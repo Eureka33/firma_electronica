@@ -1,0 +1,44 @@
+<html
+	t:type="layout"
+	title="Firma Electrónica WS"
+    t:sidebarTitle="Servicio de Firma Electrónica"
+    xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd"
+    xmlns:p="tapestry:parameter">
+  
+    <p>Saludo: ${message:greeting}</p>
+    ${message:otro.mensaje}
+
+    <p>The current time is: <strong>${currentTime}</strong></p>
+
+    <!-- A Zone is a component that can be updated in place, triggered by other components. -->
+    <t:zone t:id="zone">
+        <p>
+            Haz dado click <strong>${clickCount}</strong> times.
+        </p>
+
+        <p>
+            [
+            <t:actionlink t:id="increment">increment</t:actionlink>
+            ]
+       
+            [
+            <t:actionlink t:id="incrementNormal" zone="^">increment (via Ajax)</t:actionlink>
+            ]
+        </p>
+
+    </t:zone>
+
+    <p:sidebar>
+        <p>
+            You are running Tapestry version <strong>${tapestryVersion}</strong>.
+        </p>
+
+
+        <p>
+            [
+            <t:pagelink page="Index">refresh page</t:pagelink>
+            ]
+        </p>
+    </p:sidebar>
+
+</html>

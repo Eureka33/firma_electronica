@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jaxws="http://cxf.apache.org/jaxws"
+	xmlns:soap="http://cxf.apache.org/bindings/soap"
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context-3.1.xsd	
+	http://cxf.apache.org/bindings/soap 
+	http://cxf.apache.org/schemas/configuration/soap.xsd
+	http://cxf.apache.org/jaxws
+	http://cxf.apache.org/schemas/jaxws.xsd">
+    
+    <import resource="context-firma-digital.xml"/>
+	
+	<jaxws:endpoint id="firmaElectronica"
+        implementor="com.meve.firma.digital.ws.service.FirmaElectronicaServiceImpl"
+        address="/FirmaElectronica"
+	>
+		<jaxws:properties>
+		    <entry key="mtom-enabled" value="true"/>
+		</jaxws:properties>	
+    </jaxws:endpoint>
+	
+	<context:component-scan base-package="com.meve.firma.digital.ws.core" />
+    
+</beans>
