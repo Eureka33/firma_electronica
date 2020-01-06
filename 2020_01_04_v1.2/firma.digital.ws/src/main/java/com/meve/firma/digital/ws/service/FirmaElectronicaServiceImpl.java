@@ -277,9 +277,7 @@ public class FirmaElectronicaServiceImpl implements IFirmaElectronica {
         
         String serverName    = configService.getPropiedad( "url.server.name");
         String webAppContext = configService.getPropiedad( "path.app.context");
-        
         String nombreArchivo = sf.archivo.getName();
-        String firma         = resultado.getResultado().getFirmaElectronica();
         
         final String folioArchivo = streamService.obtenerFolioArchivo(); 
         final String pathDeposito = streamService.obtenerPathDeposito( pathRepositorio, folioArchivo, nombreArchivo);
@@ -287,7 +285,5 @@ public class FirmaElectronicaServiceImpl implements IFirmaElectronica {
       
         streamService.firmarDocumento( pathDeposito, downloadURL, sf, resultado.getResultado());
     }
-    
-    
 
 }
