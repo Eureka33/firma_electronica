@@ -57,7 +57,7 @@ public class StreamService implements IStreamService {
     }
     
     public String generarURLDescarga( String serverName, String webAppContext, String folio, String nombre) {
-		return "{server}{rutaBase}/validacionDocumento?folio={folio}&nombre={name}"
+		return "{server}{rutaBase}/validacionDocumento?folio={folio}&nombre={nombre}"
 			.replace(   "{server}", serverName)
 			.replace( "{rutaBase}", webAppContext)
 			.replace(    "{folio}", folio)
@@ -66,12 +66,11 @@ public class StreamService implements IStreamService {
     
     @Override
     public void firmarDocumento( String pathDeposito, String urlDescarga, SessionFirma sf, Firma firma) {
-        
-        info( "path deposito: " + pathDeposito);
-        info( "url descarga : " + urlDescarga);
-        
+                
         final String source = sf.archivo.getAbsolutePath();
         final File pathDirDeposito = new File( pathDeposito).getParentFile();
+        
+        firma.setUrlDescarga( urlDescarga);
         
         pathDirDeposito.mkdirs(); // crea directorio deposito
                
@@ -149,8 +148,5 @@ public class StreamService implements IStreamService {
 			buffer = null;
 		}
 	}
-	
-    private void info( Object data) {
-        System.out.println( data);
-    }
+    
 }

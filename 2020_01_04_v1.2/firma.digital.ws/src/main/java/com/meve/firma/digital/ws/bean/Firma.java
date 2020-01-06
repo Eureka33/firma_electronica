@@ -12,6 +12,7 @@ public class Firma implements Serializable {
 	private String curp;
 	private String firmaElectronica;
 	private String fecha;
+    private String urlDescarga;
 	
 	
 	public Firma() {
@@ -55,4 +56,11 @@ public class Firma implements Serializable {
 		this.fecha = fecha;
 	}
 
+    public String getUrlDescarga() {
+        return urlDescarga;
+    }
+    public void setUrlDescarga(String urlDescarga) {
+        this.urlDescarga = urlDescarga;
+    }
+    
 }
