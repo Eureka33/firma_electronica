@@ -2,3 +2,7 @@
 test/Claveprivada_FIEL_VERJ740211JG0_20180606_112220.key
 test/password.txt
 test/verj740211jg0.cer
+/2020_01_04_v1.2/basic-core/target/
+/2020_01_04_v1.2/firma.digital.core/target/
+/2020_01_04_v1.2/firma.digital.ws/target/
+/2020_01_04_v1.2/firma.digital.client/target/
