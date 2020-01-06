@@ -74,6 +74,7 @@ public class VentanaCliente {
         fieldPanel.add(p);
         
         //---
+        /*
         JTextField cadenaTexto = new JTextField();
         cadenaTexto.setColumns( 20);
         cadenaTexto.setToolTipText( "Ingrese una cadena de texto para generar su firma electrónica");
@@ -87,7 +88,7 @@ public class VentanaCliente {
         p = new JPanel( new FlowLayout(FlowLayout.LEFT));
         p.add( cadenaTexto);
         fieldPanel.add(p);
-        
+        */
         // ---
         JTextField pathCertificado = new JTextField();
         pathCertificado.setColumns( 20);

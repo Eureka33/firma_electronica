@@ -40,7 +40,7 @@ public class ClienteFirmaElectronica implements ActionListener {
 		textArea.setText( "");
 		
 		String pathArchivo = ((JTextField) modelo.get( "archivo")).getText();
-		String cadena      = ((JTextField) modelo.get( "cadena")).getText();
+		String cadena      = (modelo.get( "cadena") == null)? null : ((JTextField) modelo.get( "cadena")).getText();
 		
 		String pathCertificado = ((JTextField) modelo.get( "certificado")).getText();
 		String pathLlavePrivada = ((JTextField) modelo.get( "llave")).getText();
@@ -49,7 +49,7 @@ public class ClienteFirmaElectronica implements ActionListener {
 		RespuestaFirma respuesta = null;
 		
         try {
-			respuesta = invocarServicio( pathArchivo, cadena, pathCertificado, pathLlavePrivada, password);
+			respuesta = invocarServicio( pathArchivo, pathCertificado, pathLlavePrivada, password);
 
 			if ( respuesta.getCodigo() != 0) {
                 StringBuilder strb = new StringBuilder();
@@ -111,7 +111,6 @@ public class ClienteFirmaElectronica implements ActionListener {
 	}
 	
 	public RespuestaFirma invocarServicio( 	String pathArchivo,
-											String cadena,
 											String pathCertificado,
 											String pathLlavePrivada,
 											String password) {
@@ -134,10 +133,6 @@ public class ClienteFirmaElectronica implements ActionListener {
     	
     	if( pathArchivo!= null && !pathArchivo.trim().isEmpty()) {
     		solicitud.setArchivoDatos(		getArchivoDatos(pathArchivo));
-    	} 
-    	
-    	if ( cadena != null && !cadena.trim().isEmpty()) {
-    		solicitud.setCadena( cadena);
     	}
     	
     	RespuestaFirma respuesta = servicio.firmarArchivo( solicitud);
