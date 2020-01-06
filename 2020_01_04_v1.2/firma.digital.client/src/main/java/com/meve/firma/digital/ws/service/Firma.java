@@ -16,11 +16,12 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="curp" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
- *         &lt;element name="fecha" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
+ *         &lt;element name="curp"             type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
+ *         &lt;element name="fecha"            type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="firmaElectronica" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
- *         &lt;element name="rfc" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
- *         &lt;element name="titular" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
+ *         &lt;element name="rfc"              type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
+ *         &lt;element name="titular"          type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
+ *         &lt;element name="urlDescarga"      type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -35,7 +36,8 @@ import javax.xml.bind.annotation.XmlType;
     "fecha",
     "firmaElectronica",
     "rfc",
-    "titular"
+    "titular",
+    "urlDescarga"
 })
 public class Firma {
 
@@ -44,6 +46,7 @@ public class Firma {
     protected String firmaElectronica;
     protected String rfc;
     protected String titular;
+    protected String urlDescarga;
 
     /**
      * Obtiene el valor de la propiedad curp.
@@ -163,6 +166,30 @@ public class Firma {
      */
     public void setTitular(String value) {
         this.titular = value;
+    }
+    
+    /**
+     * Obtiene el valor de la propiedad urlDescarga.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getUrlDescarga() {
+        return urlDescarga;
+    }
+
+    /**
+     * Define el valor de la propiedad urlDescarga.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setUrlDescarg(String value) {
+        this.urlDescarga = value;
     }
 
 }

@@ -48,13 +48,13 @@ public class ClienteFirmaElectronica implements ActionListener {
 		String pathLlavePrivada = ((JTextField) modelo.get( "llave")).getText();
 		String password = ((JTextField) modelo.get( "password")).getText();
 		
-		
 		RespuestaFirma respuesta = null;
-		try {
+		
+        try {
 			respuesta = invocarServicio( pathArchivo, cadena, pathCertificado, pathLlavePrivada, password);
 
 			if ( respuesta.getCodigo() != 0) {
-StringBuilder strb = new StringBuilder();
+                StringBuilder strb = new StringBuilder();
 				
 				strb.append("URL: ").append( SERVICIO_WEB_FIRMA_URL).append("\n");
 				strb.append( "código: ").append( respuesta.getCodigo());
@@ -65,19 +65,22 @@ StringBuilder strb = new StringBuilder();
 			} else {
 				StringBuilder strb = new StringBuilder();
 				
-				strb.append("URL: ").append( SERVICIO_WEB_FIRMA_URL).append("\n");
-				strb.append( "código: ").append( respuesta.getCodigo());
-				strb.append( "\nmensaje: ").append( respuesta.getMensaje());
+				strb.append("peticion: {\n\turl:").append( SERVICIO_WEB_FIRMA_URL).append("\n}");
+				strb.append( "respuesta: {");
+                strb.append( "\n\tcódigo: ").append( respuesta.getCodigo());
+				strb.append( ",\n\tmensaje: ").append( respuesta.getMensaje());
 				
 				Firma firma = respuesta.getFirma();
 				
-				strb.append( "\nTitular: " + firma.getTitular());
-				strb.append( "\nCURP   : " + firma.getCurp());
-				strb.append( "\nRFC    : " + firma.getRfc());
-				strb.append( "\nFecha  : " + firma.getFecha());
-				strb.append( "\nFirma  : " + firma.getFirmaElectronica());
-					
-				textArea.setText( strb.toString());
+				strb.append( ",\n\ttitular: ").append( firma.getTitular());
+				strb.append( ",\n\tcurp: ").append( firma.getCurp());
+				strb.append( ",\n\trfc: ").append( firma.getRfc());
+				strb.append( ",\n\tfecha: ").append( firma.getFecha());
+				strb.append( ",\n\tfirma: ").append( firma.getFirmaElectronica());
+				strb.append( "\n\turlDescarga: ").append( firma.getUrlDescarga());
+                strb.append( "\n}");
+                
+                textArea.setText( strb.toString() );
 			}
 
 		} catch( Exception ex) {
@@ -141,32 +144,6 @@ StringBuilder strb = new StringBuilder();
     	
     	RespuestaFirma respuesta = servicio.firmarArchivo( solicitud);
     
-    	/*
-    	InfoArchivo firmado = respuesta.getArchivoFirmado();
-  
-    	if ( firmado != null) {
-    		try {
-    			InputStream is = firmado.getHandler().getInputStream();
-
-    			OutputStream os = new FileOutputStream( "c:\\tmp\\cliente\\" + firmado.getNombre() + "." + firmado.getExtension());
-
-    			final byte[] buffer = new byte[128*1024];
-    			int bytesLeidos = 0;
-    			while( (bytesLeidos = is.read( buffer)) != -1) {
-    				os.write( buffer, 0, bytesLeidos);
-    			}
-
-    			os.flush();
-    			os.close();
-    			is.close();
-
-    		} catch (Exception ex) {
-    			ex.printStackTrace();
-    		}
-    	}
-    	
-    	*/
-    	
     	return respuesta;
 	}
 	
