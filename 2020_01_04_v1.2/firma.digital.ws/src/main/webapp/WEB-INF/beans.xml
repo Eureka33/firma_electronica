@@ -18,7 +18,7 @@
     <import resource="context-firma-digital.xml"/>
 	
 	<jaxws:endpoint id="firmaElectronica"
-        implementor="com.meve.firma.digital.ws.service.FirmaElectronicaServiceImpl"
+        implementor="com.eureka.firma.digital.ws.service.FirmaElectronicaServiceImpl"
         address="/FirmaElectronica"
 	>
 		<jaxws:properties>
@@ -26,6 +26,6 @@
 		</jaxws:properties>	
     </jaxws:endpoint>
 	
-	<context:component-scan base-package="com.meve.firma.digital.ws.core" />
+	<context:component-scan base-package="com.eureka.firma.digital.ws.core" />
     
 </beans>
