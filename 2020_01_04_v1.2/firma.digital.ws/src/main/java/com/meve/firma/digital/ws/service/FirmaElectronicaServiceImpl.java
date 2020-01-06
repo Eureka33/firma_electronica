@@ -65,7 +65,7 @@ public class FirmaElectronicaServiceImpl implements IFirmaElectronica {
         
             resultado = generaFirma( sf);
             
-            //actualizarArchivo( sf,  (Resultado<Firma>) resultado);
+            actualizarArchivo( sf,  (Resultado<Firma>) resultado);
                         
 			return getRespuesta( resultado);
 				
@@ -263,7 +263,6 @@ public class FirmaElectronicaServiceImpl implements IFirmaElectronica {
 		return resultado;
 	}
     
-    /*
     void actualizarArchivo( SessionFirma sf, Resultado<Firma> resultado) {
         if( sf.archivo == null ) {
             return;
@@ -275,12 +274,20 @@ public class FirmaElectronicaServiceImpl implements IFirmaElectronica {
         }
         
         String pathRepositorio = configService.getPropiedad( "path.repositorio.fs");
-        String baseDownloadURL = configService.getPropiedad( "url.download.base");
-        String nombreArchivo   = sf.archivo.getName();
-        String firma           = resultado.getResultado().getFirmaElectronica();
         
-        final String pathDeposito = streamService.obtenerPathDeposito( pathRepositorio, nombreArchivo, firma);
-        streamService.firmarDocumento( pathDeposito, baseDownloadURL, sf, resultado.getResultado());  
+        String serverName    = configService.getPropiedad( "url.server.name");
+        String webAppContext = configService.getPropiedad( "path.app.context");
+        
+        String nombreArchivo = sf.archivo.getName();
+        String firma         = resultado.getResultado().getFirmaElectronica();
+        
+        final String folioArchivo = streamService.obtenerFolioArchivo(); 
+        final String pathDeposito = streamService.obtenerPathDeposito( pathRepositorio, folioArchivo, nombreArchivo);
+        final String downloadURL  = streamService.generarURLDescarga( serverName, webAppContext, folioArchivo, nombreArchivo);
+      
+        streamService.firmarDocumento( pathDeposito, downloadURL, sf, resultado.getResultado());
     }
-    */
+    
+    
+
 }

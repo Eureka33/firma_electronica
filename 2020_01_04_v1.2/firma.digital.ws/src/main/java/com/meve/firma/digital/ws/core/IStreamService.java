@@ -13,11 +13,16 @@ public interface IStreamService {
 
 	Resultado<Void> guardarArchivoDatos( 	File archivo, DataHandler handler);
     
-    String obtenerPathDeposito( String pathRepositorio, String nombre, String firma);
+    String obtenerFolioArchivo();
+    
+    String obtenerPathDeposito( String pathRepositorio, String folio, String nombre);
+    
+    String generarURLDescarga( String serverName, String webAppContext, String folio, String nombre);
     
     void firmarDocumento( String pathDeposito, String baseDownloadURL, SessionFirma sf, Firma firma);
 	
 	void eliminarDirectorio( 	File directorio);
 	
 	String streamToBase64( 		InfoArchivo infoArchivo);
+
 }

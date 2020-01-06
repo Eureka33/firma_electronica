@@ -18,7 +18,6 @@ import java.io.OutputStream;
 import java.util.UUID;
 import mx.neogen.log.Log;
 import org.apache.commons.codec.binary.Base64;
-import org.h2.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Service( "streamService")
@@ -48,24 +47,34 @@ public class StreamService implements IStreamService {
 	}
 
     @Override
-    public String obtenerPathDeposito( String pathRepositorio, String nombre, String firma) {
-        return pathRepositorio + File.separator + UUID.randomUUID().toString().replace("-", "") + File.separator + nombre;
+    public String obtenerFolioArchivo() {
+        return UUID.randomUUID().toString().replace("-", "");
     }
     
     @Override
-    public void firmarDocumento( String pathDeposito, String baseDownloadURL, SessionFirma sf, Firma firma) {
+    public String obtenerPathDeposito( String pathRepositorio, String folio, String nombre) {
+        return pathRepositorio + File.separator + folio + File.separator + nombre;
+    }
+    
+    public String generarURLDescarga( String serverName, String webAppContext, String folio, String nombre) {
+		return "{server}{rutaBase}/validacionDocumento?folio={folio}&nombre={name}"
+			.replace(   "{server}", serverName)
+			.replace( "{rutaBase}", webAppContext)
+			.replace(    "{folio}", folio)
+			.replace(   "{nombre}", nombre);
+	}
+    
+    @Override
+    public void firmarDocumento( String pathDeposito, String urlDescarga, SessionFirma sf, Firma firma) {
+        
+        info( "path deposito: " + pathDeposito);
+        info( "url descarga : " + urlDescarga);
+        
         final String source = sf.archivo.getAbsolutePath();
         final File pathDirDeposito = new File( pathDeposito).getParentFile();
         
-        // crea directorio deposito
-        pathDirDeposito.mkdirs();
-        
-        // obtiene uuid del archivo
-        final String uuid = pathDirDeposito.getName();
-       
-        // forma URL de descarga
-        final String urlDescarga = baseDownloadURL + "/" + uuid + "/" + sf.archivo.getName();
-         
+        pathDirDeposito.mkdirs(); // crea directorio deposito
+               
         appender.firmarPDF( source, pathDeposito, urlDescarga, firma);
     }
     
@@ -141,4 +150,7 @@ public class StreamService implements IStreamService {
 		}
 	}
 	
+    private void info( Object data) {
+        System.out.println( data);
+    }
 }
