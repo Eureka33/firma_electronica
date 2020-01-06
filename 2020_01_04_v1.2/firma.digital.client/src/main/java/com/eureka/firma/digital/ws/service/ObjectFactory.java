@@ -1,5 +1,5 @@
 
-package com.meve.firma.digital.ws.service;
+package com.eureka.firma.digital.ws.service;
 
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.annotation.XmlElementDecl;
@@ -10,7 +10,7 @@ import javax.xml.namespace.QName;
 /**
  * This object contains factory methods for each 
  * Java content interface and Java element interface 
- * generated in the com.meve.firma.digital.ws.service package. 
+ * generated in the com.eureka.firma.digital.ws.service package. 
  * <p>An ObjectFactory allows you to programatically 
  * construct new instances of the Java representation 
  * for XML content. The Java representation of XML 
@@ -24,11 +24,11 @@ import javax.xml.namespace.QName;
 @XmlRegistry
 public class ObjectFactory {
 
-    private final static QName _FirmarArchivo_QNAME = new QName("http://service.ws.digital.firma.meve.com/", "firmarArchivo");
-    private final static QName _FirmarArchivoResponse_QNAME = new QName("http://service.ws.digital.firma.meve.com/", "firmarArchivoResponse");
+    private final static QName _FirmarArchivo_QNAME = new QName("http://service.ws.digital.firma.eureka.com/", "firmarArchivo");
+    private final static QName _FirmarArchivoResponse_QNAME = new QName("http://service.ws.digital.firma.eureka.com/", "firmarArchivoResponse");
 
     /**
-     * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: com.meve.firma.digital.ws.service
+     * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: com.eureka.firma.digital.ws.service
      * 
      */
     public ObjectFactory() {
@@ -94,7 +94,7 @@ public class ObjectFactory {
      * Create an instance of {@link JAXBElement }{@code <}{@link FirmarArchivo }{@code >}}
      * 
      */
-    @XmlElementDecl(namespace = "http://service.ws.digital.firma.meve.com/", name = "firmarArchivo")
+    @XmlElementDecl(namespace = "http://service.ws.digital.firma.eureka.com/", name = "firmarArchivo")
     public JAXBElement<FirmarArchivo> createFirmarArchivo(FirmarArchivo value) {
         return new JAXBElement<FirmarArchivo>(_FirmarArchivo_QNAME, FirmarArchivo.class, null, value);
     }
@@ -103,7 +103,7 @@ public class ObjectFactory {
      * Create an instance of {@link JAXBElement }{@code <}{@link FirmarArchivoResponse }{@code >}}
      * 
      */
-    @XmlElementDecl(namespace = "http://service.ws.digital.firma.meve.com/", name = "firmarArchivoResponse")
+    @XmlElementDecl(namespace = "http://service.ws.digital.firma.eureka.com/", name = "firmarArchivoResponse")
     public JAXBElement<FirmarArchivoResponse> createFirmarArchivoResponse(FirmarArchivoResponse value) {
         return new JAXBElement<FirmarArchivoResponse>(_FirmarArchivoResponse_QNAME, FirmarArchivoResponse.class, null, value);
     }

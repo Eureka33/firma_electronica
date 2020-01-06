@@ -1,5 +1,5 @@
 
-package com.meve.firma.digital.ws.service;
+package com.eureka.firma.digital.ws.service;
 
 /**
  * Please modify this class to meet your needs
@@ -26,7 +26,7 @@ import javax.xml.ws.ResponseWrapper;
  */
 public final class IFirmaElectronica_FirmaElectronicaServiceImplPort_Client {
 
-    private static final QName SERVICE_NAME = new QName("http://service.ws.digital.firma.meve.com/", "FirmaElectronicaService");
+    private static final QName SERVICE_NAME = new QName("http://service.ws.digital.firma.eureka.com/", "FirmaElectronicaService");
 
     private IFirmaElectronica_FirmaElectronicaServiceImplPort_Client() {
     }
@@ -51,8 +51,8 @@ public final class IFirmaElectronica_FirmaElectronicaServiceImplPort_Client {
         
         {
         System.out.println("Invoking firmarArchivo...");
-        com.meve.firma.digital.ws.service.SolicitudFirma _firmarArchivo_solicitudFirma = null;
-        com.meve.firma.digital.ws.service.RespuestaFirma _firmarArchivo__return = port.firmarArchivo(_firmarArchivo_solicitudFirma);
+            com.eureka.firma.digital.ws.service.SolicitudFirma _firmarArchivo_solicitudFirma = null;
+            com.eureka.firma.digital.ws.service.RespuestaFirma _firmarArchivo__return = port.firmarArchivo(_firmarArchivo_solicitudFirma);
         System.out.println("firmarArchivo.result=" + _firmarArchivo__return);
 
 

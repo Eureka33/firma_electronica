@@ -1,5 +1,5 @@
 
-package com.meve.firma.digital.ws.service;
+package com.eureka.firma.digital.ws.service;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -17,7 +17,7 @@ import javax.xml.bind.annotation.XmlType;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
  *         &lt;element name="codigo" type="{http://www.w3.org/2001/XMLSchema}int" minOccurs="0"/>
- *         &lt;element name="firma" type="{http://service.ws.digital.firma.meve.com/}firma" minOccurs="0"/>
+ *         &lt;element name="firma" type="{http://service.ws.digital.firma.eureka.com/}firma" minOccurs="0"/>
  *         &lt;element name="mensaje" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/restriction>

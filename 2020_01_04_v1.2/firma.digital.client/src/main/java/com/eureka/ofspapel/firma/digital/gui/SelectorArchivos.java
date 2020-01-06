@@ -1,4 +1,4 @@
-package com.meve.ofspapel.firma.digital.gui;
+package com.eureka.ofspapel.firma.digital.gui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

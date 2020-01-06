@@ -1,5 +1,5 @@
 
-package com.meve.firma.digital.ws.service;
+package com.eureka.firma.digital.ws.service;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -16,7 +16,7 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="solicitudFirma" type="{http://service.ws.digital.firma.meve.com/}solicitudFirma" minOccurs="0"/>
+ *         &lt;element name="solicitudFirma" type="{http://service.ws.digital.firma.eureka.com/}solicitudFirma" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>

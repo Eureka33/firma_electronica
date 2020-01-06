@@ -1,4 +1,4 @@
-package com.meve.firma.digital.ws.service;
+package com.eureka.firma.digital.ws.service;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -17,14 +17,14 @@ import javax.xml.ws.Service;
 @WebServiceClient(
 	name = "FirmaElectronicaService", 
     wsdlLocation = "http://localhost:8080/digitalSignWS/servicios/FirmaElectronica?wsdl",
-    targetNamespace = "http://service.ws.digital.firma.meve.com/"
+    targetNamespace = "http://service.ws.digital.firma.eureka.com/"
 )
 public class FirmaElectronicaService extends Service {
 
     public final static URL WSDL_LOCATION;
 
-    public final static QName SERVICE = new QName("http://service.ws.digital.firma.meve.com/", "FirmaElectronicaService");
-    public final static QName FirmaElectronicaServiceImplPort = new QName("http://service.ws.digital.firma.meve.com/", "FirmaElectronicaServiceImplPort");
+    public final static QName SERVICE = new QName("http://service.ws.digital.firma.eureka.com/", "FirmaElectronicaService");
+    public final static QName FirmaElectronicaServiceImplPort = new QName("http://service.ws.digital.firma.eureka.com/", "FirmaElectronicaServiceImplPort");
     static {
         URL url = null;
         try {

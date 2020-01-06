@@ -1,4 +1,4 @@
-package com.meve.ofspapel.firma.digital.gui;
+package com.eureka.ofspapel.firma.digital.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -20,7 +20,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
-import com.meve.ofspapel.firma.digital.client.ClienteFirmaElectronica;
+import com.eureka.ofspapel.firma.digital.client.ClienteFirmaElectronica;
 
 public class VentanaCliente {
 	
@@ -36,7 +36,7 @@ public class VentanaCliente {
     	final ActionListener FIRMA_ELECTRONICA_ACTION_LISTENER = new ClienteFirmaElectronica( modelo);
     	
     	//Create and set up the window.
-        JFrame frame = new JFrame("Firma Electrónica: MEVE Soluciones");
+        JFrame frame = new JFrame("Firma Electrónica: Eureka Consulting");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
         Container pane = frame.getContentPane();

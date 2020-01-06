@@ -1,5 +1,5 @@
 
-package com.meve.firma.digital.ws.service;
+package com.eureka.firma.digital.ws.service;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -16,8 +16,8 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="archivoLlave" type="{http://service.ws.digital.firma.meve.com/}infoArchivo" minOccurs="0"/>
- *         &lt;element name="certificado" type="{http://service.ws.digital.firma.meve.com/}infoArchivo" minOccurs="0"/>
+ *         &lt;element name="archivoLlave" type="{http://service.ws.digital.firma.eureka.com/}infoArchivo" minOccurs="0"/>
+ *         &lt;element name="certificado" type="{http://service.ws.digital.firma.eureka.com/}infoArchivo" minOccurs="0"/>
  *         &lt;element name="passwordLlave" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="rfc" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *       &lt;/sequence>

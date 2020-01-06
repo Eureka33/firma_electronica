@@ -1,5 +1,5 @@
 
-package com.meve.firma.digital.ws.service;
+package com.eureka.firma.digital.ws.service;
 
 import javax.activation.DataHandler;
 import javax.xml.bind.annotation.XmlAccessType;

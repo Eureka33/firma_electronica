@@ -1,4 +1,4 @@
-package com.meve.ofspapel.firma.digital.client;
+package com.eureka.ofspapel.firma.digital.client;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,20 +14,18 @@ import org.apache.cxf.interceptor.LoggingInInterceptor;
 import org.apache.cxf.interceptor.LoggingOutInterceptor;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 
-import com.meve.firma.digital.ws.service.Firma;
-import com.meve.firma.digital.ws.service.IFirmaElectronica;
-import com.meve.firma.digital.ws.service.InfoArchivo;
-import com.meve.firma.digital.ws.service.InfoConfidencial;
-import com.meve.firma.digital.ws.service.RespuestaFirma;
-import com.meve.firma.digital.ws.service.SolicitudFirma;
+import com.eureka.firma.digital.ws.service.Firma;
+import com.eureka.firma.digital.ws.service.IFirmaElectronica;
+import com.eureka.firma.digital.ws.service.InfoArchivo;
+import com.eureka.firma.digital.ws.service.InfoConfidencial;
+import com.eureka.firma.digital.ws.service.RespuestaFirma;
+import com.eureka.firma.digital.ws.service.SolicitudFirma;
 
 
 public class ClienteFirmaElectronica implements ActionListener {
 
 	private final static String SERVICIO_WEB_FIRMA_URL =
-	"http://localhost:8080/digitalSignWS/servicios/FirmaElectronica";
-	//"http://10.1.21.34:8089/digitalSignWS/servicios/FirmaElectronica";
-	//"http://10.1.20.50:8001/digitalSignWS/servicios/FirmaElectronica";
+        "http://localhost:8080/digitalSignWS/servicios/FirmaElectronica";
 	
 	private Map<String, ?> modelo;
 	
@@ -65,7 +63,7 @@ public class ClienteFirmaElectronica implements ActionListener {
 			} else {
 				StringBuilder strb = new StringBuilder();
 				
-				strb.append("peticion: {\n\turl:").append( SERVICIO_WEB_FIRMA_URL).append("\n}");
+				strb.append("peticion: {\n\turl:").append( SERVICIO_WEB_FIRMA_URL).append("\n}\n");
 				strb.append( "respuesta: {");
                 strb.append( "\n\tcódigo: ").append( respuesta.getCodigo());
 				strb.append( ",\n\tmensaje: ").append( respuesta.getMensaje());
