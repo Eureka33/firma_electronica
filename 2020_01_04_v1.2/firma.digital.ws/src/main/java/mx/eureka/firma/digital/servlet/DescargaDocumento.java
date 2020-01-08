@@ -2,6 +2,7 @@ package mx.eureka.firma.digital.servlet;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -20,13 +21,25 @@ public class DescargaDocumento extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		final BeanInfoDocumento infoDocumento = UtilDocumento.requestToBean( request);
-		final InfoArchivo infoArchivo = UtilDocumento.obtenerInfoArchivo( infoDocumento);
+        final BeanInfoDocumento infoDocumento = UtilDocumento.requestToBean( request);
+		
+        try {
+            final InfoArchivo infoArchivo = UtilDocumento.obtenerInfoArchivo( infoDocumento);
+            final OutputStream out = prepararDescarga( infoArchivo, response);
         
-        final OutputStream out = prepararDescarga( infoArchivo, response);
+            UtilDocumento.copiarContenido( infoArchivo.getContenido(), out);
         
-        UtilDocumento.copiarContenido( infoArchivo.getContenido(), out);
-    
+        } catch ( Exception ex) {
+            if ( "error.negocio.entidad.inexistente".equals( ex.getMessage())) {
+                request.setAttribute( "info", UtilDocumento.requestToBean( request));
+                request.setAttribute( "resultado", "No existe documento con el folio y nombre solicitados");
+                forwardTo( request, response, "/jsp/validacionDocumento.jsp?ts=" + Math.random());
+                
+            } else {
+                throw ex;
+            }
+		}
+		
 	}
 
     private OutputStream prepararDescarga( InfoArchivo infoArchivo, HttpServletResponse response) {
@@ -42,4 +55,8 @@ public class DescargaDocumento extends HttpServlet {
         }
     }
     
+    protected void forwardTo( HttpServletRequest request, HttpServletResponse response, String pagina) throws IOException, ServletException {	
+		final RequestDispatcher dispatcher = getServletContext().getRequestDispatcher( pagina);
+		dispatcher.forward( request, response);
+	}
 }

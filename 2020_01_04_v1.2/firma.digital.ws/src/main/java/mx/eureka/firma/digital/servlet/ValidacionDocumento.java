@@ -50,13 +50,24 @@ public class ValidacionDocumento extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		final BeanInfoDocumento infoDocumento = UtilDocumento.requestToBean( request);
-			
-        final String cheksum = checksumStoredFile( infoDocumento);
-		final String resultado = cheksum.equals( checksumUploadedFile( request))? "ok": "error";
-		final String params = "&folio=" + infoDocumento.getFolio() + "&nombre=" + infoDocumento.getNombre() + "&resultado=" + resultado;
-			
-		response.sendRedirect( "validacionDocumento?ts=" + Math.random() + params);
 		
+        try {	
+            final String cheksum = checksumStoredFile( infoDocumento);
+            final String resultado = cheksum.equals( checksumUploadedFile( request))? "ok": "error";
+            final String params = "&folio=" + infoDocumento.getFolio() + "&nombre=" + infoDocumento.getNombre() + "&resultado=" + resultado;
+			
+            response.sendRedirect( "validacionDocumento?ts=" + Math.random() + params);
+		
+        } catch ( Exception ex) {
+            if ( "error.negocio.entidad.inexistente".equals( ex.getMessage())) {
+                request.setAttribute( "info", UtilDocumento.requestToBean( request));
+                request.setAttribute( "resultado", "No existe documento con el folio y nombre solicitados");
+                forwardTo( request, response, "/jsp/validacionDocumento.jsp?ts=" + Math.random());
+                
+            } else {
+                throw ex;
+            }
+		}
 	}
 
 	protected void forwardTo( HttpServletRequest request, HttpServletResponse response, String pagina) throws IOException, ServletException {	
