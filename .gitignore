@@ -6,3 +6,11 @@ test/verj740211jg0.cer
 /2020_01_04_v1.2/firma.digital.core/target/
 /2020_01_04_v1.2/firma.digital.ws/target/
 /2020_01_04_v1.2/firma.digital.client/target/
+/2019_12_12_v1.0/basic-core/target/
+/2019_12_12_v1.0/firma.digital.core/target/
+/2019_12_12_v1.0/firma.digital.ws/target/
+/2019_12_12_v1.0/firma.digital.client/target/
+2019_12_12_v1.0/basic-core/nb-configuration.xml
+2019_12_12_v1.0/firma.digital.core/nb-configuration.xml
+2019_12_12_v1.0/firma.digital.client/nb-configuration.xml
+2019_12_12_v1.0/firma.digital.ws/nb-configuration.xml
