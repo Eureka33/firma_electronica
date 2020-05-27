@@ -6,23 +6,81 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.math.BigInteger;
 import java.security.MessageDigest;
+import java.util.List;
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
 import javax.servlet.http.HttpServletRequest;
 import mx.com.neogen.commons.exception.OperacionNoRealizadaException;
+import org.apache.commons.fileupload.DiskFileUpload;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUploadBase;
 
 public class UtilDocumento {
 
-    public static BeanInfoDocumento requestToBean( HttpServletRequest request) {
+    public static BeanInfoDocumento requestToInfoDocumento( HttpServletRequest request) {
 		final BeanInfoDocumento info = new BeanInfoDocumento();
 		
-		info.setFolio( request.getParameter( "folio"));
+		info.setFolio(  request.getParameter(  "folio"));
 		info.setNombre( request.getParameter( "nombre"));
 		
 		return info;
 	}
+    
+    public static BeanInfoFirma requestToInfoFirma( HttpServletRequest request) {
+        boolean isMultipart = FileUploadBase.isMultipartContent( request);
+
+		if (!isMultipart) {
+			return null;
+		}
+        
+        final BeanInfoFirma bean = new BeanInfoFirma();
+        
+		final DiskFileUpload upload = new DiskFileUpload();
+       
+        try { 
+            List items = upload.parseRequest( request);
+            for ( Object nextItem : items) {
+                FileItem item = (FileItem) nextItem;
+                
+                System.out.println( "idField?: " + item.isFormField() + "field:" + item.getFieldName() + ", name: " + item.getName());
+                    
+                if ( !item.isFormField()) {
+                    
+                    if ( "documento".equals( item.getFieldName())) {
+                        bean.setNombreDocumento( item.getName());
+                        bean.setContenidoDocumento( item.getInputStream());
+                        
+                    } else if( "certificado".equals( item.getFieldName())) {
+                        bean.setCertificado( item.getInputStream());
+                    
+                    } else if ( "llavePrivada".equals( item.getFieldName())) {
+                        bean.setLlavePrivada( item.getInputStream());
+                    
+                    }
+                 
+                } else {
+             
+                    if( "password".equals( item.getFieldName())) {
+                        bean.setPassword( item.getString().trim());
+                    
+                    } else if ( "correo".equals( item.getFieldName())) {
+                        bean.setCorreo( item.getString().trim());
+                    }
+                }
+            }
+        
+        } catch( Exception ex) {
+            throw new OperacionNoRealizadaException( "error.infraestructura", ex);
+        
+        }
+        
+		return bean;
+    }
     
     
     public static void copiarContenido( InputStream in, OutputStream out) {
@@ -118,6 +176,44 @@ public class UtilDocumento {
         
         final String pathRepositorio = configService.getPropiedad( "path.repositorio.fs");
         return streamService.obtenerPathDeposito( pathRepositorio, info.getFolio(), info.getNombre());
+    }
+    
+    
+    public static DataHandler createInstance(final InputStream inputStream, final String nombre, final String tipo) {
+    
+        return new DataHandler( new DataSource() {
+            @Override
+            public InputStream getInputStream() throws IOException {
+                return inputStream;
+            }
+
+            @Override
+            public OutputStream getOutputStream() throws IOException {
+                throw new UnsupportedOperationException( "Operacion no soportada");
+            }
+
+            @Override
+            public String getContentType() {
+                if ( "cert".equals( tipo)) {
+                    return "application/x-x509-ca-cert";
+                
+                } else if( "key".equals( tipo)) {
+                    return "application/pkcs8";
+                
+                } else if( "document".equals( tipo)) {
+                    return "application/pdf";
+                
+                } else {
+                    throw new IllegalArgumentException( "Tipo de contenido no valido: " + tipo);
+                
+                }
+            }
+
+            @Override
+            public String getName() {
+                return nombre;
+            }
+        });
     }
     
 }

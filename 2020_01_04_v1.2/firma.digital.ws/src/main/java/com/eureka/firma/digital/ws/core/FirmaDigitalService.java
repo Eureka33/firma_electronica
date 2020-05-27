@@ -98,8 +98,7 @@ public class FirmaDigitalService implements IFirmaDigitalService {
 		
 		try {
 			fis = new ByteArrayInputStream( Base64.decodeBase64( certificadoBase64));
-			certificado = (X509Certificate)
-			CertificateFactory.getInstance("X.509").generateCertificate( fis);		
+			certificado = (X509Certificate)	CertificateFactory.getInstance("X.509").generateCertificate( fis);		
 
 		} catch ( Exception ex) {
 			ex.printStackTrace();
@@ -208,7 +207,7 @@ public class FirmaDigitalService implements IFirmaDigitalService {
 		} catch ( Exception ex) {
 			ex.printStackTrace();
 			return ResultadoEnum.ERROR_VALIDACION.getResultado(
-				"La informació de llave privada no puede leerse o el password " +
+				"La información de llave privada no puede leerse o el password " +
 				"es incorrecto [" + ex.getMessage() +"]"
 			);
 

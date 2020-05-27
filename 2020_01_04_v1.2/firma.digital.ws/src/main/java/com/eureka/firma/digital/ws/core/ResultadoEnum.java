@@ -7,9 +7,9 @@ public enum ResultadoEnum {
 	OK( 0, "Operación exitosa" ),
 	ERROR_SAVING_FILE( 		1, "Error al recuperar información de solicitud"),
 	INVOCATION_ERROR(  		2, "Error de invocación. Información incompleta"),
-	ERROR_VALIDACION(  		3, "Error al realizar operación de validación: "),
-	ERROR_FIRMADO(     		4, "Error al realizar la operacion de firmado: "),
-	ERROR_INTERNAL_CONFIG( 	5, "Error de configuración interno, notifique a su administrador: "),
+	ERROR_VALIDACION(  		3, "Error al realizar operación de validación"),
+	ERROR_FIRMADO(     		4, "Error al realizar la operacion de firmado"),
+	ERROR_INTERNAL_CONFIG( 	5, "Error de configuración interno, notifique a su administrador"),
 	ERROR_DESCONOCIDO( 		9, "Situación inesperada");
 	
 	

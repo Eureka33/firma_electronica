@@ -21,7 +21,7 @@ public class DescargaDocumento extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        final BeanInfoDocumento infoDocumento = UtilDocumento.requestToBean( request);
+        final BeanInfoDocumento infoDocumento = UtilDocumento.requestToInfoDocumento( request);
 		
         try {
             final InfoArchivo infoArchivo = UtilDocumento.obtenerInfoArchivo( infoDocumento);
@@ -31,8 +31,10 @@ public class DescargaDocumento extends HttpServlet {
         
         } catch ( Exception ex) {
             if ( "error.negocio.entidad.inexistente".equals( ex.getMessage())) {
-                request.setAttribute( "info", UtilDocumento.requestToBean( request));
+                
+                request.setAttribute( "info", infoDocumento);
                 request.setAttribute( "resultado", "No existe documento con el folio y nombre solicitados");
+                
                 forwardTo( request, response, "/jsp/validacionDocumento.jsp?ts=" + Math.random());
                 
             } else {

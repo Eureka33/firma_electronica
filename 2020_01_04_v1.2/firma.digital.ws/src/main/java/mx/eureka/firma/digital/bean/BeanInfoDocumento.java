@@ -1,8 +1,6 @@
 package mx.eureka.firma.digital.bean;
 
-import java.io.Serializable;
-
-public class BeanInfoDocumento implements Serializable {
+public class BeanInfoDocumento {
     
     private String folio;
     private String nombre;
@@ -17,7 +15,7 @@ public class BeanInfoDocumento implements Serializable {
         return folio;
     }
 
-    public void setFolio(String folio) {
+    void setFolio(String folio) {
         this.folio = folio;
     }
 
@@ -25,7 +23,7 @@ public class BeanInfoDocumento implements Serializable {
         return nombre;
     }
 
-    public void setNombre(String nombre) {
+    void setNombre(String nombre) {
         this.nombre = nombre;
     }    
     

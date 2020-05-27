@@ -30,7 +30,7 @@ public class ValidacionDocumento extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		request.setAttribute( "info", UtilDocumento.requestToBean( request));
+		request.setAttribute( "info", UtilDocumento.requestToInfoDocumento( request));
 			
 		final String resultado =  request.getParameter( "resultado");
 			
@@ -43,13 +43,12 @@ public class ValidacionDocumento extends HttpServlet {
 		}
 		
 		forwardTo( request, response, "/jsp/validacionDocumento.jsp?ts=" + Math.random());
-	
 	}
 	
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		final BeanInfoDocumento infoDocumento = UtilDocumento.requestToBean( request);
+		final BeanInfoDocumento infoDocumento = UtilDocumento.requestToInfoDocumento(request);
 		
         try {	
             final String cheksum = checksumStoredFile( infoDocumento);
@@ -60,7 +59,7 @@ public class ValidacionDocumento extends HttpServlet {
 		
         } catch ( Exception ex) {
             if ( "error.negocio.entidad.inexistente".equals( ex.getMessage())) {
-                request.setAttribute( "info", UtilDocumento.requestToBean( request));
+                request.setAttribute( "info", infoDocumento);
                 request.setAttribute( "resultado", "No existe documento con el folio y nombre solicitados");
                 forwardTo( request, response, "/jsp/validacionDocumento.jsp?ts=" + Math.random());
                 
@@ -69,7 +68,7 @@ public class ValidacionDocumento extends HttpServlet {
             }
 		}
 	}
-
+    
 	protected void forwardTo( HttpServletRequest request, HttpServletResponse response, String pagina) throws IOException, ServletException {	
 		final RequestDispatcher dispatcher = getServletContext().getRequestDispatcher( pagina);
 		dispatcher.forward( request, response);
