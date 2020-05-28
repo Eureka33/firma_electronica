@@ -204,14 +204,33 @@ public class UtilStream {
 	}
 	
 	/**
-	 * 	Obtiene la extension de un archivo, incluido el punto. 
+	 * 	Obtiene la extension de un archivo, sin el punto
 	 *  Por ejemplo, para la ruta ".../alfa/beta/archivo.patito" 
 	 *  , este método regresa ".patito"
 	 * 
 	 */
-	public static String getExtension( final String fileName) {
-		final int indice =  fileName.lastIndexOf( '.');
-		return  (indice > 0)? fileName.substring( indice) : "";
+	public static String getExtensionArchivo( String fileName) {
+		final int idx = obtenerIndiceExtension( fileName);      
+        return  fileName.substring( idx + 1).toLowerCase();
 	}
-
+    
+    public static String getNombreArchivo( String fileName) {
+        final int idx = obtenerIndiceExtension( fileName);
+        return fileName.substring( 0, idx);
+    }
+    
+    private static int obtenerIndiceExtension( String fileName) {
+        if( fileName == null) {
+            throw new IllegalArgumentException( "No se acepta un nombre de archivo nulo");
+        }
+        
+        int idx = fileName.lastIndexOf( '.');
+        
+        if( idx < 0) {
+            throw new IllegalArgumentException( "El nombre de archivo no incluye extensión");
+        }
+        
+        return idx;
+    }
+    
 }
