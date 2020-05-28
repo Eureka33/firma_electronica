@@ -1,29 +1,29 @@
 package com.eureka.firma.digital.ws.core;
 
+import com.ctc.wstx.io.CharsetNames;
 import com.eureka.firma.digital.ws.bean.Firma;
 import com.eureka.firma.digital.ws.bean.InfoArchivo;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-
-import javax.activation.DataHandler;
-
-import org.springframework.stereotype.Service;
-
 import com.eureka.firma.digital.ws.bean.Resultado;
 import com.eureka.firma.digital.ws.bean.SessionFirma;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.UUID;
+import javax.activation.DataHandler;
 import mx.neogen.log.Log;
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service( "streamService")
 public class StreamService implements IStreamService {
 
-	@Autowired private PDFSignAppender appender;
+	@Autowired private IPDFSignAppender appender;
     
     @Override
 	public Resultado<Void> guardarArchivoDatos(File archivo, DataHandler handler) {
@@ -56,12 +56,12 @@ public class StreamService implements IStreamService {
         return pathRepositorio + File.separator + folio + File.separator + nombre;
     }
     
-    public String generarURLDescarga( String serverName, String webAppContext, String folio, String nombre) {
+    public String generarURLDescarga( String serverName, String webAppContext, String folio, String nombre) throws UnsupportedEncodingException {
 		return "{server}{rutaBase}/validacionDocumento?folio={folio}&nombre={nombre}"
 			.replace(   "{server}", serverName)
 			.replace( "{rutaBase}", webAppContext)
 			.replace(    "{folio}", folio)
-			.replace(   "{nombre}", nombre);
+			.replace(   "{nombre}", URLEncoder.encode( nombre, CharsetNames.CS_UTF8));
 	}
     
     @Override

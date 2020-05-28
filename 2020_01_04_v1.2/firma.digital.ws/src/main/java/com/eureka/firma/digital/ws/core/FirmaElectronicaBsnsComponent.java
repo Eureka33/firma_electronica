@@ -9,6 +9,7 @@ import com.eureka.firma.digital.ws.bean.SessionFirma;
 import com.eureka.firma.digital.ws.bean.SolicitudFirma;
 import com.meve.ofspapel.firma.digital.core.service.IConfiguracionService;
 import java.io.File;
+import java.io.UnsupportedEncodingException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.util.UUID;
@@ -245,7 +246,7 @@ public class FirmaElectronicaBsnsComponent {
 		return resultado;
 	}
     
-    void actualizarArchivo( SessionFirma sf, Resultado<Firma> resultado) {
+    void actualizarArchivo( SessionFirma sf, Resultado<Firma> resultado) throws UnsupportedEncodingException {
         if( sf.archivo == null ) {
             return;
         }
@@ -263,8 +264,6 @@ public class FirmaElectronicaBsnsComponent {
         
         final String folioArchivo = streamService.obtenerFolioArchivo(); 
         final String pathDeposito = streamService.obtenerPathDeposito( pathRepositorio, folioArchivo, nombreArchivo);
-        
-        System.out.println(serverName + "||" + webAppContext + "||" + folioArchivo  + "||" + nombreArchivo);
         
         final String downloadURL  = streamService.generarURLDescarga( serverName, webAppContext, folioArchivo, nombreArchivo);
       

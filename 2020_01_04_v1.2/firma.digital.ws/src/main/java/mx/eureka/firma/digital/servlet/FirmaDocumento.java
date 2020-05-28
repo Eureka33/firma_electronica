@@ -12,6 +12,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import mx.com.neogen.commons.util.UtilStream;
 import mx.eureka.firma.digital.bean.AppContext;
 import mx.eureka.firma.digital.bean.BeanInfoFirma;
 import mx.eureka.firma.digital.bean.UtilDocumento;
@@ -83,10 +84,10 @@ public class FirmaDocumento extends HttpServlet {
     
     private static InfoArchivo getArchivoDatos( final BeanInfoFirma bean) {
 		InfoArchivo archivo = new InfoArchivo();
-		
-		archivo.setHandler( UtilDocumento.createInstance( bean.getContenidoDocumento(), "archivoDatos.pdf", "documento"));	
-		archivo.setNombre( "ArchivoDatos");
-		archivo.setExtension( "pdf");
+        
+		archivo.setHandler( UtilDocumento.createInstance( bean.getContenidoDocumento(), bean.getNombreDocumento(), "documento"));	
+		archivo.setNombre(    UtilStream.getNombreArchivo(    bean.getNombreDocumento()));
+		archivo.setExtension( UtilStream.getExtensionArchivo( bean.getNombreDocumento()));
 		
 		return archivo;
 	}

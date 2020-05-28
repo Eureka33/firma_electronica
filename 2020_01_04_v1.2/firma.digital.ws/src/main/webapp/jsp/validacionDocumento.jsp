@@ -30,6 +30,12 @@
 			link.href= './descargaDocumento?folio=<%= info.getFolio() %>&nombre=<%= info.getNombre() %>';
 			link.click();
 		}
+        
+        function regresar() {
+			var link = document.getElementById( 'download');
+			link.href= './firmaDocumento';
+			link.click();
+		}
 	
 		function mostrarFormulario() {
 			var formulario = document.getElementById( 'formValidacion');
@@ -56,7 +62,24 @@
 		</tr>
         
         <tr><td>&nbsp;</td></tr>
-	
+        
+        <tr>
+			<td>
+				<table style="width: 100%">
+					<tr>
+						<td width="60%">&nbsp;</td>
+						<td width="40%" style="text-align: right;">
+                            <button type="button" class="btn btn-secondary" onclick="javascript: regresar();">
+                                Firmar Documento
+                            </button>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		
+		<tr><td>&nbsp;</td></tr>
+        
 		<tr>
 			<td>
 				<table style="width: 100%;">

@@ -8,6 +8,7 @@ import javax.activation.DataHandler;
 import com.eureka.firma.digital.ws.bean.InfoArchivo;
 import com.eureka.firma.digital.ws.bean.Resultado;
 import com.eureka.firma.digital.ws.bean.SessionFirma;
+import java.io.UnsupportedEncodingException;
 
 public interface IStreamService {
 
@@ -17,7 +18,7 @@ public interface IStreamService {
     
     String obtenerPathDeposito( String pathRepositorio, String folio, String nombre);
     
-    String generarURLDescarga( String serverName, String webAppContext, String folio, String nombre);
+    String generarURLDescarga( String serverName, String webAppContext, String folio, String nombre) throws UnsupportedEncodingException;
     
     void firmarDocumento( String pathDeposito, String baseDownloadURL, SessionFirma sf, Firma firma);
 	

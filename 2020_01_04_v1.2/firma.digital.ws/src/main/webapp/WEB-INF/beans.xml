@@ -28,4 +28,6 @@
 	
 	<context:component-scan base-package="com.eureka.firma.digital.ws.core" />
     
+    <bean id="appender" class="com.eureka.firma.digital.ws.appenders.PDFSignAppenderV2"></bean>
+    
 </beans>

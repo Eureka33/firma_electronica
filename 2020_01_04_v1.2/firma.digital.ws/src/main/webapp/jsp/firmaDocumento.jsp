@@ -214,7 +214,7 @@
                             </td>
                     		<td>
                                 <input type="password" id="password" name="password" class="form-control col-sm-4"
-                                    placeholder="Ingrese contraseña FIEL"
+                                    placeholder="contraseña FIEL"
                                     title="Contraseña FIEL" maxlength="20"
                                 />
                             </td>

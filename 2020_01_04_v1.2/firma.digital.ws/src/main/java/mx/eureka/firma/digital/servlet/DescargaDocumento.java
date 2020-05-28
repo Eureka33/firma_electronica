@@ -47,7 +47,7 @@ public class DescargaDocumento extends HttpServlet {
     private OutputStream prepararDescarga( InfoArchivo infoArchivo, HttpServletResponse response) {
 
         response.setContentType( "application/pdf");
-        response.setHeader("Content-disposition","attachment; filename=" + infoArchivo.getNombre());
+        response.setHeader("Content-disposition","attachment; filename=\"" + infoArchivo.getNombre() + "\"");
         
         try {
             return response.getOutputStream();

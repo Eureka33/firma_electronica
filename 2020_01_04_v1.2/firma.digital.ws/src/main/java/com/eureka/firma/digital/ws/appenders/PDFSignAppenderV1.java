@@ -1,9 +1,7 @@
-package com.eureka.firma.digital.ws.core;
+package com.eureka.firma.digital.ws.appenders;
 
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.client.j2se.MatrixToImageWriter;
-import com.google.zxing.common.BitMatrix;
-import com.google.zxing.qrcode.QRCodeWriter;
+import com.eureka.firma.digital.ws.bean.Firma;
+import com.eureka.firma.digital.ws.core.IPDFSignAppender;
 import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
@@ -18,19 +16,18 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.PdfStamper;
-import com.eureka.firma.digital.ws.bean.Firma;
-import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
-import org.springframework.stereotype.Component;
 
-@Component
-public class PDFSignAppender {
-    public static Font FONT_2  = new Font( FontFactory.getFont("cambria_bold", 7));
-    public static Font FONT_9  = new Font( FontFactory.getFont("cambria_bold", 9));
-    public static Font FONT_11 = new Font( FontFactory.getFont("cambria_bold", 7, Font.ITALIC));
-    public static Font FONT_12 = new Font( FontFactory.getFont("cambria_bold", 9, Font.UNDERLINE));
+
+public class PDFSignAppenderV1 extends BasePDFSignAppender implements IPDFSignAppender {
+    
+    private static final Font FONT_2  = new Font( FontFactory.getFont("cambria_bold", 7));
+    private static final Font FONT_9  = new Font( FontFactory.getFont("cambria_bold", 9));
+    private static final Font FONT_11 = new Font( FontFactory.getFont("cambria_bold", 7, Font.ITALIC));
+    private static final Font FONT_12 = new Font( FontFactory.getFont("cambria_bold", 9, Font.UNDERLINE));
     
     
+    @Override
     public void firmarPDF( String source, String target, String urlDescarga, Firma firma) {
        
         PdfReader reader = null;
@@ -214,31 +211,6 @@ public class PDFSignAppender {
         table.addCell(celda);
         
         return table;
-    }
-    
-    byte[] generateQRCodeImage( String text, int width, int height) {
-        QRCodeWriter qrCodeWriter;
-        BitMatrix bitMatrix;
-        ByteArrayOutputStream pngOutputStream = null;
-        
-        try {
-            qrCodeWriter = new QRCodeWriter();
-            bitMatrix = qrCodeWriter.encode(text, BarcodeFormat.QR_CODE, width, height);
-            
-            pngOutputStream = new ByteArrayOutputStream();
-            MatrixToImageWriter.writeToStream( bitMatrix, "PNG", pngOutputStream);
-            
-            return pngOutputStream.toByteArray(); 
-        
-        } catch( Exception ex) {
-            ex.printStackTrace();
-            return null;
-            
-        } finally {
-            try{ pngOutputStream.close(); } catch( Exception ex) {}
-        
-        }
-        
     }
     
 }

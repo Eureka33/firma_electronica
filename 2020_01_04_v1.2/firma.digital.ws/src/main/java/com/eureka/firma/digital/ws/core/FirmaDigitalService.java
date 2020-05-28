@@ -77,7 +77,7 @@ public class FirmaDigitalService implements IFirmaDigitalService {
 			final Resultado<Firma> resultado = ResultadoEnum.OK.getResultado( "Firma digital exitosa");
 			
 			firma.setFecha( new SimpleDateFormat( "dd/MM/yyyy HH:mm:ss").format(new Date()));
-			firma.setFirmaElectronica(Base64.encodeBase64String( firmaDigital));
+			firma.setFirmaElectronica( Base64.encodeBase64String( firmaDigital));
 			
 			resultado.setResultado( firma);
 			
@@ -103,7 +103,7 @@ public class FirmaDigitalService implements IFirmaDigitalService {
 		} catch ( Exception ex) {
 			ex.printStackTrace();
 			return ResultadoEnum.ERROR_VALIDACION.getResultado(
-				"La información del certificado no puede leerse: " + ex.getMessage()
+				"La información del certificado no puede leerse."
 			);
 
 		} finally {
@@ -208,7 +208,7 @@ public class FirmaDigitalService implements IFirmaDigitalService {
 			ex.printStackTrace();
 			return ResultadoEnum.ERROR_VALIDACION.getResultado(
 				"La información de llave privada no puede leerse o el password " +
-				"es incorrecto [" + ex.getMessage() +"]"
+				"es incorrecto."
 			);
 
 		} finally {
@@ -265,7 +265,7 @@ public class FirmaDigitalService implements IFirmaDigitalService {
 			
 			return ResultadoEnum.ERROR_VALIDACION.getResultado(
 				"Imposible completar la operación de acoplamiento de llave y " +
-				"certificado. [" + ex.getMessage() +"]"
+				"certificado."
 			);
 		}
 	}
