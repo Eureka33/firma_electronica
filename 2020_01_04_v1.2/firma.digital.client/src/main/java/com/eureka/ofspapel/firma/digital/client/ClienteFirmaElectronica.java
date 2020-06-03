@@ -25,7 +25,7 @@ import com.eureka.firma.digital.ws.service.SolicitudFirma;
 public class ClienteFirmaElectronica implements ActionListener {
 
 	private final static String SERVICIO_WEB_FIRMA_URL =
-        "http://srvcontrolgest.asa.gob.mx/digitalSignWSSS/servicios/FirmaElectronica";
+        "http://localhost:8080/digitalSignWSSS/servicios/FirmaElectronica";
 	
 	private Map<String, ?> modelo;
 	

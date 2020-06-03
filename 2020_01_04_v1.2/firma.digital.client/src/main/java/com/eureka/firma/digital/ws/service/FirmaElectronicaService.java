@@ -16,7 +16,7 @@ import javax.xml.ws.Service;
  */
 @WebServiceClient(
 	name = "FirmaElectronicaService", 
-    wsdlLocation = "http://srvcontrolgest.asa.gob.mx/digitalSignWSSS/servicios/FirmaElectronica?wsdl",
+    wsdlLocation = "http://localhost:8080/digitalSignWSSS/servicios/FirmaElectronica?wsdl",
     targetNamespace = "http://service.ws.digital.firma.eureka.com/"
 )
 public class FirmaElectronicaService extends Service {
@@ -28,11 +28,11 @@ public class FirmaElectronicaService extends Service {
     static {
         URL url = null;
         try {
-            url = new URL("http://srvcontrolgest.asa.gob.mx/digitalSignWSSS/servicios/FirmaElectronica?wsdl");
+            url = new URL("http://localhost:8080/digitalSignWSSS/servicios/FirmaElectronica?wsdl");
         } catch (MalformedURLException e) {
             java.util.logging.Logger.getLogger(FirmaElectronicaService.class.getName())
                 .log(java.util.logging.Level.INFO, 
-                     "Can not initialize the default wsdl from {0}", "http://srvcontrolgest.asa.gob.mx/digitalSignWSSS/servicios/FirmaElectronica?wsdl");
+                     "Can not initialize the default wsdl from {0}", "http://localhost:8080/digitalSignWSSS/servicios/FirmaElectronica?wsdl");
         }
         WSDL_LOCATION = url;
     }
