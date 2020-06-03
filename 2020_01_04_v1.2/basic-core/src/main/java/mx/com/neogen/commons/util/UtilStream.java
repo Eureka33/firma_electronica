@@ -72,7 +72,7 @@ public class UtilStream {
 			return null;
 
 		} finally {
-			closeInStream( entrada);
+			close( entrada);
 		}
 	}
 	
@@ -97,7 +97,7 @@ public class UtilStream {
 			return null;
 
 		} finally {
-			closeInStream( inputStream);
+			close( inputStream);
 		}
 		
 	}
@@ -133,11 +133,11 @@ public class UtilStream {
 			return null;
 
 		} finally {
-			closeInStream( entrada);
+			close( entrada);
 		}
 	}
 		
-	public static void closeInStream( Reader reader) {
+	public static void close( Reader reader) {
 		if( reader == null) {
 			return;
 		}
@@ -151,7 +151,7 @@ public class UtilStream {
 	}
 	
 	
-	public static void closeutStream( Writer writer) {
+	public static void close( Writer writer) {
 		if( writer == null) {
 			return;
 		}
@@ -171,7 +171,7 @@ public class UtilStream {
 	}
 	
 	
-	public static void closeInStream( InputStream inputStream) {
+	public static void close( InputStream inputStream) {
 		if ( inputStream == null) {
 			return;
 		}
@@ -184,7 +184,7 @@ public class UtilStream {
 	}
 
 
-	public static  void closeOutStream( OutputStream outputStream) {
+	public static  void close( OutputStream outputStream) {
 		if ( outputStream == null) {
 			return;
 		}

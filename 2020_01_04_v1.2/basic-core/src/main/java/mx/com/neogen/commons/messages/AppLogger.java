@@ -17,7 +17,7 @@ public class AppLogger {
 	}
 	
 	public void error(	final Object data) {
-		System.err.println( data);
+		System.out.println( data);
 	}
 	public void error(	final Object data, final Throwable causa) {
 		error( data);
