@@ -1,6 +1,5 @@
 package com.eureka.firma.digital.ws.core;
 
-import com.ctc.wstx.io.CharsetNames;
 import com.eureka.firma.digital.ws.bean.Firma;
 import com.eureka.firma.digital.ws.bean.InfoArchivo;
 import com.eureka.firma.digital.ws.bean.Resultado;
@@ -8,6 +7,7 @@ import com.eureka.firma.digital.ws.bean.SessionFirma;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -15,6 +15,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.UUID;
 import javax.activation.DataHandler;
+import mx.com.neogen.commons.util.UtilStream;
+import mx.eureka.firma.digital.bean.UtilDocumento;
 import mx.neogen.log.Log;
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,20 +63,21 @@ public class StreamService implements IStreamService {
 			.replace(   "{server}", serverName)
 			.replace( "{rutaBase}", webAppContext)
 			.replace(    "{folio}", folio)
-			.replace(   "{nombre}", URLEncoder.encode( nombre, CharsetNames.CS_UTF8));
+			.replace(   "{nombre}", URLEncoder.encode( nombre, "UTF-8"));
 	}
     
     @Override
-    public void firmarDocumento( String pathDeposito, String urlDescarga, SessionFirma sf, Firma firma) {
-                
+    public void firmarDocumento( String pathDeposito, String urlDescarga, SessionFirma sf, Firma firma, String organizacion) throws FileNotFoundException {          
         final String source = sf.archivo.getAbsolutePath();
-        final File pathDirDeposito = new File( pathDeposito).getParentFile();
+        final String checksum = UtilDocumento.getMd5( source);
         
+        final File pathDirDeposito = new File( pathDeposito).getParentFile();
+       
         firma.setUrlDescarga( urlDescarga);
         
         pathDirDeposito.mkdirs(); // crea directorio deposito
-               
-        appender.firmarPDF( source, pathDeposito, urlDescarga, firma);
+        
+        appender.firmarPDF( source, pathDeposito, urlDescarga, firma, organizacion, checksum);
     }
     
     @Override
@@ -141,10 +144,8 @@ public class StreamService implements IStreamService {
 				out.write( buffer, 0, length);
 			}
 			
-			out.flush();
-			
 		} finally {
-			out.close();
+			UtilStream.close( out);
 			buffer = null;
 		}
 	}

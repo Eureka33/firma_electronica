@@ -9,6 +9,7 @@ import com.eureka.firma.digital.ws.bean.SessionFirma;
 import com.eureka.firma.digital.ws.bean.SolicitudFirma;
 import com.meve.ofspapel.firma.digital.core.service.IConfiguracionService;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
@@ -22,7 +23,6 @@ public class FirmaElectronicaBsnsComponent {
 	@Autowired private IConfiguracionService configService;
 	@Autowired private IStreamService        streamService;
 	@Autowired private IFirmaDigitalService   firmaService;
-	
 	
 	/**
 	 * 	Firma el archivo recibido como argumento y devuelve el archivo firmado
@@ -49,7 +49,7 @@ public class FirmaElectronicaBsnsComponent {
             resultado = generaFirma( sf);
             
             actualizarArchivo( sf,  (Resultado<Firma>) resultado);
-                        
+            
 			return getRespuesta( resultado);
 				
 		} catch ( Exception ex) {
@@ -66,7 +66,7 @@ public class FirmaElectronicaBsnsComponent {
 	}
 	
 	
-	Resultado<?> validarCertificado( SessionFirma sf) {
+	private Resultado<?> validarCertificado( SessionFirma sf) {
 		Resultado<PublicKey> rPubKey = firmaService.validaCertificado( sf.certificadoBase64, sf.firma);
 		if ( rPubKey.isError()) {
 			return rPubKey;	
@@ -91,7 +91,7 @@ public class FirmaElectronicaBsnsComponent {
 
 	}
 	
-	Resultado<Firma> generaFirma( SessionFirma sf) {
+	private Resultado<Firma> generaFirma( SessionFirma sf) {
 		Resultado<Firma> resultado = firmaService.generaFirma( sf.privateKey, sf.firma, sf.archivo, sf.solicitud.getCadena());
 		
 		if ( resultado.isError()) {
@@ -102,7 +102,7 @@ public class FirmaElectronicaBsnsComponent {
 	}
 
 
-	Resultado<Void> validarInfo( SolicitudFirma solicitud) {
+	private Resultado<Void> validarInfo( SolicitudFirma solicitud) {
 		
 		Resultado<Void> resultado = validarInfoConfidencial( solicitud.getInfoConfidencial());
 		if ( resultado.isError()) {
@@ -124,7 +124,7 @@ public class FirmaElectronicaBsnsComponent {
 		return resultado;
 	}
 
-	Resultado<Void> validarInfoConfidencial( InfoConfidencial info) {
+	private Resultado<Void> validarInfoConfidencial( InfoConfidencial info) {
 		if ( info == null) {
 			return ResultadoEnum.INVOCATION_ERROR.getResultado(
 				"Falta elemento de información confidencial"
@@ -151,11 +151,11 @@ public class FirmaElectronicaBsnsComponent {
 		
 	}
 	
-	Resultado<Void> validarArchivoDatos( InfoArchivo archivoDatos) {
+	private Resultado<Void> validarArchivoDatos( InfoArchivo archivoDatos) {
 		return validarInfoArchivo( archivoDatos, "Archivo a firmar");
 	}
 	
-	Resultado<Void> validarInfoArchivo(	final InfoArchivo infoArchivo, String entidad) {
+	private Resultado<Void> validarInfoArchivo(	final InfoArchivo infoArchivo, String entidad) {
 		if ( infoArchivo == null || infoArchivo.getHandler() == null) {
 			return ResultadoEnum.INVOCATION_ERROR.getResultado(
 				"Elemento: " + entidad + " : Falta el contenido del archivo"
@@ -182,7 +182,7 @@ public class FirmaElectronicaBsnsComponent {
 	/**
 	 * 	Crea directorio temporal y descarga la información de archivos
 	 */
-	Resultado<Void> descargarInfo( final SessionFirma sf, final String directoriBasePath) {
+	private Resultado<Void> descargarInfo( final SessionFirma sf, final String directoriBasePath) {
 
 		InfoArchivo archivo 	= sf.solicitud.getArchivoDatos();
 		InfoArchivo certificado = sf.solicitud.getInfoConfidencial().getCertificado();
@@ -210,14 +210,14 @@ public class FirmaElectronicaBsnsComponent {
 	}
 	
 	
-	void eliminarInfo( final SessionFirma sf) {
+	private void eliminarInfo( final SessionFirma sf) {
 		if ( sf.archivo != null) {
 			streamService.eliminarDirectorio( sf.archivo.getParentFile());
 		}
 	}
 	
 	
-	RespuestaFirma getRespuesta( Resultado<?> resultado) {
+	private RespuestaFirma getRespuesta( Resultado<?> resultado) {
 		final RespuestaFirma rf = new RespuestaFirma();
 		
 		rf.setCodigo( resultado.getCodigo());
@@ -232,7 +232,7 @@ public class FirmaElectronicaBsnsComponent {
 		return rf;
 	}
 	
-	Resultado<String> obtenerPathDescarga() {
+	private Resultado<String> obtenerPathDescarga() {
 		final String pathDescarga = configService.getPropiedad( "path.directorio.descarga");
 		
 		if ( pathDescarga == null) {
@@ -246,7 +246,7 @@ public class FirmaElectronicaBsnsComponent {
 		return resultado;
 	}
     
-    void actualizarArchivo( SessionFirma sf, Resultado<Firma> resultado) throws UnsupportedEncodingException {
+    private void actualizarArchivo( SessionFirma sf, Resultado<Firma> resultado) throws UnsupportedEncodingException, FileNotFoundException {
         if( sf.archivo == null ) {
             return;
         }
@@ -267,7 +267,7 @@ public class FirmaElectronicaBsnsComponent {
         
         final String downloadURL  = streamService.generarURLDescarga( serverName, webAppContext, folioArchivo, nombreArchivo);
       
-        streamService.firmarDocumento( pathDeposito, downloadURL, sf, resultado.getResultado());
+        streamService.firmarDocumento( pathDeposito, downloadURL, sf, resultado.getResultado(), "Aeropuertos y Servicios Auxiliares");
     }
 
 }

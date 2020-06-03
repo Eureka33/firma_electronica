@@ -17,6 +17,8 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.PdfStamper;
 import java.io.FileOutputStream;
+import mx.com.neogen.commons.util.UtilStream;
+import mx.eureka.firma.digital.bean.UtilDocumento;
 
 
 public class PDFSignAppenderV2 extends BasePDFSignAppender implements IPDFSignAppender {
@@ -61,17 +63,18 @@ public class PDFSignAppenderV2 extends BasePDFSignAppender implements IPDFSignAp
     
     
     @Override
-    public void firmarPDF( String source, String target, String urlDescarga, Firma firma) {
+    public void firmarPDF( String source, String target, String urlDescarga, Firma firma, String organizacion, String checksum) {
        
-        PdfReader reader = null;
-        FileOutputStream  fos = null;
+        PdfReader reader     = null;
+        FileOutputStream fos = null;
+        PdfStamper stamper   = null;
         
         try {
             reader = new PdfReader( source);
 
             fos = new FileOutputStream( target);
         
-            final PdfStamper stamper = new PdfStamper( reader, fos);
+            stamper = new PdfStamper( reader, fos);
             
             int lastPage = reader.getNumberOfPages() + 1;
             stamper.insertPage( lastPage, PageSize.LETTER);
@@ -80,31 +83,50 @@ public class PDFSignAppenderV2 extends BasePDFSignAppender implements IPDFSignAp
             
             ColumnText ct = new ColumnText( content );
             
-            ct.setSimpleColumn( 60, 650, 550, 30);
-            ct.addElement( crearSeccionFirma(urlDescarga, firma));
+            ct.setSimpleColumn( 60, 670, 550, 30);
+            ct.addElement( crearSeccionFirma(urlDescarga, firma, organizacion, checksum));
             
             ct.go();
                        
-            stamper.close();
             
         } catch( Exception ex) {
             ex.printStackTrace();
             
         } finally {
-            try { reader.close(); } catch(Exception exInt) {}
-            try { fos.close(); } catch(Exception exInt) {}
+            try {
+                if ( stamper != null) {
+                    stamper.close();
+                }
+            } catch( Exception ex) {
+                ex.printStackTrace();
+            }
+            
+            try {
+                if ( reader != null) {
+                    reader.close();
+                }
+            } catch( Exception ex) {
+                ex.printStackTrace();
+            }
+            
+            UtilStream.close( fos);
+        
+            
         }
-
     }
     
-    PdfPTable crearSeccionFirma( String urlDescarga, Firma firma) {
+    PdfPTable crearSeccionFirma( String urlDescarga, Firma firma, String organizacion, String checksum) {
         final PdfPTable table = new PdfPTable( COLUMNAS_TABLA);
         table.setWidthPercentage( 100);
         
-        agregarDatosFirma( table, firma);
+        agregarDatosFirma( table, firma, organizacion);
         
-        agregarTituloContenido( table, "Cadena Original", obtenerCadenaOriginal( firma, urlDescarga), NORMAL_FONT);
-        agregarTituloContenido( table, "Sello Digital", firma.getFirmaElectronica(), NORMAL_FONT);
+        agregarTituloContenido( table, "Cadena Original", 
+            obtenerCadenaOriginal( firma, urlDescarga, organizacion, checksum)
+        );
+        agregarTituloContenido( table, "Sello Digital",
+            new Phrase( firma.getFirmaElectronica(), NORMAL_FONT)
+        );
         
         agregarTitulo( table, "Trazabilidad");
         agregarContenidoFirma( table, urlDescarga);
@@ -119,12 +141,14 @@ public class PDFSignAppenderV2 extends BasePDFSignAppender implements IPDFSignAp
         return table;
     }
     
-    private void agregarDatosFirma( PdfPTable table, Firma firma) {
+    private void agregarDatosFirma( PdfPTable table, Firma firma, String organizacion) {
         PdfPCell celda = new PdfPCell();
+        
         celda.setColspan( COLUMNAS_TABLA - 1);
-        celda.setRowspan( 4);
+        celda.setRowspan( 6);
         celda.setBorderWidth( 0);
         table.addCell( celda);
+        
         
         celda = new PdfPCell( new Phrase( firma.getTitular(), MEDIUM_FONT));
         celda.setColspan( COLUMNAS_TABLA - 1);
@@ -149,20 +173,55 @@ public class PDFSignAppenderV2 extends BasePDFSignAppender implements IPDFSignAp
         celda.setBorderWidthTop( 1);
         table.addCell( celda);
         
+        
+        celda = new PdfPCell( new Phrase( organizacion, MEDIUM_FONT));
+        celda.setColspan( COLUMNAS_TABLA - 1);
+        celda.setBorderWidth( 0);
+        table.addCell( celda);
+        
+        celda = new PdfPCell( new Phrase( "Organización", SUBTITLE_FONT));
+        celda.setColspan( COLUMNAS_TABLA - 1);
+        celda.setBorderWidth( 0);
+        celda.setBorderWidthTop( 1);
+        table.addCell( celda);
+        
+        
         celda = new PdfPCell( new Phrase( " ", SMALL_FONT));
         celda.setColspan( COLUMNAS_TABLA);
         celda.setBorderWidth( 0);
         table.addCell( celda);
+    }
+    
+    private Phrase obtenerCadenaOriginal( Firma firma, String urlDescarga, String organizacion, String checksum) {
+        final Phrase cadena = new Phrase();
+        cadena.setFont( NORMAL_FONT);
+        
+        cadena.add( "||");
+        cadena.add( firma.getFecha());
+        cadena.add( "||");
+        cadena.add( firma.getRfc());
+        cadena.add( "||");
+        cadena.add( firma.getTitular());
+        cadena.add( "||");
+        
+        final Chunk link = new Chunk( urlDescarga, NORMAL_FONT);
+        link.setAnchor( urlDescarga);
+        cadena.add( link);
 
+        cadena.add( "||");
+        cadena.add( organizacion);
+                
+        cadena.add( "||");
+        cadena.add( checksum);
+        
+        cadena.add( "||");
+        
+        return cadena;
     }
     
-    private String obtenerCadenaOriginal( Firma firma, String urlDescarga) {
-        return "||" + firma.getFecha() + "||" + firma.getRfc() + "||" + firma.getTitular() + "||" + urlDescarga + "||";
-    }
-    
-    private void agregarTituloContenido( PdfPTable table, String titulo, String contenido, Font fontContenido) {
+    private void agregarTituloContenido( PdfPTable table, String titulo, Phrase contenido) {
         agregarTitulo( table, titulo);
-        agregarCeldaFrase( table, new Phrase( contenido, fontContenido));
+        agregarCeldaFrase( table, contenido);
     }
     
     private void agregarTitulo( PdfPTable table, String texto) {

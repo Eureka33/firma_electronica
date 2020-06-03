@@ -1,16 +1,20 @@
-<%@page import="mx.eureka.firma.digital.bean.BeanInfoDocumento"%>
+<%@ page contentType="text/html; charset=UTF-8" %>
 
-<%@ page language="java" contentType="text/html"%>
+<!DOCTYPE html>
+
+<%@page import="mx.eureka.firma.digital.bean.BeanInfoDocumento"%>
 
 <%
     String[] errorMessages = (String[]) session.getAttribute( "errorMessages");
     session.removeAttribute( "errorMessages");
 %>
 
-<!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+    
     <title>Firma y Resguardo de Documentos Digitales</title>
     
     <link rel="stylesheet" href="./libs/fontawesome/css/all.min.css"     />
@@ -37,11 +41,17 @@
     
     <script type="text/javascript" src="./libs/jquery/jquery.min.js"></script>
     <script type="text/javascript" src="./libs/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="./libs/jquery/is.min.js"></script>
+    
 	<script type="text/javascript">	
         jQuery.noConflict();
         
         jQuery( document).ready( function( $) {
-            inicializa();
+            if( is.ie()) {
+                window.location= './pages/incompatible_browser.html';
+            } else {
+                inicializa();
+            } 
         });
         
 		function inicializa() {
@@ -51,16 +61,26 @@
         function validarForm( event) {
             event.stopPropagation;
             
+            jQuery( event.target).attr( 'disabled', true);           
+            
             let errores = 0;
             
             errores += validarArchivo(    'documento', '.pdf',     'Documento', 20);
             errores += validarArchivo(  'certificado', '.cer',   'Certificado',  1);
             errores += validarArchivo( 'llavePrivada', '.key', 'Llave Privada',  1);
             
-            errores += validarTexto( 'password',         'Contraseña',  20);
-            errores += validarCorreo(  'correo', 'Correo Electrónico', 150);
+            errores += validarTexto( 'password',         'ContraseÃ±a',  20);
+            errores += validarCorreo(  'correo', 'Correo ElectrÃ³nico', 150);
             
-            return errores === 0;
+            let submit = (errores === 0);
+            
+            if( !submit) {
+                jQuery( event.target).attr( 'disabled', false);           
+            } else {
+                setTimeout( function() { jQuery( '#processing').modal( 'show');}, 0);
+            }
+            
+            return submit;
         }
                 
         function validarArchivo( id, extension, nombre, maxSizeMB) {
@@ -75,12 +95,12 @@
             }
             
             if( !files[0].name.toLowerCase().endsWith( extension)) {
-                update( errorId, "La extensión del archivo deber ser (" + extension + ")");
+                update( errorId, "La extensiÃ³n del archivo deber ser (" + extension + ")");
                 return 1;
             }
             
             if ( files[0].size > (maxSizeMB*1024*1024)) {
-                update( errorId, "El tamaño del archivo no debe exceder " + maxSizeMB + " MB");
+                update( errorId, "El tamaÃ±o del archivo no debe exceder " + maxSizeMB + " MB");
                 return 1;
             }            
             
@@ -150,7 +170,7 @@
     <table class="container">
 		<tr>
             <td style="text-align: center;">
- 				<img src="./images/logo_organizacion.jpg" style="height: 150px;" />
+ 				<img src="./images/logo_organizacion.png" style="height: 150px;" alt="organization logo"/>
 			</td>
 		</tr>
         
@@ -158,7 +178,7 @@
 	
 		<tr>
 			<td>
-                <form action="firmaDocumento" method="POST" enctype="multipart/form-data">
+                <form action="firmaDocumento" method="POST" enctype="multipart/form-data" accept-charset="UTF-8">
                     <table style="width: 100%;">
                         <tr>
                             <td>
@@ -210,12 +230,12 @@
         				
                         <tr>
     						<td>
-                                <span class="prompt">Contraseña (*):</span>
+                                <span class="prompt">ContraseÃ±a (*):</span>
                             </td>
                     		<td>
                                 <input type="password" id="password" name="password" class="form-control col-sm-4"
-                                    placeholder="contraseña FIEL"
-                                    title="Contraseña FIEL" maxlength="20"
+                                    placeholder="contraseÃ±a FIEL"
+                                    title="ContraseÃ±a FIEL" maxlength="20"
                                 />
                             </td>
     					</tr>
@@ -257,7 +277,18 @@
                 </form>
 			</td>
 		</tr>
-		
+		<tr><td>&nbsp;</td></tr>
+	
+		<tr>
+            <td style="padding:10px 50px;">
+                <span style="font-family: Verdadana, sans-serif; font-size: 0.9em; text-align: justify;">
+                    <b>Importante</b>. El documento firmado puede ser validado haciendo uso del c&oacute;digo QR o 
+                    por medio de la liga que se encuentra dentro del documento firmado en la secci&oacute;n 
+                    &quot;Trazabilidad&quot;.
+                </span>
+            </td>
+        </tr>
+        
 		<tr><td>&nbsp;</td></tr>
 	
 		<tr id="mensajeResultado">
@@ -276,5 +307,18 @@
 			</td>
 		</tr>
 	</table>
+                        
+    <div class="modal fade" id="processing" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Firma Digital</h5>
+                </div>
+                <div class="modal-body">
+                    Su documento esta siendo procesado. Por favor espere.
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

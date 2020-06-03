@@ -51,4 +51,19 @@
 	
 	<mybatis:scan base-package="com.meve.ofspapel.firma.digital.core.mappers" />
 	
+    <bean id="mailSender"	class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<property name="host" 		value="${private.string.mail.server.host}"		/>
+		<property name="port" 		value="${private.int.mail.server.port}"			/>
+		<property name="protocol" 	value="${private.string.mail.server.protocol}"	/>
+		<property name="username" 	value="${private.string.mail.server.username}"	/>
+		<property name="password" 	value="${private.string.mail.server.password}"	/>
+		<property name="javaMailProperties">
+			<props>
+				<prop key="mail.smtp.auth"				>${private.bool.mail.smtp.auth}</prop>
+				<prop key="mail.smtp.starttls.enable"	>${private.bool.mail.smtp.starttls.enable}</prop>
+				<prop key="mail.smtp.quitwait"			>${private.bool.mail.smtp.quitwait}</prop>
+			</props>
+		</property>
+	</bean>
+    
 </beans>

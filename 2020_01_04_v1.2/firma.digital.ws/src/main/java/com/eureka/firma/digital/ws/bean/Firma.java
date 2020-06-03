@@ -18,47 +18,52 @@ public class Firma implements Serializable {
 	public Firma() {
 		super();
 	}
-
-
+    
 	
 	public String getTitular() {
 		return titular;
 	}
-	public void setTitular(String titular) {
+	
+    public void setTitular(String titular) {
 		this.titular = titular;
 	}
 
 	public String getRfc() {
 		return rfc;
 	}
-	public void setRfc(String rfc) {
+	
+    public void setRfc(String rfc) {
 		this.rfc = rfc;
 	}
 	
 	public String getCurp() {
 		return curp;
 	}
-	public void setCurp( String curp) {
+	
+    public void setCurp( String curp) {
 		this.curp = curp;
 	}
 
 	public String getFirmaElectronica() {
 		return firmaElectronica;
 	}
-	public void setFirmaElectronica(String firmaElectronica) {
+	
+    public void setFirmaElectronica(String firmaElectronica) {
 		this.firmaElectronica = firmaElectronica;
 	}
 
 	public String getFecha() {
 		return fecha;
 	}
-	public void setFecha(String fecha) {
+	
+    public void setFecha(String fecha) {
 		this.fecha = fecha;
 	}
 
     public String getUrlDescarga() {
         return urlDescarga;
     }
+    
     public void setUrlDescarga(String urlDescarga) {
         this.urlDescarga = urlDescarga;
     }

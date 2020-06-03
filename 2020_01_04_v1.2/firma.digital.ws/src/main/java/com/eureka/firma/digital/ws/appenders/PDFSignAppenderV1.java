@@ -28,7 +28,7 @@ public class PDFSignAppenderV1 extends BasePDFSignAppender implements IPDFSignAp
     
     
     @Override
-    public void firmarPDF( String source, String target, String urlDescarga, Firma firma) {
+    public void firmarPDF( String source, String target, String urlDescarga, Firma firma, String organizacion, String checksum) {
        
         PdfReader reader = null;
         FileOutputStream  fos = null;

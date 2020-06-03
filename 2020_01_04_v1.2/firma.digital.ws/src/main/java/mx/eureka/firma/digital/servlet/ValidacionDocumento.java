@@ -1,6 +1,7 @@
 package mx.eureka.firma.digital.servlet;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -53,7 +54,11 @@ public class ValidacionDocumento extends HttpServlet {
         try {	
             final String cheksum = checksumStoredFile( infoDocumento);
             final String resultado = cheksum.equals( checksumUploadedFile( request))? "ok": "error";
-            final String params = "&folio=" + infoDocumento.getFolio() + "&nombre=" + infoDocumento.getNombre() + "&resultado=" + resultado;
+            final String params = 
+                "&folio="     + infoDocumento.getFolio()  + 
+                "&nombre="    + URLEncoder.encode( infoDocumento.getNombre(), "UTF-8") +
+                "&resultado=" + resultado
+            ;
 			
             response.sendRedirect( "validacionDocumento?ts=" + Math.random() + params);
 		

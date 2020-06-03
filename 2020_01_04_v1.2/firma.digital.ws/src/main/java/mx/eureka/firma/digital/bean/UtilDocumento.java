@@ -9,24 +9,33 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
+import java.net.URLDecoder;
 import java.security.MessageDigest;
 import java.util.List;
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.servlet.http.HttpServletRequest;
 import mx.com.neogen.commons.exception.OperacionNoRealizadaException;
+import mx.com.neogen.commons.util.UtilStream;
 import org.apache.commons.fileupload.DiskFileUpload;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadBase;
 
 public class UtilDocumento {
 
-    public static BeanInfoDocumento requestToInfoDocumento( HttpServletRequest request) {
+    public static BeanInfoDocumento requestToInfoDocumento( HttpServletRequest request) throws UnsupportedEncodingException {
 		final BeanInfoDocumento info = new BeanInfoDocumento();
 		
 		info.setFolio(  request.getParameter(  "folio"));
-		info.setNombre( request.getParameter( "nombre"));
+     
+        final String queryString = request.getQueryString();
+        
+        final int idx = queryString.indexOf( "&nombre=");
+        int endIdx = queryString.indexOf( '&', idx + 8);
+        endIdx = (endIdx < 0)? queryString.length() : endIdx;
+		info.setNombre( URLDecoder.decode( request.getQueryString().substring( idx + 8, endIdx), "UTF-8"));
 		
 		return info;
 	}
@@ -138,11 +147,14 @@ public class UtilDocumento {
             throw new OperacionNoRealizadaException( "error.infraestructura", ex); 
         
         } finally {
-            if( bin != null) { try { bin.close(); } catch( Exception ex) {} }
-            else { try { in.close(); } catch( Exception ex) {} }
+            UtilStream.close( bin);
+            UtilStream.close(  in);
         }
-    
     }
+    
+    public static String getMd5( String pathFile) throws FileNotFoundException {
+        return getMd5( new FileInputStream( new File ( pathFile)));
+    } 
     
     public static InfoArchivo obtenerInfoArchivo( BeanInfoDocumento infoDocumento) {
         final String rutaDeposito = obtenerRutaDeposito( infoDocumento);

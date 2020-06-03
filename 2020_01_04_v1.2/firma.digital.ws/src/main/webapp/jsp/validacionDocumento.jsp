@@ -1,25 +1,42 @@
-<%@page import="mx.eureka.firma.digital.bean.BeanInfoDocumento"%>
+<%@ page contentType="text/html; charset=UTF-8" %>
 
-<%@ page language="java" contentType="text/html"%>
+<!DOCTYPE html>
+
+<%@page import="mx.eureka.firma.digital.bean.BeanInfoDocumento"%>
+<%@page import="java.net.URLEncoder"%>
 
 <%
 	BeanInfoDocumento info = (BeanInfoDocumento) request.getAttribute( "info");
     String resultado = (String) request.getAttribute( "resultado");
 %>
 
-<!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>Descarga y Validación de Documentos Firmados</title>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+    
+    <title>Descarga y ValidaciÃ³n de Documentos Firmados</title>
     
     <link rel="stylesheet" href="./libs/fontawesome/css/all.min.css"     />
     <link rel="stylesheet" href="./libs/bootstrap/css/bootstrap.min.css" />
     
     <script type="text/javascript" src="./libs/jquery/jquery.min.js"></script>
     <script type="text/javascript" src="./libs/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="./libs/jquery/is.min.js"></script>
+    
 	<script type="text/javascript">
 		
+        jQuery.noConflict();
+        
+        jQuery( document).ready( function( $) {
+            if( is.ie()) {
+                window.location= './pages/incompatible_browser.html';
+            } else {
+                inicializa();
+            } 
+        });
+        
 		function inicializa() {
 			document.getElementById( 'formValidacion').style.display='none';
 			document.getElementById( 'mensajeResultado').style.display= <% if ( resultado == null) {%> 'none'; <%} else { %> ''; <% }%>
@@ -27,7 +44,7 @@
 		
 		function descargar() {
 			var link = document.getElementById( 'download');
-			link.href= './descargaDocumento?folio=<%= info.getFolio() %>&nombre=<%= info.getNombre() %>';
+			link.href= './descargaDocumento?folio=<%= info.getFolio() %>&nombre=<%= URLEncoder.encode( info.getNombre(), "UTF-8") %>';
 			link.click();
 		}
         
@@ -52,12 +69,12 @@
 	</script>
     
 </head>
-<body onload="javascript: inicializa();">
+<body>
 	
     <table style="border: none; margin-left: auto; margin-right:auto;">
 		<tr>
             <td>
- 				<img src="./images/logo_organizacion.jpg" style="height: 150px;" />
+ 				<img src="./images/logo_organizacion.jpg" style="height: 150px;" alt="organization logo"/>
 			</td>
 		</tr>
         

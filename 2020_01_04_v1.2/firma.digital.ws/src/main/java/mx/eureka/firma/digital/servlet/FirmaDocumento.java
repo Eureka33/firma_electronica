@@ -6,7 +6,9 @@ import com.eureka.firma.digital.ws.bean.InfoConfidencial;
 import com.eureka.firma.digital.ws.bean.RespuestaFirma;
 import com.eureka.firma.digital.ws.bean.SolicitudFirma;
 import com.eureka.firma.digital.ws.core.FirmaElectronicaBsnsComponent;
+import com.meve.ofspapel.firma.digital.core.service.MailSenderService;
 import java.io.IOException;
+import java.io.InputStream;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -49,6 +51,8 @@ public class FirmaDocumento extends HttpServlet {
         final Firma firma = respuesta.getFirma();
         
         if( respuesta.getCodigo().equals( 0)) {
+            sendNotificacion( bean, firma);
+            
             response.sendRedirect( firma.getUrlDescarga());
         } else {
             request.getSession().setAttribute( "errorMessages", respuesta.getMensaje().split( ":"));
@@ -56,6 +60,26 @@ public class FirmaDocumento extends HttpServlet {
         }
 	}
     
+    
+    private void sendNotificacion( final BeanInfoFirma bean, final Firma firma) {
+        if ( bean.getCorreo() == null || bean.getCorreo().isEmpty()) {
+            return;
+        }
+        
+        final Thread thread = new Thread( new Runnable() {
+            @Override
+            public void run() {
+                final InputStream stream = getServletContext().getResourceAsStream("/images/logo_organizacion.png");
+                final MailSenderService service = AppContext.getBean( MailSenderService.class);
+                
+                service.sendNotificacion( bean.getCorreo(), firma.getUrlDescarga(), firma.getTitular(), firma.getRfc(),
+                    firma.getFecha(), "Aeropuertos y Servicios Auxiliares", bean.getNombreDocumento()
+                );
+            }
+        });
+        
+        thread.start();
+    }
     
     private static InfoConfidencial getInfoConfidencial( final BeanInfoFirma bean) {
 		final InfoConfidencial info = new InfoConfidencial();
