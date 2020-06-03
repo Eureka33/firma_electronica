@@ -8,7 +8,7 @@ import mx.com.neogen.commons.bean.Resultado;
 
 public interface IVigenciaCertificadoService {
 
-	Resultado<VigenciaCertificado> encuentraCertificado( final String serial, String rfc);
+	Resultado<VigenciaCertificado> encuentraCertificado( final String serial, final String rfc);
 		
 	Resultado<VigenciaCertificado> encuentraCertificado( final String serial);
 	
