@@ -63,9 +63,9 @@
                         
             let errores = 0;
             
-            errores += validarArchivo(    'documento', '.pdf',     'Documento', 20);
-            errores += validarArchivo(  'certificado', '.cer',   'Certificado',  1);
-            errores += validarArchivo( 'llavePrivada', '.key', 'Llave Privada',  1);
+            errores += validarArchivos(    'documento', '.pdf',     'Documento', 100, 25);
+            errores += validarArchivos(  'certificado', '.cer',   'Certificado',   1, 1);
+            errores += validarArchivos( 'llavePrivada', '.key', 'Llave Privada',   1, 1);
             
             errores += validarTexto( 'password',         'Contraseña',  20);
             errores += validarCorreo(  'correo', 'Correo Electrónico', 150);
@@ -79,24 +79,30 @@
             return submit;
         }
                 
-        function validarArchivo( id, extension, nombre, maxSizeMB) {
+        function validarArchivos( id, extension, nombre, maxItems, maxSizeMB) {
             let errorId = 'error_' + id;
             
             hide( errorId);
             
             let files = jQuery("#" + id + ":eq(0)")[0].files;
+            
             if ( files.length === 0) {
                 update( errorId, "El archivo de " + nombre + " es requerido");
                 return 1;
             }
             
-            if( !files[0].name.toLowerCase().endsWith( extension)) {
-                update( errorId, "La extensión del archivo deber ser (" + extension + ")");
+            if( noCumplenConExtension( files, extension) ) {
+                update( errorId, "La extensión del archivo(s) deber ser (" + extension + ")");
                 return 1;
             }
             
-            if ( files[0].size > (maxSizeMB*1024*1024)) {
-                update( errorId, "El tamaño del archivo no debe exceder " + maxSizeMB + " MB");
+            if ( excedenMaxItems( files, maxItems)) {
+                update( errorId, "El número del archivos no debe ser mayor a " + maxItems);
+                return 1;
+            }   
+            
+            if ( excedenMaxSizeMB( files, maxSizeMB)) {
+                update( errorId, "El tamaño total del archivo(s) no debe exceder " + maxSizeMB + " MB");
                 return 1;
             }            
             
@@ -148,6 +154,30 @@
         
         function isValidEmail( value) {
             return /^\w+([\.\+\-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,4})+$/.test( value);
+        }
+        
+        function noCumplenConExtension( files, extension) {
+            let error = false;
+            for ( file of files) {
+                if ( !file.name.toLowerCase().endsWith( extension)) {
+                    error = true;
+                }
+            }
+            
+            return error;
+        }
+        
+        function excedenMaxItems( files, maxItems) {
+            return files.length > maxItems;
+        }
+        
+        function excedenMaxSizeMB( files, maxSizeMB) {
+            let total = 0;
+            for( file of files) {
+                total = total + file.size;
+            }
+
+            return total > (maxSizeMB*1024*1024);
         }
         
         function hide( id) {
