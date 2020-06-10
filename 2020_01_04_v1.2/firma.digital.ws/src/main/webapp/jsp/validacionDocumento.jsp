@@ -132,7 +132,7 @@
                             <button type="button" class="btn btn-primary" onclick="javascript: descargar();"><i class="fas fa-download"></i>&nbsp;Descargar</button>
 							<a id="download" href=""></a>
 						</td>
-						<td width="20%" style="text-align: right;">
+                        <td width="20%" style="text-align: right;" <%= info.getNombre().endsWith( ".zip")? "hidden": ""%>>
 							<button type="button" class="btn btn-secondary" onclick="javascript: mostrarFormulario();"><i class="fas fa-clipboard-check"></i>&nbsp;Validar</button>
 						</td>
 					</tr>

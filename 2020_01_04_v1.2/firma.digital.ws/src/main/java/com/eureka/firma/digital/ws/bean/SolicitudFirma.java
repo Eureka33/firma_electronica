@@ -8,7 +8,8 @@ public class SolicitudFirma implements Serializable {
 
 	private InfoConfidencial infoConfidencial;
 	private InfoArchivo archivoDatos;
-	private String cadena;
+    private String organizacion;
+    private String cadena;
 	
 	public SolicitudFirma() {
 		super();
@@ -29,6 +30,14 @@ public class SolicitudFirma implements Serializable {
 		this.archivoDatos = archivoDatos;
 	}
 
+    public String getOrganizacion() {
+        return organizacion;
+    }
+    
+    public void setOrganizacion( String value) {
+        this.organizacion = value;
+    }
+    
 	public String getCadena() {
 		return cadena;
 	}

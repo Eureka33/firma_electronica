@@ -58,6 +58,21 @@ public class StreamService implements IStreamService {
         return pathRepositorio + File.separator + folio + File.separator + nombre;
     }
     
+    @Override
+    public String obtenerPathDeposito( String pathRepositorio, String urlDescarga) {
+        int iniIdx = urlDescarga.indexOf( "?folio=") + 7;
+        int endIdx = urlDescarga.indexOf( "&nombre=", iniIdx);
+        
+        final String folio = urlDescarga.substring( iniIdx, endIdx);
+        
+        iniIdx = endIdx + 8;
+       
+        final String nombre = urlDescarga.substring( iniIdx); 
+        
+        return obtenerPathDeposito( pathRepositorio, folio, nombre);
+    }
+    
+    @Override
     public String generarURLDescarga( String serverName, String webAppContext, String folio, String nombre) throws UnsupportedEncodingException {
 		return "{server}{rutaBase}/validacionDocumento?folio={folio}&nombre={nombre}"
 			.replace(   "{server}", serverName)

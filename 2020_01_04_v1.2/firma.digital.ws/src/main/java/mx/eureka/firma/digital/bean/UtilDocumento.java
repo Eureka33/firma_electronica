@@ -61,8 +61,12 @@ public class UtilDocumento {
                 if ( !item.isFormField()) {
                     
                     if ( "documento".equals( item.getFieldName())) {
-                        bean.setNombreDocumento( item.getName());
-                        bean.setContenidoDocumento( item.getInputStream());
+                        final InfoArchivo archivo = new InfoArchivo();
+                        
+                        archivo.setNombre( item.getName());
+                        archivo.setContenido( item.getInputStream());
+                        
+                        bean.addArchivo( archivo);
                         
                     } else if( "certificado".equals( item.getFieldName())) {
                         bean.setCertificado( item.getInputStream());

@@ -1,10 +1,6 @@
 package com.eureka.firma.digital.ws.bean;
 
-import java.io.Serializable;
-
-public class RespuestaFirma implements Serializable {
-
-	private static final long serialVersionUID = 3080254654854135864L;
+public class RespuestaFirma {
 
 	private Integer codigo;
 	private String mensaje;

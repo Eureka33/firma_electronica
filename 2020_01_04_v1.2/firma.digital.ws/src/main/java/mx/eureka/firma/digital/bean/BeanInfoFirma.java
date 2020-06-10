@@ -1,13 +1,13 @@
 package mx.eureka.firma.digital.bean;
 
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class BeanInfoFirma {
     
-    private String nombreDocumento;
-    
-    private InputStream contenidoDocumento;
+    private List<InfoArchivo> archivos;
     private InputStream certificado;
     private InputStream llavePrivada;
     
@@ -20,22 +20,18 @@ public class BeanInfoFirma {
     }
 
     
-    public String getNombreDocumento() {
-        return nombreDocumento;
-    }
-
-    public void setNombreDocumento( String value) {
-        this.nombreDocumento = value;
+    public List<InfoArchivo> getArchivos() {
+        return archivos;
     }
     
-    public InputStream getContenidoDocumento() {
-        return contenidoDocumento;
+    public void addArchivo( InfoArchivo archivo) {
+        if( archivos == null) {
+            archivos = new ArrayList<>();
+        }
+        
+        archivos.add( archivo);
     }
-
-    public void setContenidoDocumento(InputStream value) {
-        this.contenidoDocumento = value;
-    }
-
+    
     public InputStream getCertificado() {
         return certificado;
     }

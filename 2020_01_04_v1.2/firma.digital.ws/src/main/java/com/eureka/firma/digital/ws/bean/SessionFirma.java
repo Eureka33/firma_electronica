@@ -11,6 +11,8 @@ public class SessionFirma implements Serializable {
 	private static final long serialVersionUID = -6792187764695478951L;
 
 	public SolicitudFirma solicitud;
+    public String folio;
+    
 	public String certificadoBase64;
 	public String archivoLlaveBase64;
 	

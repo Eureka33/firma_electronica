@@ -19,6 +19,8 @@ public interface IStreamService {
     
     String obtenerPathDeposito( String pathRepositorio, String folio, String nombre);
     
+    String obtenerPathDeposito( String pathRepositorio, String urlDescarga);
+        
     String generarURLDescarga( String serverName, String webAppContext, String folio, String nombre) throws UnsupportedEncodingException;
     
     void firmarDocumento( String pathDeposito, String baseDownloadURL, SessionFirma sf, Firma firma, String organizacion) throws FileNotFoundException;

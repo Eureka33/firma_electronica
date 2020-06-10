@@ -60,9 +60,7 @@
         
         function validarForm( event) {
             event.stopPropagation;
-            
-            jQuery( event.target).attr( 'disabled', true);           
-            
+                        
             let errores = 0;
             
             errores += validarArchivo(    'documento', '.pdf',     'Documento', 20);
@@ -74,9 +72,7 @@
             
             let submit = (errores === 0);
             
-            if( !submit) {
-                jQuery( event.target).attr( 'disabled', false);           
-            } else {
+            if( submit) {
                 setTimeout( function() { jQuery( '#processing').modal( 'show');}, 0);
             }
             
@@ -185,7 +181,7 @@
                                 <span class="prompt">Documento (*):</span>
                             </td>
         					<td>
-                                <input type="file" id="documento" name="documento" class="form-control"
+                                <input type="file" id="documento" name="documento" class="form-control" multiple
                                     accept="application/pdf" title="Documento que desea firmar"
                                 />
                             </td>
