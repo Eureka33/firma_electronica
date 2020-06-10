@@ -1,11 +1,9 @@
 package com.meve.ofspapel.firma.digital.core.service;
 
 import java.io.File;
-import java.io.InputStream;
 import javax.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -20,7 +18,8 @@ public class MailSenderService {
     @Autowired private IConfiguracionService configService;
     
     
-    public void sendNotificacion( String email, String url, String titular, String rfc, String fechaHora, String organizacion, String nombreArchivo) {
+    public void sendNotificacion(   String email, String url, String titular, String rfc, String fechaHora, 
+                                    String organizacion, String nombreArchivo) {
         try {
             MimeMessage mime = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mime, true);
@@ -28,17 +27,33 @@ public class MailSenderService {
             helper.setFrom( emailFrom);
             helper.setTo( email);
             helper.setSubject( "Notificación de Firma de Documento");
-
-            final String htmlText = 
-                "<div style='font-family: Arial, sans-serif;'>" +
-                    "<img src=\"cid:image\"><br/><br/>" +
-                    "El documento anexo fue firmado por " + titular + " con RFC " + rfc + " en la " +
-                    "siguiente fecha y hora " + fechaHora + ".<br/><br/>" +
-                    "Se puede validar la autenticidad del mismo en la siguiente dirección.<br/>" +
-                    "&nbsp;&nbsp;&nbsp;&nbsp;<a href=\""+ url + "\">"+ url + "</a><br/><br/>" +
-                    "&nbsp;&nbsp;Atentamente<br/><br/>&nbsp;&nbsp;<b>" + organizacion + "</b>" +
-                "</div>"
-            ;
+            
+            String htmlText;
+            
+            if( nombreArchivo.endsWith( ".zip")) {
+                htmlText = 
+                    "<div style='font-family: Arial, sans-serif;'>" +
+                        "<img src=\"cid:image\"><br/><br/>" +
+                        "Los documentos seleccionados fueron firmados satisfactoriamente por " + titular + 
+                        " con RFC " + rfc + " en la siguiente fecha y hora " + fechaHora + ".<br/><br/>" +
+                        "Estos documentos se encuentran dentro de un archivo zip que se puede descargar de la " +
+                        "siguiente dirección.<br/>" +
+                        "&nbsp;&nbsp;&nbsp;&nbsp;<a href=\""+ url + "\">"+ url + "</a><br/><br/>" +
+                        "&nbsp;&nbsp;Atentamente<br/><br/>&nbsp;&nbsp;<b>" + organizacion + "</b>" +
+                    "</div>"
+                ;    
+            } else {
+                htmlText= 
+                    "<div style='font-family: Arial, sans-serif;'>" +
+                        "<img src=\"cid:image\"><br/><br/>" +
+                        "El documento anexo fue firmado por " + titular + " con RFC " + rfc + " en la " +
+                        "siguiente fecha y hora " + fechaHora + ".<br/><br/>" +
+                        "Se puede validar la autenticidad del mismo en la siguiente dirección.<br/>" +
+                        "&nbsp;&nbsp;&nbsp;&nbsp;<a href=\""+ url + "\">"+ url + "</a><br/><br/>" +
+                        "&nbsp;&nbsp;Atentamente<br/><br/>&nbsp;&nbsp;<b>" + organizacion + "</b>" +
+                    "</div>"
+                ;
+            }
 
             helper.setText(htmlText, true);
 
