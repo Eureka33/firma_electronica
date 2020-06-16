@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.meve.ofspapel.firma.digital.core.mappers.RegistroDAO">
+    
+    <resultMap id="archivo" type="com.meve.ofspapel.firma.digital.core.entidades.ArchivoDepositado">
+        <constructor>
+            <arg column="id" javaType="integer"/>
+        </constructor>
+        
+        <result property="idUsuario"    column="id_usuario"/>
+        <result property="fechaHora"    column="fecha_hora"/>
+        <result property="folio"        column="folio" />
+        <result property="nombre"       column="nombre"/>
+    </resultMap>
+    
+    <!--    List<ArchivoDepositado> listItems( usuario: Usuario)            -->
+    
+    <select id="listItems" resultMap="archivo">
+        select * from eurk_wsss_documento_firmado where id_usuario = #{usuario.id}
+        order by fecha_hora desc, folio, nombre
+    </select>
+    
+          
+    <!--    int insertDocumento( item: ArchivoDepositado)                   -->
+    
+    <insert id="insertDocumento" keyColumn="id" keyProperty="item.id" useGeneratedKeys="true">
+        insert into eurk_wsss_documento_firmado( id_usuario, fecha_hora, folio, nombre) values (
+            #{item.idUsuario}, #{item.fechaHora}, #{item.folio}, #{item.nombre}
+        )
+	</insert>
+    
+    
+    <!--    int insertDocumentoBatch( item: ArchivoDepositado)              -->
+    
+    <insert id="insertDocumentoBatch" keyColumn="id" keyProperty="item.id" useGeneratedKeys="true">
+        insert into eurk_wsss_registro_batch( id_usuario, fecha_hora, folio, nombre) values (
+            #{item.idUsuario}, #{item.fechaHora}, #{item.folio}, #{item.nombre}
+        )
+	</insert>
+    
+    
+    <!--    int asignaDocumento( idDocumento: Integer, idRegistroBatch)     -->
+    
+    <insert id="asignaDocumento">
+        insert into eurk_wsss_documento_batch( id_documento_firmado, id_registro_batch) values (
+            #{idDocumento}, #{idRegistroBatch}
+        )
+    </insert>
+    
+</mapper>

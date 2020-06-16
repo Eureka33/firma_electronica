@@ -48,6 +48,7 @@ import org.springframework.stereotype.Service;
 import com.eureka.firma.digital.ws.bean.Firma;
 import com.eureka.firma.digital.ws.bean.Resultado;
 import com.meve.ofspapel.firma.digital.core.service.IConfiguracionService;
+import mx.com.neogen.commons.util.UtilStream;
 
 @Service("firmaDigitalService")
 public class FirmaDigitalService implements IFirmaDigitalService {
@@ -90,6 +91,7 @@ public class FirmaDigitalService implements IFirmaDigitalService {
 
 	}
 	
+    @Override
 	public Resultado<PublicKey> validaCertificado(
 											final String certificadoBase64, 
 											final Firma firma) {
@@ -357,7 +359,7 @@ public class FirmaDigitalService implements IFirmaDigitalService {
 
 					//Instanciamos el generador de requestOCSP
 					final OCSPReqBuilder ocspPeticionBuilder = new OCSPReqBuilder();
-					ocspPeticionBuilder.addRequest(id);
+					ocspPeticionBuilder.addRequest( id);
 
 					//create details for nonce extension
 					//final BigInteger nonce = BigInteger.valueOf(System.currentTimeMillis());
@@ -372,26 +374,51 @@ public class FirmaDigitalService implements IFirmaDigitalService {
 
 					//Se establece la conexión HTTP con el ocsp del DNIe
 					final URL url = new URL( urlServicioOCSP);
+                    
+                    System.out.println( "connecting to: [" + url + "]");
+                    
 					final HttpURLConnection con = (HttpURLConnection)url.openConnection();
 
+                    System.out.println( "succesful connection");
+                    
 					//Se configuran las propiedades de la petición HTTP
 					con.setRequestProperty("Content-Type", "application/ocsp-request");
 					con.setRequestProperty("Accept", "application/ocsp-response");
 					con.setDoOutput(true);
-					final OutputStream out = con.getOutputStream();
-					final DataOutputStream dataOut = new DataOutputStream(new BufferedOutputStream(out));
+                    
+                    DataOutputStream dataOut = null;
+                    
+                    try {
+                        final OutputStream out = con.getOutputStream();
+                        dataOut = new DataOutputStream( new BufferedOutputStream( out));
+                        
+                        System.out.println( "writing request to socket");
+                        //Se obtiene la respuesta del servidos OCSP del DNIe
+                        dataOut.write( ocspPeticion.getEncoded());
+                    
+                    } finally {
+                        UtilStream.close( dataOut);
+                    }
 
-					//Se obtiene la respuesta del servidos OCSP del DNIe
-					dataOut.write(ocspPeticion.getEncoded());
-					dataOut.flush();
-					dataOut.close();
-
+                    int estado = -1;
+                    
 					//Se parsea la respuesta y se obtiene el estado del certificado retornado por el OCSP
-					final InputStream in = (InputStream)con.getContent();
-					final OCSPResp ocspRespuesta = new OCSPResp(in);
-					int estado = ocspRespuesta.getStatus();
-
-			
+                    InputStream in = null;
+                    OCSPResp ocspRespuesta = null;
+					
+                    try {
+                        System.out.println( "reading response from socket");
+                    
+                        in = (InputStream) con.getContent();
+                        ocspRespuesta = new OCSPResp( in);
+                        
+                        estado = ocspRespuesta.getStatus();
+                        
+                    } finally {
+                        UtilStream.close( in);
+                    }
+                    
+                  
 					if (estado == OCSPResp.SUCCESSFUL) {
 						resultado =  tratarRespuestaOK( ocspRespuesta);
 
@@ -437,8 +464,7 @@ public class FirmaDigitalService implements IFirmaDigitalService {
 					ex.printStackTrace();
 					return ResultadoEnum.ERROR_VALIDACION.getResultado("Error de Invocación al Servidor OCSP");
 							
-				}
-				finally {
+				} finally {
 					try { isCertificadoRoot.close(); } catch ( Exception ex) { ex.printStackTrace(); }
 				}
 			}

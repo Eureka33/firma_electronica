@@ -7,9 +7,11 @@ import com.eureka.firma.digital.ws.bean.RespuestaFirma;
 import com.eureka.firma.digital.ws.bean.RespuestaFirmaMasiva;
 import com.eureka.firma.digital.ws.bean.SolicitudFirma;
 import com.eureka.firma.digital.ws.core.FirmaElectronicaBsnsComponent;
+import com.meve.ofspapel.firma.digital.core.entidades.Usuario;
 import com.meve.ofspapel.firma.digital.core.service.MailSenderService;
-import java.io.File;
+import com.meve.ofspapel.firma.digital.core.service.UsuarioService;
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.RequestDispatcher;
@@ -28,10 +30,10 @@ import mx.eureka.firma.digital.bean.ZipCreator;
 public class FirmaDocumento extends HttpServlet {
 
 	private static final long serialVersionUID = 2389655495605997697L;
-    private static final String NOMBRE_ORGANIZACION = "Aeropuertos y Servicios Auxiliares";
 
     private FirmaElectronicaBsnsComponent firmaService;
-	
+	private UsuarioService usuarioService;
+    
     
 	public FirmaDocumento() {
 		super();
@@ -43,6 +45,7 @@ public class FirmaDocumento extends HttpServlet {
         super.init();
         
         firmaService = AppContext.getBean( FirmaElectronicaBsnsComponent.class);
+        usuarioService = AppContext.getBean( UsuarioService.class);
     }
     
 	@Override
@@ -65,7 +68,7 @@ public class FirmaDocumento extends HttpServlet {
             if( respuesta.getCodigo().equals( 0)) {
                 sendNotificacion( 
                     bean.getCorreo(), firma.getUrlDescarga(), firma.getTitular(), firma.getRfc(), firma.getFecha(),
-                    NOMBRE_ORGANIZACION, archivo.getNombre()
+                    archivo.getNombre()
                 );
             
                 response.sendRedirect( firma.getUrlDescarga());
@@ -81,11 +84,11 @@ public class FirmaDocumento extends HttpServlet {
                         
             if( respuesta.getCodigo().equals( 0)) {
             
-                final ArchivoDepositado zip = generarZip( respuesta.getPaths());
+                final ArchivoDepositado zip = generarZip( firma, respuesta.getPaths(), respuesta.getDocumentos());
                        
                 sendNotificacion(
                     bean.getCorreo(), zip.getUrlDescarga(), firma.getTitular(), firma.getRfc(), firma.getFecha(),
-                    NOMBRE_ORGANIZACION, zip.getPathDeposito().getName()
+                    zip.getPathDeposito().getName()
                 );
                 
                 response.sendRedirect( zip.getUrlDescarga());
@@ -98,8 +101,7 @@ public class FirmaDocumento extends HttpServlet {
 	}
     
     private void sendNotificacion(  final String correo, final String urlDescarga, final String titular, 
-                                    final String rfc, final String fecha, final String organizacion,
-                                    final String nombreArchivo) {
+                                    final String rfc, final String fecha, final String nombreArchivo) {
         if ( correo == null || correo.isEmpty()) {
             return;
         }
@@ -109,7 +111,7 @@ public class FirmaDocumento extends HttpServlet {
             public void run() {
                 final MailSenderService service = AppContext.getBean( MailSenderService.class);
                 
-                service.sendNotificacion( correo, urlDescarga, titular, rfc, fecha, organizacion, nombreArchivo);
+                service.sendNotificacion( correo, urlDescarga, titular, rfc, fecha, nombreArchivo);
             }
         });
         
@@ -145,7 +147,6 @@ public class FirmaDocumento extends HttpServlet {
         
         solicitud.setArchivoDatos(     getArchivoDatos(     archivo));
         solicitud.setInfoConfidencial( getInfoConfidencial( bean));
-        solicitud.setOrganizacion( NOMBRE_ORGANIZACION);
         
         return firmaService.firmarArchivo( solicitud);
     }
@@ -159,16 +160,24 @@ public class FirmaDocumento extends HttpServlet {
         }
         
         solicitud.setInfoConfidencial( getInfoConfidencial( bean));
-        solicitud.setOrganizacion( NOMBRE_ORGANIZACION);
         
         return firmaService.firmarArchivos( solicitud, archivosDS);
     }
     
-    private ArchivoDepositado generarZip( List<String> archivos) {
-        final ArchivoDepositado zip = firmaService.generarDestinoZip();
+    private ArchivoDepositado generarZip( Firma firma, List<String> archivos, List<com.meve.ofspapel.firma.digital.core.entidades.ArchivoDepositado> documentos) {
+        
+        Usuario usuario = usuarioService.obtenerUsuario( firma.getRfc(), firma.getTitular());
+        
+        final ArchivoDepositado zip = firmaService.generarDestinoZip( usuario.getClave());
         
         final ZipCreator creator = new ZipCreator();
         creator.create( zip.getPathDeposito(), archivos);
+        
+        try {
+            firmaService.registrarZip ( usuario, zip, documentos);
+        } catch (ParseException ex) {
+            throw new RuntimeException( ex);
+        }
         
         return zip;
     }

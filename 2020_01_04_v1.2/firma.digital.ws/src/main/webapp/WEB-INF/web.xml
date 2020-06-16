@@ -40,12 +40,21 @@
         <servlet-name>FirmaDocumento</servlet-name>
         <servlet-class>mx.eureka.firma.digital.servlet.FirmaDocumento</servlet-class>
     </servlet>
+
+    <servlet>
+        <servlet-name>ConsultaDocumentos</servlet-name>
+        <servlet-class>mx.eureka.firma.digital.servlet.ConsultaDocumentos</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>Logout</servlet-name>
+        <servlet-class>mx.eureka.firma.digital.servlet.Logout</servlet-class>
+    </servlet>
     
     <filter>
         <filter-name>RequestFilter</filter-name>
         <filter-class>com.eureka.firma.digital.web.RequestFilter</filter-class>
     </filter>
-
 
 	<servlet-mapping>
 		<servlet-name>CXFServlet</servlet-name>
@@ -66,7 +75,16 @@
         <servlet-name>FirmaDocumento</servlet-name>
         <url-pattern>/firmaDocumento/*</url-pattern>
 	</servlet-mapping>
-
+    
+    <servlet-mapping>
+        <servlet-name>ConsultaDocumentos</servlet-name>
+        <url-pattern>/consultaDocumentos/*</url-pattern>
+	</servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>Logout</servlet-name>
+        <url-pattern>/logout/*</url-pattern>
+	</servlet-mapping>
 
     <filter-mapping>
         <filter-name>RequestFilter</filter-name>

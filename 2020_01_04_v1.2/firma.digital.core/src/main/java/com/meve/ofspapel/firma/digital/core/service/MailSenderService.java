@@ -19,7 +19,7 @@ public class MailSenderService {
     
     
     public void sendNotificacion(   String email, String url, String titular, String rfc, String fechaHora, 
-                                    String organizacion, String nombreArchivo) {
+                                    String nombreArchivo) {
         try {
             MimeMessage mime = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mime, true);
@@ -30,6 +30,8 @@ public class MailSenderService {
             
             String htmlText;
             
+            final String organizacion  = configService.getPropiedad( "string.organizacion.nombre");
+        
             if( nombreArchivo.endsWith( ".zip")) {
                 htmlText = 
                     "<div style='font-family: Arial, sans-serif;'>" +

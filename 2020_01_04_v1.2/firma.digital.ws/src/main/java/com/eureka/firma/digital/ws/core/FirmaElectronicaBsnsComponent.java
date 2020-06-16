@@ -8,22 +8,32 @@ import com.eureka.firma.digital.ws.bean.RespuestaFirmaMasiva;
 import com.eureka.firma.digital.ws.bean.Resultado;
 import com.eureka.firma.digital.ws.bean.SessionFirma;
 import com.eureka.firma.digital.ws.bean.SolicitudFirma;
+import com.meve.ofspapel.firma.digital.core.entidades.Usuario;
 import com.meve.ofspapel.firma.digital.core.service.IConfiguracionService;
+import com.meve.ofspapel.firma.digital.core.service.RegistroService;
+import com.meve.ofspapel.firma.digital.core.service.UsuarioService;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import mx.com.neogen.commons.util.UtilTime;
 import mx.eureka.firma.digital.bean.ArchivoDepositado;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class FirmaElectronicaBsnsComponent {
-
+    
+    @Autowired private UsuarioService usuarioService;
+    @Autowired private RegistroService registroService;
+    
 	@Autowired private IConfiguracionService configService;
 	@Autowired private IStreamService        streamService;
 	@Autowired private IFirmaDigitalService   firmaService;
@@ -31,7 +41,7 @@ public class FirmaElectronicaBsnsComponent {
 	/**
 	 * 	Firma el archivo recibido como argumento y devuelve el archivo firmado
 	 */
-	public RespuestaFirma firmarArchivo(	final SolicitudFirma solicitud) {
+	public RespuestaFirma firmarArchivo( final SolicitudFirma solicitud) {
 	
 		SessionFirma sf = new SessionFirma( solicitud);
 		Resultado<?> resultado;
@@ -55,12 +65,16 @@ public class FirmaElectronicaBsnsComponent {
 			
 			resultado = validarCertificado( sf);
 			if ( resultado.isError()) { return getRespuesta( resultado); }
-        
+ 
+            Usuario usuario = usuarioService.obtenerUsuario( sf.firma.getRfc(), sf.firma.getTitular());
+            
             resultado = generaFirma( sf);
             
             sf.folio = streamService.obtenerFolioArchivo(); 
             
             actualizarArchivo( sf, (Resultado<Firma>) resultado);
+            
+            registroService.registraDocumento( usuario, sf.firma.getFecha(), sf.folio, sf.archivo.getName());
             
 			return getRespuesta( resultado);
 				
@@ -83,20 +97,23 @@ public class FirmaElectronicaBsnsComponent {
 		
 		try {
 			resultado = validarInfoConfidencial( solicitud);
-			if ( resultado.isError()) { return getRespuestaMasiva( resultado, null); }
+			if ( resultado.isError()) { return getRespuestaMasiva( resultado); }
 			
             resultado = descargarInfoConfidencial( sf);
-			if ( resultado.isError()) { return getRespuestaMasiva( resultado, null); }
+			if ( resultado.isError()) { return getRespuestaMasiva( resultado); }
         
             resultado = validarCertificado( sf);
-			if ( resultado.isError()) { return getRespuestaMasiva( resultado, null); }
+			if ( resultado.isError()) { return getRespuestaMasiva( resultado); }
         
             resultado = obtenerPathDescarga();
-			if ( resultado.isError()) { return getRespuestaMasiva( resultado, null); }
+			if ( resultado.isError()) { return getRespuestaMasiva( resultado); }
 			String pathDescarga = (String) resultado.getResultado();
 
             List<String> paths = new ArrayList<>();
             sf.folio = streamService.obtenerFolioArchivo(); 
+            
+            Usuario usuario = usuarioService.obtenerUsuario( sf.firma.getRfc(), sf.firma.getTitular());
+            List<com.meve.ofspapel.firma.digital.core.entidades.ArchivoDepositado> documentos = new ArrayList<>();
             
             for ( InfoArchivo archivo : archivos) {
                 solicitud.setArchivoDatos(  archivo);
@@ -111,22 +128,60 @@ public class FirmaElectronicaBsnsComponent {
                 if ( resultado.isError()) { break; } 
                 
                 paths.add( actualizarArchivo( sf, (Resultado<Firma>) resultado));
-            }
+                
+                documentos.add( registroService.registraDocumento( usuario, sf.firma.getFecha(), sf.folio, sf.archivo.getName()));
             
-            return getRespuestaMasiva( resultado, paths);
+            }
+                       
+            return getRespuestaMasiva( resultado, paths, documentos);
         
         } catch ( Exception ex) {
 			ex.printStackTrace();
-			
-            return getRespuestaMasiva( 
-				ResultadoEnum.ERROR_DESCONOCIDO.getResultado( ex.getMessage()), null
-			);
+            return getRespuestaMasiva( ResultadoEnum.ERROR_DESCONOCIDO.getResultado( ex.getMessage()));
 			
         } finally {
 			eliminarInfo( sf);
             
 		}
 	}
+    
+    public Resultado<?> autenticarUsuario( final SolicitudFirma solicitud) {
+	
+		SessionFirma sf = new SessionFirma( solicitud);
+		Resultado<?> resultado;
+		
+		try {
+			resultado = validarInfoConfidencial( solicitud);
+			if ( resultado.isError()) { return resultado; }
+			
+            resultado = descargarInfoConfidencial( sf);
+			if ( resultado.isError()) { return resultado; }
+        
+            resultado = validarCertificado( sf);
+            if ( resultado.isError()) { return resultado; }
+        
+            return getResultado( resultado, usuarioService.obtenerUsuario( sf.firma.getRfc(), sf.firma.getTitular()));
+			
+        } catch ( Exception ex) {
+			ex.printStackTrace();
+            return ResultadoEnum.ERROR_DESCONOCIDO.getResultado( ex.getMessage());
+			
+        } finally {
+			eliminarInfo( sf);
+            
+		}
+	}
+        
+    public void registrarZip ( Usuario usuario, ArchivoDepositado zip, List<com.meve.ofspapel.firma.digital.core.entidades.ArchivoDepositado> documentos) throws ParseException {
+        final File file = zip.getPathDeposito();
+        
+        com.meve.ofspapel.firma.digital.core.entidades.ArchivoDepositado archivoZip = registroService.registraDocumentoBatch( 
+            usuario, zip.getFechaHora(), file.getParentFile().getName(), file.getName()
+        );
+        
+        registroService.asignaDocumentos( archivoZip, documentos);
+    }
+         
 	
 	private Resultado<?> validarCertificado( SessionFirma sf) {
 		Resultado<PublicKey> rPubKey = firmaService.validaCertificado( sf.certificadoBase64, sf.firma);
@@ -150,7 +205,6 @@ public class FirmaElectronicaBsnsComponent {
 		}
 		
 		return resultado;
-
 	}
 	
 	private Resultado<Firma> generaFirma( SessionFirma sf) {
@@ -298,7 +352,22 @@ public class FirmaElectronicaBsnsComponent {
 		return rf;
 	}
     
-    private RespuestaFirmaMasiva getRespuestaMasiva( Resultado<?> resultado, List<String> paths) {
+    private Resultado<Usuario> getResultado( Resultado<?> resultado, Usuario usuario) {
+		final Resultado<Usuario> r = new Resultado<>();
+		
+		r.setCodigo( resultado.getCodigo());
+		r.setMensaje( resultado.getMensaje());
+		
+		r.setResultado( usuario);
+		
+		return r;
+	}    
+    
+    private RespuestaFirmaMasiva getRespuestaMasiva( Resultado<?> resultado) {	   
+		return getRespuestaMasiva(resultado, null, null);
+	}
+    
+    private RespuestaFirmaMasiva getRespuestaMasiva( Resultado<?> resultado, List<String> paths, List<com.meve.ofspapel.firma.digital.core.entidades.ArchivoDepositado> documentos) {
 		final RespuestaFirmaMasiva rf = new RespuestaFirmaMasiva();
 		
 		rf.setCodigo( resultado.getCodigo());
@@ -311,6 +380,7 @@ public class FirmaElectronicaBsnsComponent {
 		}
         
         rf.setPaths( paths);
+        rf.setDocumentos( documentos);
         
 		return rf;
 	}
@@ -343,33 +413,41 @@ public class FirmaElectronicaBsnsComponent {
         
         String serverName    = configService.getPropiedad( "url.server.name");
         String webAppContext = configService.getPropiedad( "path.app.context");
+        String organizacion  = configService.getPropiedad( "string.organizacion.nombre");
+        
         String nombreArchivo = sf.archivo.getName();
         
         final String pathDeposito = streamService.obtenerPathDeposito( pathRepositorio, sf.folio, nombreArchivo);
         
         final String downloadURL  = streamService.generarURLDescarga( serverName, webAppContext, sf.folio, nombreArchivo);
       
-        streamService.firmarDocumento( pathDeposito, downloadURL, sf, resultado.getResultado(), sf.solicitud.getOrganizacion());
+        streamService.firmarDocumento( pathDeposito, downloadURL, sf, resultado.getResultado(), organizacion);
         
         return pathDeposito;
     }
     
     
-    public ArchivoDepositado generarDestinoZip() {
+    public ArchivoDepositado generarDestinoZip( String rfc) {
+        final Date currentTimeStamp = UtilTime.getFechaHoraActual();
         
         final String pathRepositorio = configService.getPropiedad( "path.repositorio.fs");
-        
         final String serverName    = configService.getPropiedad( "url.server.name");
         final String webAppContext = configService.getPropiedad( "path.app.context");
-        final String nombreArchivo = "firma_masiva.zip";
+        
+        final String nombreArchivo = 
+            "firma_masiva_" + rfc + new SimpleDateFormat( "yyyy_MM_dd_HH_mm_ss").format( currentTimeStamp) + ".zip"
+        ;
         
         final String folioArchivo = streamService.obtenerFolioArchivo(); 
         final String pathDeposito = streamService.obtenerPathDeposito( pathRepositorio, folioArchivo, nombreArchivo);
         
         try {
             final String downloadURL  = streamService.generarURLDescarga( serverName, webAppContext, folioArchivo, nombreArchivo);
-            return new ArchivoDepositado( pathDeposito, downloadURL);
-        
+            ArchivoDepositado archivo = new ArchivoDepositado( pathDeposito, downloadURL);
+            archivo.setFechaHora( new SimpleDateFormat( "dd/MM/yyyy HH:mm:ss").format( currentTimeStamp));
+            
+            return archivo;
+            
         } catch( Exception ex) {
             throw new RuntimeException( ex); 
         }

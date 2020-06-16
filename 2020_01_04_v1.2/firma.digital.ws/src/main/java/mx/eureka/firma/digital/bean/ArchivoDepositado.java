@@ -5,6 +5,7 @@ import java.io.File;
 public class ArchivoDepositado {
 
     private File pathDeposito;
+    private String fechaHora;
     private String urlDescarga;
     
     
@@ -26,6 +27,14 @@ public class ArchivoDepositado {
 
     public void setPathDeposito( String pathDeposito) {
         this.pathDeposito = new File( pathDeposito);
+    }
+
+    public String getFechaHora() {
+        return fechaHora;
+    }
+
+    public void setFechaHora(String fechaHora) {
+        this.fechaHora = fechaHora;
     }
 
     public String getUrlDescarga() {

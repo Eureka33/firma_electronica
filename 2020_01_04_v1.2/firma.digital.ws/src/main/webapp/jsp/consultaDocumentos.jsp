@@ -1,3 +1,8 @@
+<%@page import="java.net.URLEncoder"%>
+<%@page import="java.text.SimpleDateFormat"%>
+<%@page import="java.text.DateFormat"%>
+<%@page import="java.util.List"%>
+<%@page import="com.meve.ofspapel.firma.digital.core.entidades.ArchivoDepositado"%>
 <%@page import="com.meve.ofspapel.firma.digital.core.entidades.Usuario"%>
 
 <%@ page contentType="text/html; charset=UTF-8" %>
@@ -5,10 +10,11 @@
 <!DOCTYPE html>
 
 <%
-    String[] errorMessages = (String[]) session.getAttribute( "errorMessages");
+    final String[] errorMessages = (String[]) session.getAttribute( "errorMessages");
     session.removeAttribute( "errorMessages");
     
     final Usuario usuario = (Usuario) session.getAttribute( "usuario");
+    final List<ArchivoDepositado> archivos = (List) request.getAttribute( "archivos");
 %>
 
 <html lang="es">
@@ -17,7 +23,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
     
-    <title>Firma y Resguardo de Documentos Digitales</title>
+    <title>Consulta de Documentos Firmados</title>
     
     <link rel="stylesheet" href="./libs/fontawesome/css/all.min.css"     />
     <link rel="stylesheet" href="./libs/bootstrap/css/bootstrap.min.css" />
@@ -66,12 +72,10 @@
                         
             let errores = 0;
             
-            errores += validarArchivos(    'documento', '.pdf',     'Documento', 100, 25);
             errores += validarArchivos(  'certificado', '.cer',   'Certificado',   1, 1);
             errores += validarArchivos( 'llavePrivada', '.key', 'Llave Privada',   1, 1);
             
             errores += validarTexto( 'password',         'Contraseña',  20);
-            errores += validarCorreo(  'correo', 'Correo Electrónico', 150);
             
             let submit = (errores === 0);
             
@@ -81,7 +85,7 @@
             
             return submit;
         }
-                
+        
         function validarArchivos( id, extension, nombre, maxItems, maxSizeMB) {
             let errorId = 'error_' + id;
             
@@ -197,16 +201,15 @@
             jQuery( '#' + id).text( text).attr( 'hidden', false);
         }
         
+        function regresar() {
+			var link = document.getElementById( 'download');
+			link.href= './firmaDocumento';
+			link.click();
+		}
         
         function logout() {
 			var link = document.getElementById( 'download');
 			link.href= './logout';
-			link.click();
-		}
-        
-        function consultas() {
-			var link = document.getElementById( 'download');
-			link.href= './consultaDocumentos';
 			link.click();
 		}
 	</script>
@@ -214,7 +217,7 @@
 </head>
 <body>
 	
-    <table class="container">
+    <table class="container" <%= (usuario != null)? "hidden" : ""%>>
 		<tr>
             <td style="text-align: center;">
  				<img src="./images/logo_organizacion.png" style="height: 150px;" alt="organization logo"/>
@@ -224,45 +227,19 @@
         <tr><td>&nbsp;</td></tr>
         
         <tr>
-			<td>
-				<navbar class="navbar navbar-light bg-light">
-                    <a class="navbar-brand" href="#">&nbsp;</a>
-                    
-                    <button type="button" class="btn btn-sm btn-link" onclick="javascript: consultas();" title="Mis documentos firmados">
-                        <i class="fas fa-list"></i>&nbsp;Mis Documentos
-                    </button>
-                            
-                    <% if ( usuario != null) { %>
-                        <button type="button" class="btn btn-sm btn-link" onclick="javascript: logout();" title="Salir (logout)">
-                            <i class="fas fa-sign-out-alt"></i>&nbsp:Salir
-                        </button>
-                    <% } %>
-                </navbar>
-			</td>
-		</tr>
-		
-		<tr><td>&nbsp;</td></tr>
+            <td style="padding:10px 50px;">
+                <span style="font-family: Verdadana, sans-serif; font-size: 0.9em; text-align: justify;">
+                    <b>¡Bienvenido!</b>. Para consultar los documentos que usted ha firmado, por favor, ingrese 
+                    la siguiente información.
+                </span>
+            </td>
+        </tr>
         
+		<tr><td>&nbsp;</td></tr>
 		<tr>
 			<td>
-                <form action="firmaDocumento" method="POST" enctype="multipart/form-data" accept-charset="UTF-8">
+                <form action="consultaDocumentos" method="POST" enctype="multipart/form-data" accept-charset="UTF-8">
                     <table style="width: 100%;">
-                        <tr>
-                            <td>
-                                <span class="prompt">Documento (*):</span>
-                            </td>
-        					<td>
-                                <input type="file" id="documento" name="documento" class="form-control" multiple
-                                    accept="application/pdf" title="Documento que desea firmar"
-                                />
-                            </td>
-                    	</tr>
-                        
-    					<tr>
-                            <td>&nbsp;</td>
-                            <td><span id="error_documento" class="error" hidden></span> 
-                        </tr>
-
                         <tr>
                             <td>
                                 <span class="prompt">Certificado (*):</span>
@@ -308,34 +285,20 @@
     					</tr>
                         
                         <tr>
-                            <td>&nbsp;</td>
-                            <td><span id="error_password" class="error" hidden></span> 
-                        </tr>
-                        
-                        <tr>
-    						<td>
-                                <span class="prompt">Correo Electr&oacute;nico:</span>
-                            </td>
-                    		<td>
-                                <input type="text" id="correo" name="correo" class="form-control col-sm-8">
-                            </td>
-    					</tr>
-                        
-                        <tr>
-                            <td>&nbsp;</td>
-                            <td><span id="error_correo" class="error" hidden></span> 
-                        </tr>
-                        
-                        <tr>
                             <td colspan="2">
                 				<table style="width: 100%">
                                 	<tr>
                 						<td width="60%">&nbsp;</td>
                 						<td width="40%" style="text-align: right;">
-                                            <button type="submit" class="btn btn-primary" onclick="javascript: return validarForm(event);">
-                                                <i class="fas fa-pencil-square-o"></i>Firmar Documento
+                                            <button type="submit" class="btn btn-primary" onclick="javascript: return validarForm( event);">
+                                                <i class="fas fa-pencil-square-o"></i>Aceptar
+                                            </button>
+                                            &nbsp;
+                                            <button type="button" class="btn btn-info" onclick="javascript: regresar();" title="Firmar Documento(s)">
+                                                Cancelar
                                             </button>
                 						</td>
+                                        
                 					</tr>
                 				</table>
                             </td>
@@ -344,18 +307,6 @@
                 </form>
 			</td>
 		</tr>
-		<tr><td>&nbsp;</td></tr>
-	
-		<tr>
-            <td style="padding:10px 50px;">
-                <span style="font-family: Verdadana, sans-serif; font-size: 0.9em; text-align: justify;">
-                    <b>Importante</b>. El documento firmado puede ser validado haciendo uso del c&oacute;digo QR o 
-                    por medio de la liga que se encuentra dentro del documento firmado en la secci&oacute;n 
-                    &quot;Trazabilidad&quot;.
-                </span>
-            </td>
-        </tr>
-        
 		<tr><td>&nbsp;</td></tr>
 	
 		<tr id="mensajeResultado">
@@ -375,14 +326,92 @@
 		</tr>
 	</table>
                         
+    <table class="container" <%= (usuario == null)? "hidden" : ""%>>
+		<tr>
+            <td style="text-align: center;">
+ 				<img src="./images/logo_organizacion.png" style="height: 150px;" alt="organization logo"/>
+			</td>
+		</tr>
+        
+        <tr><td>&nbsp;</td></tr>
+        
+        <tr>
+			<td>
+				<navbar class="navbar navbar-light bg-light">
+                    <a class="navbar-brand" href="#">&nbsp;</a>
+                    
+					<button type="button" class="btn btn-sm btn-link" onclick="javascript: regresar();" title="Firmar Documento(s)">
+                        <i class="fas fa-file-signature"></i>&nbsp;Firmar Documento(s)
+                    </button>
+                            
+                    <button type="button" class="btn btn-sm btn-link" onclick="javascript: logout();" title="Salir (logout)">
+                        <i class="fas fa-sign-out-alt"></i>&nbsp;Salir
+                    </button>
+                </navbar>
+			</td>
+		</tr>
+        
+        <tr><td>&nbsp;</td></tr>
+        
+        <tr>
+            <td style="padding:10px 50px;">
+                <span style="font-family: Verdadana, sans-serif; font-size: 0.9em; text-align: justify;">
+                    <b>Usuario: </b><%= (usuario != null)? usuario.getNombre() : "" %>
+                    (<i><%= (usuario != null)? usuario.getClave() : "" %></i>)
+                </span>
+            </td>
+        </tr>
+        
+		<tr><td>&nbsp;</td></tr>
+		<tr>
+			<td>
+                <table class="table">
+                    <thead class="header-dark">
+                        <tr>
+                            <th>Fecha Hora</th>
+                            <th>Folio</th>
+                            <th>Documento</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <%  if ( archivos == null) { %>
+                            <tr>
+                                <td colspan="4">No hay resultados que mostrar</td>
+                            </tr>
+                        <% } else { %>                          
+                            <%
+                                DateFormat formatter = new SimpleDateFormat ("dd/MM/yyyy HH:mm:ss");
+                                for ( ArchivoDepositado archivo : archivos) {
+                            %>
+                                <tr>
+                                    <td><%= formatter.format( archivo.getFechaHora())%></td>
+                                    <td><%= archivo.getFolio()  %></td>
+                                    <td><%= archivo.getNombre() %></td>
+                                    <td>
+                                        <a href="./validacionDocumento?folio=<%= archivo.getFolio()%>&nombre=<%= URLEncoder.encode( archivo.getNombre(), "UTF-8")%>"
+                                           title="Descarga y validación del documento"
+                                        >
+                                            <i class="fas fa-download"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            <% } %>
+                        <% } %>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+    </table>
+    
     <div class="modal fade" id="processing" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Firma Digital</h5>
+                    <h5 class="modal-title">Autenticación de Usuario</h5>
                 </div>
                 <div class="modal-body">
-                    Su documento esta siendo procesado. Por favor espere.
+                    Su petición esta siendo procesada. Por favor espere.
                 </div>
             </div>
         </div>
