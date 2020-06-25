@@ -1,6 +1,8 @@
 package com.meve.ofspapel.firma.digital.core.entidades;
 
-public class Usuario {
+import mx.com.neogen.commons.interfaces.Invoker;
+
+public class Usuario implements Invoker {
     
     private Integer id;
     private String clave;

@@ -4,25 +4,6 @@
 
 <mapper namespace="com.meve.ofspapel.firma.digital.core.mappers.RegistroDAO">
     
-    <resultMap id="archivo" type="com.meve.ofspapel.firma.digital.core.entidades.ArchivoDepositado">
-        <constructor>
-            <arg column="id" javaType="integer"/>
-        </constructor>
-        
-        <result property="idUsuario"    column="id_usuario"/>
-        <result property="fechaHora"    column="fecha_hora"/>
-        <result property="folio"        column="folio" />
-        <result property="nombre"       column="nombre"/>
-    </resultMap>
-    
-    <!--    List<ArchivoDepositado> listItems( usuario: Usuario)            -->
-    
-    <select id="listItems" resultMap="archivo">
-        select * from eurk_wsss_documento_firmado where id_usuario = #{usuario.id}
-        order by fecha_hora desc, folio, nombre
-    </select>
-    
-          
     <!--    int insertDocumento( item: ArchivoDepositado)                   -->
     
     <insert id="insertDocumento" keyColumn="id" keyProperty="item.id" useGeneratedKeys="true">

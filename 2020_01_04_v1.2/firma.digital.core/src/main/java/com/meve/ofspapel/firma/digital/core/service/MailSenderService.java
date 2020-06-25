@@ -79,7 +79,6 @@ public class MailSenderService {
             System.out.println("notificacion enviada a: " + email);
             
         } catch( Exception ex) {
-            System.out.println("error al enviar notificación de correo a: " + email);
             ex.printStackTrace();
         }
     }

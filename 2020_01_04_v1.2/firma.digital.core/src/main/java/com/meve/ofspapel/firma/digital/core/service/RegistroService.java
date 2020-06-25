@@ -49,8 +49,4 @@ public class RegistroService {
         }
     }
     
-    public List<ArchivoDepositado> list( Usuario usuario) {
-        return registroDAO.listItems( usuario);
-    } 
-    
 }
