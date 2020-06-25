@@ -168,8 +168,6 @@ public class ClienteFirmaElectronica implements ActionListener {
 	private static InfoArchivo getArchivoDatos( String pathArchivo) {
 		InfoArchivo archivo = new InfoArchivo();
 		
-		System.out.println( "Creating DataHandler for File: " + pathArchivo);
-		
 		archivo.setHandler( new DataHandler( new FileDataSource(new File( pathArchivo))));	
 		archivo.setNombre( "ArchivoDatos");
 		archivo.setExtension( "pdf");

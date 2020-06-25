@@ -50,11 +50,10 @@ public final class IFirmaElectronica_FirmaElectronicaServiceImplPort_Client {
         IFirmaElectronica port = ss.getFirmaElectronicaServiceImplPort();  
         
         {
-        System.out.println("Invoking firmarArchivo...");
+        
             com.eureka.firma.digital.ws.service.SolicitudFirma _firmarArchivo_solicitudFirma = null;
             com.eureka.firma.digital.ws.service.RespuestaFirma _firmarArchivo__return = port.firmarArchivo(_firmarArchivo_solicitudFirma);
-        System.out.println("firmarArchivo.result=" + _firmarArchivo__return);
-
+        
 
         }
 
