@@ -1,4 +1,4 @@
-package mx.com.neogen.commons.bean;
+package com.eurk.core.beans.consulta;
 
 import java.io.Serializable;
 
@@ -18,14 +18,12 @@ public class Paginacion implements Serializable {
 	private int  totalItems;
 	
 	
-	
 	public Paginacion() {
 		super();
 		
 		this.pagina 	 = 1;
 		this.itemsPagina = 10;
 	}
-
 
 	
 	public int getPagina() {								return pagina;					}
@@ -37,25 +35,6 @@ public class Paginacion implements Serializable {
 	public int getTotalItems() {							return totalItems;				}
 	public void setTotalItems(	final int totalItems) {		this.totalItems = totalItems;	}
 
-	/** 
-	 * 	Calcula el número de elemento inicial de la página actual
-	 */
-	
-	public int getElementoInicial() {
-		return (totalItems == 0)? 0 : 1 + (itemsPagina * (pagina -1));		
-	}
-	
-	public void setElementoInicial( int dummy) {}
-	
-	/**
-	 * 	Calcula el número de elemento final de la página actual
-	 */
-	public int getElementoFinal() {
-		return Math.min( totalItems, itemsPagina*pagina);
-	}
-	
-	public void setElementoFinal( int dummy) {}
-	
 	
 	public String toString() {
 		return UtilReflection.toString( this);
