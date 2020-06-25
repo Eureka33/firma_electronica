@@ -5,12 +5,8 @@ import com.eureka.firma.digital.ws.bean.InfoConfidencial;
 import com.eureka.firma.digital.ws.bean.Resultado;
 import com.eureka.firma.digital.ws.bean.SolicitudFirma;
 import com.eureka.firma.digital.ws.core.FirmaElectronicaBsnsComponent;
-import com.meve.ofspapel.firma.digital.core.entidades.Usuario;
-import com.meve.ofspapel.firma.digital.core.service.RegistroService;
 import java.io.IOException;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import mx.eureka.firma.digital.bean.AppContext;
@@ -18,13 +14,12 @@ import mx.eureka.firma.digital.bean.BeanInfoFirma;
 import mx.eureka.firma.digital.bean.UtilDocumento;
 
 
-public class ConsultaDocumentos extends HttpServlet {
+public class ConsultaDocumentos extends BaseServlet {
 
 	private static final long serialVersionUID = 2389655495605997697L;
 
     private FirmaElectronicaBsnsComponent firmaService;
-	private RegistroService registroService;
-    
+	
     
 	public ConsultaDocumentos() {
 		super();
@@ -36,16 +31,10 @@ public class ConsultaDocumentos extends HttpServlet {
         super.init();
         
         firmaService    = AppContext.getBean( FirmaElectronicaBsnsComponent.class);
-        registroService = AppContext.getBean( RegistroService.class);
     }
     
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        final Usuario usuario = (Usuario) request.getSession().getAttribute( "usuario");
-        
-        if( usuario != null) {
-            request.setAttribute( "archivos", registroService.list( usuario));
-        }
         
 		forwardTo( request, response, "/jsp/consultaDocumentos.jsp?ts=" + Math.random());
 	}
@@ -98,10 +87,5 @@ public class ConsultaDocumentos extends HttpServlet {
         
         return firmaService.autenticarUsuario( solicitud);
     }
-    
-	protected void forwardTo( HttpServletRequest request, HttpServletResponse response, String pagina) throws IOException, ServletException {	
-		final RequestDispatcher dispatcher = getServletContext().getRequestDispatcher( pagina);
-		dispatcher.forward( request, response);
-	}
-    
+
 }

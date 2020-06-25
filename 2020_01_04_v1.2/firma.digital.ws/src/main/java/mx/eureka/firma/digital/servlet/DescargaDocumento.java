@@ -2,9 +2,7 @@ package mx.eureka.firma.digital.servlet;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import mx.com.neogen.commons.exception.OperacionNoRealizadaException;
@@ -13,7 +11,7 @@ import mx.eureka.firma.digital.bean.InfoArchivo;
 import mx.eureka.firma.digital.bean.UtilDocumento;
 
 
-public class DescargaDocumento extends HttpServlet {
+public class DescargaDocumento extends BaseServlet {
         
 	public DescargaDocumento() {
 		super();
@@ -46,7 +44,14 @@ public class DescargaDocumento extends HttpServlet {
 
     private OutputStream prepararDescarga( InfoArchivo infoArchivo, HttpServletResponse response) {
 
-        response.setContentType( "application/pdf");
+        if( infoArchivo.getNombre().endsWith( "zip")) {
+            response.setContentType( "application/zip");
+        
+        } else {
+            response.setContentType( "application/pdf");
+        
+        }
+        
         response.setHeader("Content-disposition","attachment; filename=\"" + infoArchivo.getNombre() + "\"");
         
         try {
@@ -57,8 +62,4 @@ public class DescargaDocumento extends HttpServlet {
         }
     }
     
-    protected void forwardTo( HttpServletRequest request, HttpServletResponse response, String pagina) throws IOException, ServletException {	
-		final RequestDispatcher dispatcher = getServletContext().getRequestDispatcher( pagina);
-		dispatcher.forward( request, response);
-	}
 }

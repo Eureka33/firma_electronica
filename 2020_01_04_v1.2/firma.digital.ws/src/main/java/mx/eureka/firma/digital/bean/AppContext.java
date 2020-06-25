@@ -14,4 +14,8 @@ public class AppContext {
         return (T) appContext.getBean( clase);
     }
     
+    public static <T> T getBean( String clave, Class clase) {
+        return (T) appContext.getBean( clave, clase);
+    }
+    
 }

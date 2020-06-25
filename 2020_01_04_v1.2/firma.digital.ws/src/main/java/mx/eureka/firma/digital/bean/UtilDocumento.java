@@ -55,8 +55,6 @@ public class UtilDocumento {
             List items = upload.parseRequest( request);
             for ( Object nextItem : items) {
                 FileItem item = (FileItem) nextItem;
-                
-                System.out.println( "idField?: " + item.isFormField() + "field:" + item.getFieldName() + ", name: " + item.getName());
                     
                 if ( !item.isFormField()) {
                     

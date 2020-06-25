@@ -19,33 +19,16 @@
     
     <title>Firma y Resguardo de Documentos Digitales</title>
     
-    <link rel="stylesheet" href="./libs/fontawesome/css/all.min.css"     />
-    <link rel="stylesheet" href="./libs/bootstrap/css/bootstrap.min.css" />
-    
-    <style type="text/css">
-        .container {
-            border: none; 
-            width: 700px;
-            margin-left: auto; 
-            margin-right:auto;
-        }
-        
-        .prompt {
-            font-size: 1.2em;
-            font-weight: bold;
-        }
-        
-        .error {
-            font-size: 1.0em;
-            color: red;
-        }
-    </style>
+    <link rel="stylesheet" href="./libs/fontawesome/css/all.min.css"    />
+    <link rel="stylesheet" href="./libs/bootstrap/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="./libs/scripts/estilos.css"            />
     
     <script type="text/javascript" src="./libs/jquery/jquery.min.js"></script>
     <script type="text/javascript" src="./libs/bootstrap/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="./libs/fontawesome/js/fontawesome.min.js"></script>
     <script type="text/javascript" src="./libs/jquery/is.min.js"></script>
-    
+    <script type="text/javascript" src="./libs/scripts/util_functions.js"></script>
+ 
 	<script type="text/javascript">	
         jQuery.noConflict();
         
@@ -66,12 +49,12 @@
                         
             let errores = 0;
             
-            errores += validarArchivos(    'documento', '.pdf',     'Documento', 100, 25);
-            errores += validarArchivos(  'certificado', '.cer',   'Certificado',   1, 1);
-            errores += validarArchivos( 'llavePrivada', '.key', 'Llave Privada',   1, 1);
+            errores += validation.validarArchivos(    'documento', '.pdf',     'Documento', 100, 25);
+            errores += validation.validarArchivos(  'certificado', '.cer',   'Certificado',   1, 1);
+            errores += validation.validarArchivos( 'llavePrivada', '.key', 'Llave Privada',   1, 1);
             
-            errores += validarTexto( 'password',         'Contraseña',  20);
-            errores += validarCorreo(  'correo', 'Correo Electrónico', 150);
+            errores += validation.validarTexto( 'password',         'Contraseña',  20);
+            errores += validation.validarCorreo(  'correo', 'Correo Electrónico', 150);
             
             let submit = (errores === 0);
             
@@ -81,134 +64,7 @@
             
             return submit;
         }
-                
-        function validarArchivos( id, extension, nombre, maxItems, maxSizeMB) {
-            let errorId = 'error_' + id;
-            
-            hide( errorId);
-            
-            let files = jQuery("#" + id + ":eq(0)")[0].files;
-            
-            if ( files.length === 0) {
-                update( errorId, "El archivo de " + nombre + " es requerido");
-                return 1;
-            }
-            
-            if( noCumplenConExtension( files, extension) ) {
-                update( errorId, "La extensión del archivo(s) deber ser (" + extension + ")");
-                return 1;
-            }
-            
-            if ( excedenMaxItems( files, maxItems)) {
-                update( errorId, "El número del archivos no debe ser mayor a " + maxItems);
-                return 1;
-            }   
-            
-            if ( excedenMaxSizeMB( files, maxSizeMB)) {
-                update( errorId, "El tamaño total del archivo(s) no debe exceder " + maxSizeMB + " MB");
-                return 1;
-            }            
-            
-            return 0;
-        }
-        
-        function validarTexto( id, nombre, maxLength) {
-            let errorId = 'error_' + id;
-            
-            hide( errorId);
-            
-            let value = jQuery("#" + id).val().trim();
-            if ( value.length === 0) {
-                update( errorId, "El campo " + nombre + " es requerido");
-                return 1;
-            }
-            
-            if ( value.length > maxLength) {
-                update( errorId, "El campo " + nombre + " no debe exceder de " + maxLength + " caracteres");
-                return 1;
-            }
-            
-            return 0;
-        }
-        
-        function validarCorreo( id, nombre, maxLength) {
-            let errorId = 'error_' + id;
-            
-            hide( errorId);
-            
-            let value = jQuery("#" + id).val().trim();
-            
-            if( value.length === 0) {
-                return 0;
-            }
-            
-            if( !isValidEmail( value)) {
-                update( errorId, "El " + nombre + " no tiene un formato valido valido");
-                return 1;
-            }
-            
-            if ( value.length > maxLength) {
-                update( errorId, "El " + nombre + " no debe exceder de " + maxLength + " caracteres");
-                return 1;
-            }
-            
-            return 0;
-        }
-        
-        function isValidEmail( value) {
-            return /^\w+([\.\+\-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,4})+$/.test( value);
-        }
-        
-        function noCumplenConExtension( files, extension) {
-            let error = false;
-            let file;
-            
-            for( let i = 0; i < files.length; ++i) {
-                file = files[i];
-                if ( !file.name.toLowerCase().endsWith( extension)) {
-                    error = true;
-                }
-            }
-            
-            return error;
-        }
-        
-        function excedenMaxItems( files, maxItems) {
-            return files.length > maxItems;
-        }
-        
-        function excedenMaxSizeMB( files, maxSizeMB) {
-            let total = 0;
-            let file;
-            
-            for( let i = 0; i < files.length; ++i) {
-                file = files[i];
-                total = total + file.size;
-            }
 
-            return total > (maxSizeMB*1024*1024);
-        }
-        
-        function hide( id) {
-            jQuery( '#' + id).attr( 'hidden', true);
-        }
-        
-        function update( id, text) {
-            jQuery( '#' + id).text( text).attr( 'hidden', false);
-        }
-        
-        
-        function logout() {
-			var link = document.getElementById( 'download');
-			link.href= './logout';
-			link.click();
-		}
-        
-        function consultas() {
-			var link = document.getElementById( 'download');
-			link.href= './consultaDocumentos';
-			link.click();
-		}
 	</script>
     
 </head>
@@ -228,12 +84,12 @@
 				<navbar class="navbar navbar-light bg-light">
                     <a class="navbar-brand" href="#">&nbsp;</a>
                     
-                    <button type="button" class="btn btn-sm btn-link" onclick="javascript: consultas();" title="Mis documentos firmados">
+                    <button type="button" class="btn btn-sm btn-link" onclick="javascript: navigation.goto( 'consultaDocumentos');" title="Mis documentos firmados">
                         <i class="fas fa-list"></i>&nbsp;Mis Documentos
                     </button>
                             
                     <% if ( usuario != null) { %>
-                        <button type="button" class="btn btn-sm btn-link" onclick="javascript: logout();" title="Salir (logout)">
+                        <button type="button" class="btn btn-sm btn-link" onclick="javascript: navigation.logout();" title="Salir (logout)">
                             <i class="fas fa-sign-out-alt"></i>&nbsp:Salir
                         </button>
                     <% } %>
@@ -332,7 +188,7 @@
                                 	<tr>
                 						<td width="60%">&nbsp;</td>
                 						<td width="40%" style="text-align: right;">
-                                            <button type="submit" class="btn btn-primary" onclick="javascript: return validarForm(event);">
+                                            <button type="submit" class="btn btn-primary" onclick="javascript: return validarForm( event);">
                                                 <i class="fas fa-pencil-square-o"></i>Firmar Documento
                                             </button>
                 						</td>
@@ -375,7 +231,7 @@
 		</tr>
 	</table>
                         
-    <div class="modal fade" id="processing" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal fade" id="processing" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">

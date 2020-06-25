@@ -1,8 +1,4 @@
 <%@page import="java.net.URLEncoder"%>
-<%@page import="java.text.SimpleDateFormat"%>
-<%@page import="java.text.DateFormat"%>
-<%@page import="java.util.List"%>
-<%@page import="com.meve.ofspapel.firma.digital.core.entidades.ArchivoDepositado"%>
 <%@page import="com.meve.ofspapel.firma.digital.core.entidades.Usuario"%>
 
 <%@ page contentType="text/html; charset=UTF-8" %>
@@ -14,7 +10,6 @@
     session.removeAttribute( "errorMessages");
     
     final Usuario usuario = (Usuario) session.getAttribute( "usuario");
-    final List<ArchivoDepositado> archivos = (List) request.getAttribute( "archivos");
 %>
 
 <html lang="es">
@@ -25,46 +20,49 @@
     
     <title>Consulta de Documentos Firmados</title>
     
-    <link rel="stylesheet" href="./libs/fontawesome/css/all.min.css"     />
-    <link rel="stylesheet" href="./libs/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="./libs/fontawesome/css/all.min.css"    />
+    <link rel="stylesheet" href="./libs/bootstrap/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="./libs/scripts/estilos.css"            />
+       
+    <script type="text/javascript" charset="UTF-8" src="./libs/jquery/jquery.min.js"></script>
+    <script type="text/javascript" charset="UTF-8" src="./libs/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" charset="UTF-8" src="./libs/bootstrap/js/popper.min.js"></script>
     
-    <style type="text/css">
-        .container {
-            border: none; 
-            width: 700px;
-            margin-left: auto; 
-            margin-right:auto;
-        }
-        
-        .prompt {
-            font-size: 1.2em;
-            font-weight: bold;
-        }
-        
-        .error {
-            font-size: 1.0em;
-            color: red;
-        }
-    </style>
-    
-    <script type="text/javascript" src="./libs/jquery/jquery.min.js"></script>
-    <script type="text/javascript" src="./libs/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" charset="UTF-8" src="./libs//handlebars/handlebars.js"></script>
+    <script type="text/javascript" charset="UTF-8" src="./libs/scripts/eureka33/eurk-core.min.js"></script>
+	   
     <script type="text/javascript" src="./libs/fontawesome/js/fontawesome.min.js"></script>
     <script type="text/javascript" src="./libs/jquery/is.min.js"></script>
+    <script type="text/javascript" src="./libs/scripts/util_functions.js"></script>
     
 	<script type="text/javascript">	
         jQuery.noConflict();
         
+        var env = { documento: {}};
+        
         jQuery( document).ready( function( $) {
             if( is.ie()) {
-                window.location= './pages/incompatible_browser.html';
+                navigation.goto( 'pages/incompatible_browser.html');
+                
             } else {
-                inicializa();
+                server.resource.load( 'componente_autocompletion', './libs/components/autocompletion/component', function() {
+                    inicializa();
+                });
             } 
         });
         
 		function inicializa() {
 			document.getElementById( 'mensajeResultado').style.display= "<%= (errorMessages == null)? "none" : "" %>";
+            <% if ( usuario != null) { %>
+                 server.resource.load( 'componente_tabla', './libs/components/tabla/component', function() {
+					console.log( "resource loaded: [tabla]");
+                    env.tabla = new Tabla( 'documento', env.config, env.callbacks);
+                    env.tabla.update();
+                    
+                    env.autoComplete = new AutoCompletion( 'autoComplete_documento', env.autocompletion, env.callbacks);
+		
+				});
+            <% } %>
 		}
         
         function validarForm( event) {
@@ -72,10 +70,10 @@
                         
             let errores = 0;
             
-            errores += validarArchivos(  'certificado', '.cer',   'Certificado',   1, 1);
-            errores += validarArchivos( 'llavePrivada', '.key', 'Llave Privada',   1, 1);
+            errores += validation.validarArchivos(  'certificado', '.cer',   'Certificado',   1, 1);
+            errores += validation.validarArchivos( 'llavePrivada', '.key', 'Llave Privada',   1, 1);
             
-            errores += validarTexto( 'password',         'Contraseña',  20);
+            errores += validation.validarTexto( 'password',         'Contraseña',  20);
             
             let submit = (errores === 0);
             
@@ -86,132 +84,68 @@
             return submit;
         }
         
-        function validarArchivos( id, extension, nombre, maxItems, maxSizeMB) {
-            let errorId = 'error_' + id;
-            
-            hide( errorId);
-            
-            let files = jQuery("#" + id + ":eq(0)")[0].files;
-            
-            if ( files.length === 0) {
-                update( errorId, "El archivo de " + nombre + " es requerido");
-                return 1;
+        env.config = {
+            module    : "documento",
+            id        : "id",
+            pagination: true,
+            isEditable: false,
+			columns   : [
+				{value: "fechaHora", label: "Fecha Hora"},
+				{value:     "folio", label:      "Folio"},
+				{value:    "nombre", label: "Documentos"}
+			],
+            actions   : [
+                {value: 'view', icon: "download", title: "Descarga y validación del documento"}
+            ],
+            resource: "documento/firmado",
+			search: {
+                tipo: "PAGINADA", "propiedades": {}, "ordenacion": [{"campo": "fechaHora", "direccion": "desc"}]
             }
-            
-            if( noCumplenConExtension( files, extension) ) {
-                update( errorId, "La extensión del archivo(s) deber ser (" + extension + ")");
-                return 1;
-            }
-            
-            if ( excedenMaxItems( files, maxItems)) {
-                update( errorId, "El número del archivos no debe ser mayor a " + maxItems);
-                return 1;
-            }   
-            
-            if ( excedenMaxSizeMB( files, maxSizeMB)) {
-                update( errorId, "El tamaño total del archivo(s) no debe exceder " + maxSizeMB + " MB");
-                return 1;
-            }            
-            
-            return 0;
-        }
+        };
         
-        function validarTexto( id, nombre, maxLength) {
-            let errorId = 'error_' + id;
-            
-            hide( errorId);
-            
-            let value = jQuery("#" + id).val().trim();
-            if ( value.length === 0) {
-                update( errorId, "El campo " + nombre + " es requerido");
-                return 1;
+        env.autocompletion = {
+            resource: "documento/firmado",
+            item: {
+                value: "id",
+                label: "(${fechaHora}) ${nombre} : ${folio}"
             }
-            
-            if ( value.length > maxLength) {
-                update( errorId, "El campo " + nombre + " no debe exceder de " + maxLength + " caracteres");
-                return 1;
-            }
-            
-            return 0;
-        }
+		};
         
-        function validarCorreo( id, nombre, maxLength) {
-            let errorId = 'error_' + id;
-            
-            hide( errorId);
-            
-            let value = jQuery("#" + id).val().trim();
-            
-            if( value.length === 0) {
-                return 0;
-            }
-            
-            if( !isValidEmail( value)) {
-                update( errorId, "El " + nombre + " no tiene un formato valido valido");
-                return 1;
-            }
-            
-            if ( value.length > maxLength) {
-                update( errorId, "El " + nombre + " no debe exceder de " + maxLength + " caracteres");
-                return 1;
-            }
-            
-            return 0;
-        }
+        env.callbacks = {
         
-        function isValidEmail( value) {
-            return /^\w+([\.\+\-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,4})+$/.test( value);
-        }
-        
-        function noCumplenConExtension( files, extension) {
-            let error = false;
-            let file;
+            show_action_view: function( item, items) {
+                return true;
+            },
+    
+            on_click_action: function( info) {
+                env.callbacks.consulta_documento( info.id);
+            },
             
-            for( let i = 0; i < files.length; ++i) {
-                file = files[i];
-                if ( !file.name.toLowerCase().endsWith( extension)) {
-                    error = true;
+            on_click_autocomplete : function() {
+                env.callbacks.consulta_documento( env.idItem);
+            },
+            
+            consulta_documento: function( id) {
+                server.data.get( 'documento/firmado/' + id, function(resp) {
+                    let item = resp.item;
+                    let folio = item.folio;
+                    let encodedName = encodeURIComponent( item.nombre);
+                    
+                    navigation.goto( 'validacionDocumento?folio='+ folio + '&nombre=' + encodedName);
+                });
+            }
+        };
+        
+        
+        
+        var componente = {
+            documento: {
+                obtener_pagina: function ( pagina) {
+                    env.tabla.mostrarPagina( pagina);
                 }
             }
-            
-            return error;
-        }
+        };
         
-        function excedenMaxItems( files, maxItems) {
-            return files.length > maxItems;
-        }
-        
-        function excedenMaxSizeMB( files, maxSizeMB) {
-            let total = 0;
-            let file;
-            
-            for( let i = 0; i < files.length; ++i) {
-                file = files[i];
-                total = total + file.size;
-            }
-
-            return total > (maxSizeMB*1024*1024);
-        }
-        
-        function hide( id) {
-            jQuery( '#' + id).attr( 'hidden', true);
-        }
-        
-        function update( id, text) {
-            jQuery( '#' + id).text( text).attr( 'hidden', false);
-        }
-        
-        function regresar() {
-			var link = document.getElementById( 'download');
-			link.href= './firmaDocumento';
-			link.click();
-		}
-        
-        function logout() {
-			var link = document.getElementById( 'download');
-			link.href= './logout';
-			link.click();
-		}
 	</script>
     
 </head>
@@ -294,7 +228,7 @@
                                                 <i class="fas fa-pencil-square-o"></i>Aceptar
                                             </button>
                                             &nbsp;
-                                            <button type="button" class="btn btn-info" onclick="javascript: regresar();" title="Firmar Documento(s)">
+                                            <button type="button" class="btn btn-info" onclick="javascript: navigation.goto( 'firmaDocumento');" title="Firmar Documento(s)">
                                                 Cancelar
                                             </button>
                 						</td>
@@ -340,11 +274,11 @@
 				<navbar class="navbar navbar-light bg-light">
                     <a class="navbar-brand" href="#">&nbsp;</a>
                     
-					<button type="button" class="btn btn-sm btn-link" onclick="javascript: regresar();" title="Firmar Documento(s)">
+					<button type="button" class="btn btn-sm btn-link" onclick="javascript: navigation.goto( 'firmaDocumento');" title="Firmar Documento(s)">
                         <i class="fas fa-file-signature"></i>&nbsp;Firmar Documento(s)
                     </button>
                             
-                    <button type="button" class="btn btn-sm btn-link" onclick="javascript: logout();" title="Salir (logout)">
+                    <button type="button" class="btn btn-sm btn-link" onclick="javascript: navigation.logout();" title="Salir (logout)">
                         <i class="fas fa-sign-out-alt"></i>&nbsp;Salir
                     </button>
                 </navbar>
@@ -365,41 +299,19 @@
 		<tr><td>&nbsp;</td></tr>
 		<tr>
 			<td>
-                <table class="table">
-                    <thead class="header-dark">
-                        <tr>
-                            <th>Fecha Hora</th>
-                            <th>Folio</th>
-                            <th>Documento</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <%  if ( archivos == null) { %>
-                            <tr>
-                                <td colspan="4">No hay resultados que mostrar</td>
-                            </tr>
-                        <% } else { %>                          
-                            <%
-                                DateFormat formatter = new SimpleDateFormat ("dd/MM/yyyy HH:mm:ss");
-                                for ( ArchivoDepositado archivo : archivos) {
-                            %>
-                                <tr>
-                                    <td><%= formatter.format( archivo.getFechaHora())%></td>
-                                    <td><%= archivo.getFolio()  %></td>
-                                    <td><%= archivo.getNombre() %></td>
-                                    <td>
-                                        <a href="./validacionDocumento?folio=<%= archivo.getFolio()%>&nombre=<%= URLEncoder.encode( archivo.getNombre(), "UTF-8")%>"
-                                           title="Descarga y validación del documento"
-                                        >
-                                            <i class="fas fa-download"></i>
-                                        </a>
-                                    </td>
-                                </tr>
-                            <% } %>
-                        <% } %>
-                    </tbody>
-                </table>
+                <div id="list_documento" class="card">
+                    <div class="card-header" style="color: #0056b3;">
+                        Documentos Firmados
+                        <div class="float-right col-sm-6" id="container_autoComplete_documento"></div>
+                    </div>
+                    <div class="card-body" style="padding: 12px;">
+                        <table class="table table-striped table-hover">
+                            <thead id="header_documento" class="thead-dark"></thead>
+                            <tbody id="page_documento"></tbody>
+                            <tfoot id="footer_documento"></tfoot>
+                        </table>
+                    </div>
+                </div>
             </td>
         </tr>
     </table>
@@ -418,5 +330,8 @@
     </div>
     
     <a id="download" href=""></a>
+    
+    <div id="componente_autocompletion"></div>
+    <div id="componente_tabla"></div>
 </body>
 </html>

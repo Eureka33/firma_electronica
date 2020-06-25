@@ -3,23 +3,19 @@ package mx.eureka.firma.digital.servlet;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.List;
-
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import mx.com.neogen.commons.exception.OperacionNoRealizadaException;
 import mx.eureka.firma.digital.bean.BeanInfoDocumento;
 import mx.eureka.firma.digital.bean.InfoArchivo;
 import mx.eureka.firma.digital.bean.UtilDocumento;
-
 import org.apache.commons.fileupload.DiskFileUpload;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadBase;
 
 
-public class ValidacionDocumento extends HttpServlet {
+public class ValidacionDocumento extends BaseServlet {
 
 	private static final long serialVersionUID = 2389655495605997697L;
 
@@ -72,11 +68,6 @@ public class ValidacionDocumento extends HttpServlet {
                 throw ex;
             }
 		}
-	}
-    
-	protected void forwardTo( HttpServletRequest request, HttpServletResponse response, String pagina) throws IOException, ServletException {	
-		final RequestDispatcher dispatcher = getServletContext().getRequestDispatcher( pagina);
-		dispatcher.forward( request, response);
 	}
 	
 	private String checksumUploadedFile( final HttpServletRequest request) {

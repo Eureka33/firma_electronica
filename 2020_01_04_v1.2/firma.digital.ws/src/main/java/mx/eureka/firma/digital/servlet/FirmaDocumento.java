@@ -14,9 +14,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import mx.com.neogen.commons.util.UtilStream;
@@ -27,7 +25,7 @@ import mx.eureka.firma.digital.bean.UtilDocumento;
 import mx.eureka.firma.digital.bean.ZipCreator;
 
 
-public class FirmaDocumento extends HttpServlet {
+public class FirmaDocumento extends BaseServlet {
 
 	private static final long serialVersionUID = 2389655495605997697L;
 
@@ -182,17 +180,6 @@ public class FirmaDocumento extends HttpServlet {
         return zip;
     }
     
-    private String[] obtenerMensajesError( String nombreArchivo, String[] errores) {
-        final List<String> mensajes = new ArrayList<>();
-        
-        mensajes.add( "Archivo: " + nombreArchivo);
-        for( String error : errores) {
-            mensajes.add( error);
-        }
-        
-        return mensajes.toArray( new String[] {});
-    }
-    
     private static InfoArchivo getArchivoDatos( final mx.eureka.firma.digital.bean.InfoArchivo info) {
 		final InfoArchivo archivo = new InfoArchivo();
         
@@ -201,11 +188,6 @@ public class FirmaDocumento extends HttpServlet {
 		archivo.setExtension( UtilStream.getExtensionArchivo( info.getNombre()));
 		
 		return archivo;
-	}
-    
-	protected void forwardTo( HttpServletRequest request, HttpServletResponse response, String pagina) throws IOException, ServletException {	
-		final RequestDispatcher dispatcher = getServletContext().getRequestDispatcher( pagina);
-		dispatcher.forward( request, response);
 	}
     
 }

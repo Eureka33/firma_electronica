@@ -23,8 +23,6 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import mx.neogen.log.Log;
-
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.ssl.PKCS8Key;
 import org.bouncycastle.asn1.x500.RDN;
@@ -49,6 +47,7 @@ import com.eureka.firma.digital.ws.bean.Firma;
 import com.eureka.firma.digital.ws.bean.Resultado;
 import com.meve.ofspapel.firma.digital.core.service.IConfiguracionService;
 import mx.com.neogen.commons.util.UtilStream;
+import mx.neogen.log.Log;
 
 @Service("firmaDigitalService")
 public class FirmaDigitalService implements IFirmaDigitalService {
@@ -111,8 +110,6 @@ public class FirmaDigitalService implements IFirmaDigitalService {
 		} finally {
 			try { fis.close(); } catch( Exception ex) { ex.printStackTrace(); }
 		}
-		
-		Log.info( "certificado: " + certificado);
 		
 		try {
 			X500Name x500name = new JcaX509CertificateHolder(certificado).getSubject();
@@ -344,8 +341,6 @@ public class FirmaDigitalService implements IFirmaDigitalService {
 			for ( File certiFile : directorioRootCerts.listFiles()) {
 				InputStream isCertificadoRoot = null;
 				
-				Log.info( "Testing root certificate: " + certiFile);
-				
 				try {
 					isCertificadoRoot = new FileInputStream( certiFile);
 					X509Certificate rootCert = (X509Certificate) cf.generateCertificate(isCertificadoRoot);
@@ -374,14 +369,9 @@ public class FirmaDigitalService implements IFirmaDigitalService {
 
 					//Se establece la conexión HTTP con el ocsp del DNIe
 					final URL url = new URL( urlServicioOCSP);
-                    
-                    System.out.println( "connecting to: [" + url + "]");
-                    
-					final HttpURLConnection con = (HttpURLConnection)url.openConnection();
+                    final HttpURLConnection con = (HttpURLConnection)url.openConnection();
 
-                    System.out.println( "succesful connection");
-                    
-					//Se configuran las propiedades de la petición HTTP
+                    //Se configuran las propiedades de la petición HTTP
 					con.setRequestProperty("Content-Type", "application/ocsp-request");
 					con.setRequestProperty("Accept", "application/ocsp-response");
 					con.setDoOutput(true);
@@ -392,7 +382,6 @@ public class FirmaDigitalService implements IFirmaDigitalService {
                         final OutputStream out = con.getOutputStream();
                         dataOut = new DataOutputStream( new BufferedOutputStream( out));
                         
-                        System.out.println( "writing request to socket");
                         //Se obtiene la respuesta del servidos OCSP del DNIe
                         dataOut.write( ocspPeticion.getEncoded());
                     
@@ -407,8 +396,6 @@ public class FirmaDigitalService implements IFirmaDigitalService {
                     OCSPResp ocspRespuesta = null;
 					
                     try {
-                        System.out.println( "reading response from socket");
-                    
                         in = (InputStream) con.getContent();
                         ocspRespuesta = new OCSPResp( in);
                         
@@ -452,13 +439,13 @@ public class FirmaDigitalService implements IFirmaDigitalService {
 							"OCSP-RESPONDER: ERROR. TIPO DE RESPUESTA DESCONOCIDO"
 						);
 					}
-
+                    
+                    Log.info( "resultado: (" + resultado.getCodigo() + ") " + resultado.getMensaje());
+                    
 					if ( resultado.getCodigo() == 0) {
-						Log.info( " --- resultado ok");
+						Log.info( "resultado ok");
 						return resultado;
 					} 
-					
-					Log.info( " --- resultado : " + resultado);
 					
 				} catch ( Exception ex) {
 					ex.printStackTrace();
