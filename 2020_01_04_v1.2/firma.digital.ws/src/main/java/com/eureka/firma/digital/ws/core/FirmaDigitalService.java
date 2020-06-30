@@ -148,15 +148,13 @@ public class FirmaDigitalService implements IFirmaDigitalService {
 		}
 		
 		// valida estatus con el servidor OCSP
-       
-        //  TODO: La consulta OCSP siempre regresa TRY LATER
         
 		Resultado<String> validacion = validaCertificado( certificado);
-		if ( validacion.isError()) {
+        
+        if ( validacion.isError()) {
 			return ResultadoEnum.ERROR_VALIDACION.getResultado( validacion.getMensaje());
 		}
 		
-        
 		final PublicKey key =  certificado.getPublicKey();
 		
 		Resultado<PublicKey> resultado = ResultadoEnum.OK.getResultado("");
