@@ -1,3 +1,8 @@
+--
+--	Propieadades de configuración
+--	
+--	TODO: Revisar el uso de cada propiedad en el codigo fuente
+--
 
 insert into eurk_wsss_configuracion( clave, valor) values (     'algoritmo.digest.cipher', 'SHA1withRSA');
 insert into eurk_wsss_configuracion( clave, valor) values (      'url.servicio.ocsp.fiel', 'http://www.sat.gob.mx/ocsp');
