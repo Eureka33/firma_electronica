@@ -18,7 +18,6 @@ import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.PdfStamper;
 import java.io.FileOutputStream;
 import mx.com.neogen.commons.util.UtilStream;
-import mx.eureka.firma.digital.bean.UtilDocumento;
 
 
 public class PDFSignAppenderV2 extends BasePDFSignAppender implements IPDFSignAppender {
