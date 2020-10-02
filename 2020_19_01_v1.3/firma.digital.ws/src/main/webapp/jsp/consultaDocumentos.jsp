@@ -24,18 +24,18 @@
     <link rel="stylesheet" href="./libs/bootstrap/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="./libs/scripts/estilos.css"            />
        
-    <script type="text/javascript" charset="UTF-8" src="./libs/jquery/jquery.min.js"></script>
-    <script type="text/javascript" charset="UTF-8" src="./libs/bootstrap/js/bootstrap.min.js"></script>
-    <script type="text/javascript" charset="UTF-8" src="./libs/bootstrap/js/popper.min.js"></script>
+    <script src="./libs/jquery/jquery.min.js"></script>
+    <script src="./libs/bootstrap/js/bootstrap.min.js"></script>
+    <script src="./libs/bootstrap/js/popper.min.js"></script>
     
-    <script type="text/javascript" charset="UTF-8" src="./libs//handlebars/handlebars.js"></script>
-    <script type="text/javascript" charset="UTF-8" src="./libs/scripts/eureka33/eurk-core.min.js"></script>
+    <script src="./libs//handlebars/handlebars.js"></script>
+    <script src="./libs/scripts/eureka33/eurk-core.min.js"></script>
 	   
-    <script type="text/javascript" src="./libs/fontawesome/js/fontawesome.min.js"></script>
-    <script type="text/javascript" src="./libs/jquery/is.min.js"></script>
-    <script type="text/javascript" src="./libs/scripts/util_functions.js"></script>
+    <script src="./libs/fontawesome/js/fontawesome.min.js"></script>
+    <script src="./libs/jquery/is.min.js"></script>
+    <script src="./libs/scripts/util_functions.js"></script>
     
-	<script type="text/javascript">	
+	<script>	
         jQuery.noConflict();
         
         var env = { documento: {}};
@@ -135,8 +135,6 @@
                 });
             }
         };
-        
-        
         
         var componente = {
             documento: {

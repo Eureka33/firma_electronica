@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:c="http://www.springframework.org/schema/c"
+<beans
+    xmlns        ="http://www.springframework.org/schema/beans"
+	xmlns:xsi    ="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:c      ="http://www.springframework.org/schema/c"
 	xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:p="http://www.springframework.org/schema/p"
-	xmlns:tx="http://www.springframework.org/schema/tx"
-	xmlns:util="http://www.springframework.org/schema/util"
-    xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:p      ="http://www.springframework.org/schema/p"
+	xmlns:tx     ="http://www.springframework.org/schema/tx"
+	xmlns:util   ="http://www.springframework.org/schema/util"
+    xmlns:aop    ="http://www.springframework.org/schema/aop"
 	xmlns:mybatis="http://mybatis.org/schema/mybatis-spring"
-	xmlns:jaxws="http://cxf.apache.org/jaxws"
-	xmlns:soap="http://cxf.apache.org/bindings/soap"
+	xmlns:jaxws  ="http://cxf.apache.org/jaxws"
+	xmlns:soap   ="http://cxf.apache.org/bindings/soap"
     xsi:schemaLocation="
 		http://www.springframework.org/schema/beans
 		http://www.springframework.org/schema/beans/spring-beans.xsd
@@ -28,8 +29,10 @@
         http://cxf.apache.org/schemas/configuration/soap.xsd
         http://cxf.apache.org/jaxws
         http://cxf.apache.org/schemas/jaxws.xsd"
-  	default-init-method="initialize" default-destroy-method="stop">
-    
+  	default-init-method="initialize"
+    default-destroy-method="stop"
+>
+        
     <tx:annotation-driven />
     
     <!-- Datasource Base de Datos										-->

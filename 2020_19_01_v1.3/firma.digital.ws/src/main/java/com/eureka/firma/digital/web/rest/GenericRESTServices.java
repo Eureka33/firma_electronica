@@ -22,7 +22,7 @@ public class GenericRESTServices {
 	
 	
 	@RequestMapping(
-		value = "/list/{claveModulo}/{claveEntidad}",
+		value = "/_data_/list/{claveModulo}/{claveEntidad}",
 		method = RequestMethod.POST, consumes = "application/json", produces = "application/json"
 	)
 	@ResponseBody
@@ -35,7 +35,7 @@ public class GenericRESTServices {
 	}
 	
 	@RequestMapping(
-		value = "/getItem/{claveModulo}/{claveEntidad}/{idItem}",
+		value = "/_data_/getItem/{claveModulo}/{claveEntidad}/{idItem}",
 		method = RequestMethod.POST, consumes="application/json", produces="application/json"
 	)
 	@ResponseBody
@@ -50,7 +50,7 @@ public class GenericRESTServices {
 	}
 	
 	@RequestMapping(
-		value = "/get/{claveModulo}/{claveEntidad}/{idItem}",
+		value = "/_data_/get/{claveModulo}/{claveEntidad}/{idItem}",
 		method = RequestMethod.GET, produces = "application/json"
 	)
 	@ResponseBody
@@ -64,7 +64,7 @@ public class GenericRESTServices {
 	}
 	
 	@RequestMapping(
-		value = "/create/{claveModulo}/{claveEntidad}",
+		value = "/_data_/create/{claveModulo}/{claveEntidad}",
 		method = RequestMethod.POST, consumes = "application/json", produces = "application/json"
 	)
 	@ResponseBody
@@ -77,7 +77,7 @@ public class GenericRESTServices {
 	}
 	
 	@RequestMapping(
-		value = "/save/{claveModulo}/{claveEntidad}",
+		value = "/_data_/save/{claveModulo}/{claveEntidad}",
 		method = RequestMethod.POST, consumes = "application/json", produces = "application/json"
 	)
 	@ResponseBody
@@ -90,7 +90,7 @@ public class GenericRESTServices {
 	}
 	
 	@RequestMapping(
-		value = "/delete/{claveModulo}/{claveEntidad}/{idItem}",
+		value = "/_data_/delete/{claveModulo}/{claveEntidad}/{idItem}",
 		method = RequestMethod.POST, consumes = "application/json", produces = "application/json"
 	)
 	@ResponseBody
@@ -105,7 +105,7 @@ public class GenericRESTServices {
 	}
 	
 	@RequestMapping( 
-		value="/manage/{claveModulo}/{claveEntidad}",
+		value="/_data_/manage/{claveModulo}/{claveEntidad}",
 		method=RequestMethod.POST,consumes = "application/json", produces="application/json")
 	@ResponseBody
 	public RespuestaWS gestionar(	final HttpServletRequest   request, 

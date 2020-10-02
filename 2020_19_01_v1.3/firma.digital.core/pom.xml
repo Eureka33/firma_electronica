@@ -11,25 +11,20 @@
     <name>firma.electronica.core.v1.3</name>
   
     <properties>
-
-        <!-- Generic properties -->
-        <java.jdk.version>11</java.jdk.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<java.jdk.version>11</java.jdk.version>
+		<java.junit.version>4.13</java.junit.version>
 
 		<!-- Spring -->
-		<spring-framework.version>5.2.9.RELEASE</spring-framework.version>
+		<java.spring.version>5.2.6.RELEASE</java.spring.version>
 
 		<!--  Data Base -->
-		<commons-dbcp-version>20030825.184428</commons-dbcp-version>
+		<java.dbcp.version>1.4</java.dbcp.version>
 		
 		<!--  Bouncycastle -->
-		<bouncycastle.version>1.49</bouncycastle.version>
-
-		<!-- Test -->
-		<junit.version>4.11</junit.version>
-
+		<java.bouncycastle.version>1.49</java.bouncycastle.version>
+        
 	</properties>
 	
 	<dependencies>
@@ -44,37 +39,37 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
-			<version>${spring-framework.version}</version>
+			<version>${java.spring.version}</version>
 		</dependency>
 		
         <dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-tx</artifactId>
-			<version>${spring-framework.version}</version>
+			<version>${java.spring.version}</version>
 		</dependency>
 		
         <dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-orm</artifactId>
-			<version>${spring-framework.version}</version>
+			<version>${java.spring.version}</version>
 		</dependency>
 		
         <dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-core</artifactId>
-			<version>${spring-framework.version}</version>
+			<version>${java.spring.version}</version>
 		</dependency>				
 		
         <dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-web</artifactId>
-			<version>${spring-framework.version}</version>
+			<version>${java.spring.version}</version>
 		</dependency>
         
         <dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context-support</artifactId>
-			<version>${spring-framework.version}</version>
+			<version>${java.spring.version}</version>
 		</dependency>
         
         
@@ -107,49 +102,49 @@
 	    <dependency>
 	      <groupId>commons-dbcp</groupId>
 	      <artifactId>commons-dbcp</artifactId>
-	      <version>1.4</version>
+	      <version>${java.dbcp.version}</version>
 	    </dependency>		
 	    
 	    <!-- Javax Presistence -->
 	    <dependency>
 	    	<groupId>javax.persistence</groupId>
 	    	<artifactId>persistence-api</artifactId>
-	    	<version>1.0</version>
+	    	<version>1.0.2</version>
 	    </dependency>
 	    
 	    <!--  JCA / JCE with bouncycastle -->
 	    <dependency>
 			<groupId>org.bouncycastle</groupId>
 			<artifactId>bcprov-jdk15on</artifactId>
-			<version>${bouncycastle.version}</version>
+			<version>${java.bouncycastle.version}</version>
 			<type>jar</type>
 			<scope>compile</scope>
       	</dependency>
 		<dependency>
 			<groupId>org.bouncycastle</groupId>
 			<artifactId>bcprov-ext-jdk15on</artifactId>
-			<version>${bouncycastle.version}</version>
+			<version>${java.bouncycastle.version}</version>
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.bouncycastle</groupId>
 			<artifactId>bcpkix-jdk15on</artifactId>
-			<version>${bouncycastle.version}</version>
+			<version>${java.bouncycastle.version}</version>
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.bouncycastle</groupId>
 			<artifactId>bcmail-jdk15on</artifactId>
-			<version>${bouncycastle.version}</version>
+			<version>${java.bouncycastle.version}</version>
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.bouncycastle</groupId>
 			<artifactId>bcpg-jdk15on</artifactId>
-			<version>${bouncycastle.version}</version>
+			<version>${java.bouncycastle.version}</version>
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
@@ -167,19 +162,11 @@
             <version>1.1.1</version>
         </dependency>
     
-	    
-		<!-- Test Artifacts -->
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-test</artifactId>
-			<version>${spring-framework.version}</version>
-			<scope>test</scope>
-		</dependency>
         
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>${junit.version}</version>
+			<version>${java.junit.version}</version>
 			<scope>test</scope>
 		</dependency>
 		
@@ -188,15 +175,26 @@
 	<build>
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.3.2</version>
-                <configuration>
-                    <source>${java.jdk.version}</source>
-                    <target>${java.jdk.version}</target>
-                    <optimize>true</optimize>
-                </configuration>
-            </plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+				<configuration>
+					<source>${java.jdk.version}</source>
+					<target>${java.jdk.version}</target>
+					<optimize>true</optimize>
+					<encoding>${project.build.sourceEncoding}</encoding>
+					<sourceEncoding>${project.build.sourceEncoding}</sourceEncoding>
+				</configuration>
+			</plugin>
+			
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-site-plugin</artifactId>
+                <version>3.9.1</version>
+				<configuration>
+					<outputEncoding>${project.build.sourceEncoding}</outputEncoding>
+				</configuration>
+			</plugin>
         </plugins>
     </build>
 </project>
