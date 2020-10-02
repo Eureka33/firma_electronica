@@ -1,0 +1,17 @@
+
+.container {
+    border: none; 
+    width: 700px;
+    margin-left: auto; 
+    margin-right:auto;
+}
+       
+.prompt {
+    font-size: 1.2em;
+    font-weight: bold;
+}
+        
+.error {
+    font-size: 1.0em;
+    color: red;
+}

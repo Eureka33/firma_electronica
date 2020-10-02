@@ -14,3 +14,7 @@ test/verj740211jg0.cer
 2019_12_12_v1.0/firma.digital.core/nb-configuration.xml
 2019_12_12_v1.0/firma.digital.client/nb-configuration.xml
 2019_12_12_v1.0/firma.digital.ws/nb-configuration.xml
+/2020_19_01_v1.3/basic-core/target/
+/2020_19_01_v1.3/firma.digital.client/target/
+/2020_19_01_v1.3/firma.digital.core/target/
+/2020_19_01_v1.3/firma.digital.ws/target/

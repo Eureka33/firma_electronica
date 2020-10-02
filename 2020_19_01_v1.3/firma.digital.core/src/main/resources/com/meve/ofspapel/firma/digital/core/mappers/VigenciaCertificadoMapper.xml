@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC 
+	"-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd"
+>
+
+<mapper namespace="com.meve.ofspapel.firma.digital.core.mappers.VigenciaCertificadoMapper">
+   
+   <select id="findVigenciaCert" resultType="com.meve.ofspapel.firma.digital.core.entidades.VigenciaCertificado">
+      select
+    	no_serie 			as serial,
+		fec_inicial_cert	as fechaIni,
+        fec_final_cert		as fechaFin,
+        rfc					as rfc,
+        edo_certificado 	as estatus
+      from certificado where no_serie = #{param1} and rfc = #{param2}
+	</select>
+	
+    <select id="findVigenciaCertBySerial" resultType="com.meve.ofspapel.firma.digital.core.entidades.VigenciaCertificado">
+      select 
+       	no_serie 			as serial,
+       	fec_inicial_cert	as fechaIni,
+       	fec_final_cert		as fechaFin,
+       	rfc					as rfc,
+       	edo_certificado 	as estatus
+      from certificado where no_serie = #{serial}
+	</select>
+    
+    <insert id="insertaVigenciaCertificado" parameterType="com.meve.ofspapel.firma.digital.core.entidades.VigenciaCertificado">
+	  insert into certificado (
+		no_serie, fec_inicial_cert, fec_final_cert, rfc, edo_certificado
+	  ) values( #{serial}, #{fechaIni}, #{fechaFin}, #{rfc}, #{estatus})
+	</insert>
+	
+	<update id="actualizaVigenciaCertificado" parameterType="com.meve.ofspapel.firma.digital.core.entidades.VigenciaCertificado">
+	  update certificado set
+		fec_inicial_cert	= #{fechaIni},
+		fec_final_cert 		= #{fechaFin},
+		edo_certificado 	= #{estatus}
+	  where no_serie = #{serial} and rfc = #{rfc}		
+	</update>
+
+</mapper>

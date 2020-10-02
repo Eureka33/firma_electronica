@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script type="text/javascript" charset="UTF-8" src="./libs/components/autocompletion/autocompletion.js"></script>
+</head>
+<body>
+
+<script id="autocompletion_template" type="text/x-handlebars-template">
+<div class="dropdown" id="{{id}}">
+	<input id="drpdwn_txt_{{id}}" type="text" class="form-control dropdown-toggle" data-toggle="dropdown" placeholder="{{placeholder}}"/>
+	<div id="drpdwn_lst_{{id}}" class="dropdown-menu" style="display: none; "></div>
+</div>
+</script>
+
+<script id="autocompletion_item" type="text/x-handlebars-template">
+<a class= "dropdown-item" data-value="{{value}}" href="#" style="cursor: pointer">
+	{{formatMatches tokens label}}
+</a>
+</script>
+
+</body>
+</html>

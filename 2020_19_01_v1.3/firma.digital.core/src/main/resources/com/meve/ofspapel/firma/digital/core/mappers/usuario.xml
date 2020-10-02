@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.meve.ofspapel.firma.digital.core.mappers.UsuarioDAO">
+   
+    <resultMap id="usuario" type="com.meve.ofspapel.firma.digital.core.entidades.Usuario">
+        <constructor>
+            <arg column="id" javaType="integer"/>
+        </constructor>
+        
+        <result property="clave"    column="clave"  />
+        <result property="nombre"   column="nombre" />
+         
+    </resultMap>
+        
+    <select id="find" resultMap="usuario">
+        select * from eurk_wsss_usuario where clave = #{clave}
+    </select>
+    
+    <insert id="insert" keyColumn="id" keyProperty="item.id" useGeneratedKeys="true">
+        insert into eurk_wsss_usuario( clave, nombre) values ( #{item.clave}, #{item.nombre})
+	</insert>
+    
+</mapper>
