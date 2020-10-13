@@ -23,7 +23,7 @@
 		<bouncycastle.version>1.49</bouncycastle.version>
 
 		<!-- Test -->
-		<junit.version>4.11</junit.version>
+		<junit.version>4.13.1</junit.version>
 
 	</properties>
 	
