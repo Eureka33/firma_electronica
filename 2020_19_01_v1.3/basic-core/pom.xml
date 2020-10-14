@@ -22,7 +22,7 @@
 	    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         
 		<java.jdk.version>11</java.jdk.version>
-		<java.junit.version>4.13</java.junit.version>
+		<java.junit.version>4.13.1</java.junit.version>
 	</properties>
 	
 	<dependencies>
