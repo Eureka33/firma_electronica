@@ -20,9 +20,7 @@
 
 	<properties>
 	    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        
 		<java.jdk.version>11</java.jdk.version>
-		<java.junit.version>4.13</java.junit.version>
 	</properties>
 	
 	<dependencies>
@@ -36,7 +34,7 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>${java.junit.version}</version>
+			<version>4.13.2</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
