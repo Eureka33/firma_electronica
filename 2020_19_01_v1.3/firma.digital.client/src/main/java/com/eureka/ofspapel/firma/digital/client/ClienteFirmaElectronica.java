@@ -23,11 +23,16 @@ import com.eureka.firma.digital.ws.service.SolicitudFirma;
 
 
 public class ClienteFirmaElectronica implements ActionListener {
-
+    
+    /*
+     *  BEFORE DEPLOY:  set correct URL according to the execution environment
+     */
 	private final static String SERVICIO_WEB_FIRMA_URL =
+        /*"http://fiel.asa.gob.mx/digitalSignWSSS/servicios/FirmaElectronica";*/
         "http://localhost:8080/digitalSignWSSS/servicios/FirmaElectronica";
 	
-	private Map<String, ?> modelo;
+	
+    private Map<String, ?> modelo;
 	
 	
 	public ClienteFirmaElectronica( Map<String, ?> modelo) {
