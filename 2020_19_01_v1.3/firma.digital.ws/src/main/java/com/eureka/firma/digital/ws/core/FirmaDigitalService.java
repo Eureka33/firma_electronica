@@ -449,7 +449,7 @@ public class FirmaDigitalService implements IFirmaDigitalService {
 					
 				} catch ( Exception ex) {
 					ex.printStackTrace();
-					return ResultadoEnum.ERROR_VALIDACION.getResultado("Error de Invocación al Servidor OCSP");
+					//return ResultadoEnum.ERROR_VALIDACION.getResultado("Error de Invocación al Servidor OCSP");
 							
 				} finally {
 					try { isCertificadoRoot.close(); } catch ( Exception ex) { ex.printStackTrace(); }
