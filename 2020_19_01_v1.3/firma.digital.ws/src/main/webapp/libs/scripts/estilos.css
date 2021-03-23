@@ -7,7 +7,7 @@
 }
        
 .prompt {
-    font-size: 1.2em;
+    font-size: 1.1em;
     font-weight: bold;
 }
         
@@ -15,3 +15,11 @@
     font-size: 1.0em;
     color: red;
 }
+
+/** 
+ *  estilos de formularios
+ */
+form table td {
+    padding-bottom: 15px;
+}
+

@@ -14,8 +14,7 @@
     <name>web.firma.electronica.v1.3</name>
     
     <description>
-    	Servicio WEB capaz de obtener la firma digital de archivos utilizando
-    	la FIEL como el sistema PKI.
+    	Servicio WEB capaz de obtener la firma digital de archivos utilizando la FIEL como el sistema PKI.
     </description>
     
     <properties>
@@ -64,7 +63,6 @@
             <artifactId>commons-codec</artifactId>
             <version>1.15</version>  
         </dependency>
-      
   
  		<dependency>
 			<groupId>com.meve.ofspapel</groupId>
