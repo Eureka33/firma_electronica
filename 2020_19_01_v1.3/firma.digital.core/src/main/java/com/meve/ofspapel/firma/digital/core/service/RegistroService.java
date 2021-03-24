@@ -44,9 +44,9 @@ public class RegistroService {
     }
         
     public void asignaDocumentos( ArchivoDepositado archivoZip, List<ArchivoDepositado> documentos) {
-        for( ArchivoDepositado documento : documentos) {
+        documentos.forEach( (ArchivoDepositado documento) -> {
             registroDAO.asignaDocumento( documento.getId(), archivoZip.getId());
-        }
+        });
     }
     
 }

@@ -83,7 +83,7 @@ public class StreamService implements IStreamService {
     
     @Override
     public void firmarDocumento( String pathDeposito, String urlDescarga, SessionFirma sf, Firma firma, String organizacion) throws FileNotFoundException {          
-        final String source = sf.archivo.getAbsolutePath();
+        final String source   = sf.archivo.getAbsolutePath();
         final String checksum = UtilDocumento.getMd5( source);
         
         final File pathDirDeposito = new File( pathDeposito).getParentFile();
