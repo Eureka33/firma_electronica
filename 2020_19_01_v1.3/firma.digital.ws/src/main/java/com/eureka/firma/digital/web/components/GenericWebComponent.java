@@ -3,30 +3,25 @@ package com.eureka.firma.digital.web.components;
 import com.eureka.firma.digital.web.ComponentLocator;
 import com.eureka.firma.digital.web.UtilWeb;
 import com.eureka.firma.digital.web.beans.RequestItem;
+import com.eurk.core.beans.consulta.Consulta;
+import com.eurk.core.beans.consulta.enums.EnumTipoConsulta;
+import com.eurk.core.beans.respuesta.RespuestaItemWS;
+import com.eurk.core.beans.respuesta.RespuestaItemsWS;
+import com.eurk.core.beans.respuesta.RespuestaWS;
+import com.meve.ofspapel.firma.digital.core.entidades.Usuario;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import com.eurk.core.beans.consulta.Consulta;
-import com.eurk.core.beans.respuesta.RespuestaItemWS;
-import com.eurk.core.beans.respuesta.RespuestaItemsWS;
-import com.eurk.core.beans.respuesta.RespuestaWS;
-
-
 import mx.com.neogen.commons.bean.Propiedades;
-import com.eurk.core.beans.consulta.enums.EnumTipoConsulta;
-import com.meve.ofspapel.firma.digital.core.entidades.Usuario;
 import mx.com.neogen.commons.interfaces.ICRUDService;
 import mx.com.neogen.commons.interfaces.IConsultableService;
 import mx.com.neogen.commons.interfaces.IManageService;
 import mx.com.neogen.commons.util.UtilBean;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 
 @Component

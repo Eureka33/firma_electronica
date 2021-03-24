@@ -4,6 +4,7 @@ import com.eureka.firma.digital.ws.bean.InfoArchivo;
 import com.eureka.firma.digital.ws.bean.InfoConfidencial;
 import com.eureka.firma.digital.ws.bean.Resultado;
 import com.eureka.firma.digital.ws.bean.SolicitudFirma;
+import com.eureka.firma.digital.ws.core.AutenticacionBsnsComponent;
 import com.eureka.firma.digital.ws.core.FirmaElectronicaBsnsComponent;
 import java.io.IOException;
 import javax.servlet.ServletException;
@@ -19,7 +20,8 @@ public class ConsultaDocumentos extends BaseServlet {
 	private static final long serialVersionUID = 2389655495605997697L;
 
     private FirmaElectronicaBsnsComponent firmaService;
-	
+	private AutenticacionBsnsComponent    autenticacion;
+    
     
 	public ConsultaDocumentos() {
 		super();
@@ -30,7 +32,8 @@ public class ConsultaDocumentos extends BaseServlet {
     public void init() throws ServletException {
         super.init();
         
-        firmaService    = AppContext.getBean( FirmaElectronicaBsnsComponent.class);
+        firmaService  = AppContext.getBean( FirmaElectronicaBsnsComponent.class);
+        autenticacion = AppContext.getBean(    AutenticacionBsnsComponent.class);
     }
     
 	@Override
@@ -85,7 +88,7 @@ public class ConsultaDocumentos extends BaseServlet {
         
         solicitud.setInfoConfidencial( getInfoConfidencial( bean));
         
-        return firmaService.autenticarUsuario( solicitud);
+        return autenticacion.autenticarUsuario( solicitud);
     }
 
 }

@@ -62,7 +62,7 @@ var validation = (function() {
         }
 
         if (!isValidEmail(value)) {
-            update(errorId, "El " + nombre + " no tiene un formato valido valido");
+            update(errorId, "El " + nombre + " no tiene un formato válido");
             return 1;
         }
 
@@ -73,6 +73,22 @@ var validation = (function() {
 
         return 0;
     }
+    
+    function validar_distinto( id1, id2, campo_ref) {
+        let errorId = 'error_' + id1;
+
+        hide( errorId);
+        
+        if( jQuery("#" + id1).val().trim() === jQuery("#" + id2).val().trim()) {
+            update( errorId, "Debe indicar un valor distinto al del campo " + campo_ref);
+            return 1;
+        }
+        
+        return 0;
+    }
+    
+    
+    
 
     function isValidEmail(value) {
         return /^\w+([\.\+\-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,4})+$/.test(value);
@@ -120,7 +136,8 @@ var validation = (function() {
     return {
         validarArchivos: validarArchivos,
         validarTexto   : validarTexto,
-        validarCorreo  : validarCorreo
+        validarCorreo  : validarCorreo,
+        validarDistinto: validar_distinto
     };       
 })();
 

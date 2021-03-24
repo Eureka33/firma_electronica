@@ -9,11 +9,14 @@ import com.meve.ofspapel.firma.digital.core.entidades.Usuario;
 import com.meve.ofspapel.firma.digital.core.service.IConfiguracionService;
 import com.meve.ofspapel.firma.digital.core.service.RegistroService;
 import com.meve.ofspapel.firma.digital.core.service.UsuarioService;
+import java.io.FileNotFoundException;
+import java.io.UnsupportedEncodingException;
+import mx.neogen.log.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class FirmaElectronicaBsnsComponent {
+public class SolicitudFirmaBsnsComponent  {
     
     @Autowired private UsuarioService usuarioService;
     @Autowired private RegistroService registroService;
@@ -27,7 +30,7 @@ public class FirmaElectronicaBsnsComponent {
 	/**
 	 * 	Firma el archivo recibido como argumento y devuelve el archivo firmado
 	 */
-	public RespuestaFirma firmarArchivo( final SolicitudFirma solicitud) {
+	public RespuestaFirma registrarArchivo( final SolicitudFirma solicitud) {
 	
 		SessionFirma sf = new SessionFirma( solicitud);
 		Resultado<?> resultado;
@@ -54,11 +57,11 @@ public class FirmaElectronicaBsnsComponent {
  
             Usuario usuario = usuarioService.obtenerUsuario( sf.firma.getRfc(), sf.firma.getTitular());
             
-            resultado = service.generaFirma( sf);
+            //resultado = generaFirma( sf);
             
             sf.folio = streamService.obtenerFolioArchivo(); 
             
-            service.actualizarArchivo( sf, (Resultado<Firma>) resultado);
+            //actualizarArchivo( sf, (Resultado<Firma>) resultado);
             
             registroService.registraDocumento( usuario, sf.firma.getFecha(), sf.folio, sf.archivo.getName());
             
@@ -72,15 +75,46 @@ public class FirmaElectronicaBsnsComponent {
 			);
 			
 		} finally {
-			service.eliminarDirectorioUpload( sf);
-		
-        }
-	}
-    
-	
-    public String obtenerRealPath( String urlDescarga) {
-        final String pathRepositorio = configService.getPropiedad( "path.repositorio.fs");
-        return streamService.obtenerPathDeposito( pathRepositorio, urlDescarga);
+			eliminarInfo( sf);
+		}		
     }
     
+    protected String actualizarArchivo( SessionFirma sf, Resultado<Firma> resultado) throws UnsupportedEncodingException, FileNotFoundException {
+        if( sf.archivo == null ) {
+            return null;
+        }
+        
+        final String extension = sf.solicitud.getArchivoDatos().getExtension();
+        if( !"pdf".equalsIgnoreCase( extension)) {
+            return null;
+        }
+        
+        String pathRepositorio = configService.getPropiedad( "path.repositorio.fs");
+        
+        String serverName    = configService.getPropiedad( "url.server.name");
+        String webAppContext = configService.getPropiedad( "path.app.context");
+        String organizacion  = configService.getPropiedad( "string.organizacion.nombre");
+        
+        String nombreArchivo = sf.archivo.getName();
+        
+        final String pathDeposito = streamService.obtenerPathDeposito( pathRepositorio, sf.folio, nombreArchivo);
+        
+        final String downloadURL  = streamService.generarURLDescarga( serverName, webAppContext, sf.folio, nombreArchivo);
+      
+        streamService.firmarDocumento( pathDeposito, downloadURL, sf, resultado.getResultado(), organizacion);
+        
+        return pathDeposito;
+    }
+
+    protected void eliminarInfo( final SessionFirma sf) {
+		// elimina unicamente los archivos confidenciales
+        Log.info( "directorio upload: " + sf.archivo.getParentFile().getAbsolutePath());
+        
+        /*
+        if ( sf.archivo != null) {
+			streamService.eliminarDirectorio( sf.archivo.getParentFile());
+		}
+        */
+	}
+        
 }

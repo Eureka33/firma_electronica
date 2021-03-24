@@ -1,7 +1,6 @@
 package com.eureka.firma.digital.ws.bean;
 
 import java.io.Serializable;
-
 import javax.activation.DataHandler;
 
 /**	

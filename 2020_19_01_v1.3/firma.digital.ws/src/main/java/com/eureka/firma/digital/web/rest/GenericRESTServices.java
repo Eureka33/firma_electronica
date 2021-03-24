@@ -1,8 +1,8 @@
 package com.eureka.firma.digital.web.rest;
 
 import com.eureka.firma.digital.web.beans.RequestItem;
-import com.eurk.core.beans.consulta.Consulta;
 import com.eureka.firma.digital.web.components.GenericWebComponent;
+import com.eurk.core.beans.consulta.Consulta;
 import com.eurk.core.beans.respuesta.RespuestaWS;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

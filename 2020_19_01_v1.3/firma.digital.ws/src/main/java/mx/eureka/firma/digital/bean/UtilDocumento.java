@@ -53,34 +53,58 @@ public class UtilDocumento {
        
         try { 
             List items = upload.parseRequest( request);
+            String value;
+            
             for ( Object nextItem : items) {
                 FileItem item = (FileItem) nextItem;
                     
                 if ( !item.isFormField()) {
                     
-                    if ( "documento".equals( item.getFieldName())) {
-                        final InfoArchivo archivo = new InfoArchivo();
+                    switch( item.getFieldName()) {
+                        case "documento":
+                            final InfoArchivo archivo = new InfoArchivo();
                         
-                        archivo.setNombre( item.getName());
-                        archivo.setContenido( item.getInputStream());
+                            archivo.setNombre( item.getName());
+                            archivo.setContenido( item.getInputStream());
                         
-                        bean.addArchivo( archivo);
+                            bean.addArchivo( archivo);
+                            
+                            break;
+                            
+                        case "certificado":
+                            bean.setCertificado( item.getInputStream());
+                            break;
                         
-                    } else if( "certificado".equals( item.getFieldName())) {
-                        bean.setCertificado( item.getInputStream());
-                    
-                    } else if ( "llavePrivada".equals( item.getFieldName())) {
-                        bean.setLlavePrivada( item.getInputStream());
-                    
+                        case "llavePrivada":
+                            bean.setLlavePrivada( item.getInputStream());
+                            break;
+                            
+                        default:
+                            throw new IllegalArgumentException( "Campo de archivo no conocido: " + item.getFieldName());
                     }
                  
                 } else {
-             
-                    if( "password".equals( item.getFieldName())) {
-                        bean.setPassword( item.getString().trim());
+                    value = item.getString().trim();
                     
-                    } else if ( "correo".equals( item.getFieldName())) {
-                        bean.setCorreo( item.getString().trim());
+                    switch( item.getFieldName()) {
+                        case "idOperacion":
+                            bean.setIdOperacion( Integer.valueOf( value));
+                            break;
+                            
+                        case "password":
+                            bean.setPassword( value);
+                            break;
+                            
+                        case "correo":
+                            bean.setCorreo(   value);
+                            break;
+                            
+                        case "correoDestinatario":
+                            bean.setCorreoDestinatario( value);
+                            break;
+                        
+                        default:
+                            throw new IllegalArgumentException( "Campo de formulario no conocido: " + item.getFieldName());
                     }
                 }
             }
@@ -218,7 +242,7 @@ public class UtilDocumento {
                     return "application/pdf";
                 
                 } else {
-                    throw new IllegalArgumentException( "Tipo de contenido no valido: " + tipo);
+                    throw new IllegalArgumentException( "Tipo de contenido no válido: " + tipo);
                 
                 }
             }

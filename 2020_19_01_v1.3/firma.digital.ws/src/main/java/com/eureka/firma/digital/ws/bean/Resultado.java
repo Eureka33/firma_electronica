@@ -1,7 +1,6 @@
 package com.eureka.firma.digital.ws.bean;
 
 import java.io.Serializable;
-
 import mx.com.neogen.commons.util.UtilReflection;
 
 public class Resultado<T> implements Serializable {

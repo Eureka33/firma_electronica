@@ -27,7 +27,7 @@
     <script src="./libs/bootstrap/js/bootstrap.min.js"></script>
     <script src="./libs/fontawesome/js/fontawesome.min.js"></script>
     <script src="./libs/jquery/is.min.js"></script>
-    <script src="./libs/scripts/util_functions.js"></script>
+    <script src="./libs/scripts/util_functions.js?rnd=<%= Math.random()%>"></script>
  
 	<script>	
         jQuery.noConflict();
@@ -56,6 +56,16 @@
             errores += validation.validarArchivos( 'llavePrivada', '.key', 'Llave Privada',   1, 1);
             
             errores += validation.validarTexto( 'password',         'Contraseña',  20);
+            
+            let idOperacion = parseInt( jQuery( "input[name='idOperacion']:checked").val(), 10);
+            
+            if( idOperacion === 1) {
+                let error = validation.validarTexto( 'correoDestinatario', 'Correo del Destinatario', 150);
+                error = (error === 0)? validation.validarCorreo( 'correoDestinatario', 'Correo del Destinatario', 150) : error;
+                error = (error === 0)? validation.validarDistinto( 'correoDestinatario', 'correo', 'Mi Correo Electrónico') : error;
+                errores += error;
+            }
+            
             errores += validation.validarCorreo(  'correo', 'Correo Electrónico', 150);
             
             let submit = (errores === 0);
@@ -68,7 +78,6 @@
         }
         
         function activar_continuar( event) {
-            console.log( "idOperacion change");
             jQuery( "#btnPaso1").attr( "disabled", false);
         }
         

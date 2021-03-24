@@ -17,7 +17,7 @@ public enum ResultadoEnum {
 	
 	
 	private ResultadoEnum( Integer codigo, String mensaje) {
-		resultado = new Resultado<Void>();
+		resultado = new Resultado<>();
 		
 		resultado.setCodigo( 	codigo);
 		resultado.setMensaje( 	mensaje);	
@@ -25,7 +25,7 @@ public enum ResultadoEnum {
 	
 	
 	public <T> Resultado<T> getResultado( String descripcion) {
-		Resultado<T> bean = new Resultado<T>();
+		Resultado<T> bean = new Resultado<>();
 		
 		bean.setCodigo( resultado.getCodigo());
 		bean.setMensaje(resultado.getMensaje() + ": " + descripcion);

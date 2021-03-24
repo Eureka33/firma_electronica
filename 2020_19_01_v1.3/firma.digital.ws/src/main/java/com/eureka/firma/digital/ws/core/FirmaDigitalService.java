@@ -1,5 +1,8 @@
 package com.eureka.firma.digital.ws.core;
 
+import com.eureka.firma.digital.ws.bean.Firma;
+import com.eureka.firma.digital.ws.bean.Resultado;
+import com.meve.ofspapel.firma.digital.core.service.IConfiguracionService;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
@@ -22,7 +25,8 @@ import java.security.cert.X509Certificate;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
+import mx.com.neogen.commons.util.UtilStream;
+import mx.neogen.log.Log;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.ssl.PKCS8Key;
 import org.bouncycastle.asn1.x500.RDN;
@@ -42,12 +46,6 @@ import org.bouncycastle.cert.ocsp.SingleResp;
 import org.bouncycastle.operator.jcajce.JcaDigestCalculatorProviderBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.eureka.firma.digital.ws.bean.Firma;
-import com.eureka.firma.digital.ws.bean.Resultado;
-import com.meve.ofspapel.firma.digital.core.service.IConfiguracionService;
-import mx.com.neogen.commons.util.UtilStream;
-import mx.neogen.log.Log;
 
 @Service("firmaDigitalService")
 public class FirmaDigitalService implements IFirmaDigitalService {

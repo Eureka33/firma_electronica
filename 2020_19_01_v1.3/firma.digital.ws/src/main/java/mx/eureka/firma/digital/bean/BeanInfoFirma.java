@@ -6,13 +6,15 @@ import java.util.List;
 
 
 public class BeanInfoFirma {
-    
+
+    private Integer idOperacion;
     private List<InfoArchivo> archivos;
     private InputStream certificado;
     private InputStream llavePrivada;
     
     private String password;
     private String correo;
+    private String correoDestinatario;
 
     
     public BeanInfoFirma() {
@@ -20,6 +22,14 @@ public class BeanInfoFirma {
     }
 
     
+    public Integer getIdOperacion() {
+        return idOperacion;
+    }
+
+    public void setIdOperacion(Integer idOperacion) {
+        this.idOperacion = idOperacion;
+    }
+
     public List<InfoArchivo> getArchivos() {
         return archivos;
     }
@@ -63,6 +73,13 @@ public class BeanInfoFirma {
     public void setCorreo(String correo) {
         this.correo = correo;
     }
-   
-        
+
+    public String getCorreoDestinatario() {
+        return correoDestinatario;
+    }
+
+    public void setCorreoDestinatario(String correoDestinatario) {
+        this.correoDestinatario = correoDestinatario;
+    }
+    
 }
