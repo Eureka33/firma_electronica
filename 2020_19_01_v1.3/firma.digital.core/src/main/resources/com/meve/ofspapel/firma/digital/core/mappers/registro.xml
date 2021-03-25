@@ -30,4 +30,15 @@
         )
     </insert>
     
+    <!--     int insertSolicitud( item: RegistroSolicitud)                  -->
+    
+    <insert id="insertSolicitud" keyColumn="id" keyProperty="item.id" useGeneratedKeys="true">
+        insert into eurk_wsss_solicitud_firma(
+            id_usuario, fecha_hora, folio, path_upload, email_destinatario, estatus, last_update
+        ) values (
+            #{item.idUsuario}, #{item.fechaHora}, #{item.folio}, #{item.nombre}, #{item.emailDestinatario},
+            #{item.estatus}  , #{item.ultimaActualizacion}            
+        )
+	</insert>
+    
 </mapper>
