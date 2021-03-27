@@ -5,6 +5,8 @@ import com.eureka.firma.digital.ws.bean.InfoArchivo;
 import com.eureka.firma.digital.ws.bean.InfoConfidencial;
 import com.eureka.firma.digital.ws.bean.RespuestaFirma;
 import com.eureka.firma.digital.ws.bean.RespuestaFirmaMasiva;
+import com.eureka.firma.digital.ws.bean.RespuestaSolicitud;
+import com.eureka.firma.digital.ws.bean.Solicitud;
 import com.eureka.firma.digital.ws.bean.SolicitudFirma;
 import com.eureka.firma.digital.ws.core.FirmaElectronicaBsnsComponent;
 import com.eureka.firma.digital.ws.core.FirmaMasivaBsnsComponent;
@@ -124,13 +126,18 @@ public class FirmaDocumento extends BaseServlet {
         
         final mx.eureka.firma.digital.bean.InfoArchivo archivo = bean.getArchivos().get( 0);
         
-        final RespuestaFirma respuesta = registraSolicitud( archivo, bean);
-        final Firma firma = respuesta.getFirma();
+        final RespuestaSolicitud respuesta = registraSolicitud( archivo, bean);
+        final Firma firma         = respuesta.getFirma();
+        final Solicitud solicitud = respuesta.getSolicitud();
         
         if( respuesta.getCodigo().equals( 0)) {
-            sendNotificacion(
-                bean.getCorreoDestinatario(), firma.getUrlDescarga(), firma.getTitular(), firma.getRfc(), firma.getFecha(),
-                archivo.getNombre()
+            
+            sendSolicitud( solicitud, bean.getCorreoDestinatario(),
+                firma.getUrlDescarga(), firma.getTitular(), firma.getRfc(), firma.getFecha(), solicitud.getPathArchivo()
+            );
+            
+            sendNotificacionSolicitud( solicitud, bean.getCorreo(), 
+                firma.getTitular(), firma.getRfc(), firma.getFecha(), solicitud.getPathArchivo()
             );
             
             request.getSession().setAttribute( "errorMessages", new String[] {"Su solicitud ha sido enviada al destinatario"});
@@ -156,6 +163,44 @@ public class FirmaDocumento extends BaseServlet {
                 final MailSenderService service = AppContext.getBean( MailSenderService.class);
                 
                 service.sendNotificacion( correo, urlDescarga, titular, rfc, fecha, nombreArchivo);
+            }
+        });
+        
+        thread.start();
+    }
+    
+    private void sendSolicitud(     Solicitud solicitud, String correoDestinatario, String urlDescarga,
+                                    String titular     , String rfc               , String fecha      ,
+                                    String pathArchivo ) {
+        
+        final Thread thread = new Thread( new Runnable() {
+            @Override
+            public void run() {
+                final MailSenderService service = AppContext.getBean( MailSenderService.class);
+                
+                boolean enviado = service.sendSolicitud( correoDestinatario, urlDescarga, titular, rfc, fecha, pathArchivo);
+                
+                if ( enviado) {
+                    solicitudFirma.actualizaSolicitud( solicitud.getId(), "correo");
+                }
+            }
+        });
+        
+        thread.start();
+    }    
+    
+    private void sendNotificacionSolicitud( Solicitud solicitud, String correo, String titular    , 
+                                            String rfc         , String fecha , String pathArchivo) {
+        if ( correo == null || correo.isEmpty()) {
+            return;
+        }
+        
+        final Thread thread = new Thread( new Runnable() {
+            @Override
+            public void run() {
+                final MailSenderService service = AppContext.getBean( MailSenderService.class);
+                
+                service.sendNotificacionSolicitud( correo, titular, rfc, fecha, pathArchivo);
             }
         });
         
@@ -195,13 +240,13 @@ public class FirmaDocumento extends BaseServlet {
         return firmaSimple.firmarArchivo( solicitud);
     }
     
-    private RespuestaFirma registraSolicitud( mx.eureka.firma.digital.bean.InfoArchivo archivo, BeanInfoFirma bean) {
+    private RespuestaSolicitud registraSolicitud( mx.eureka.firma.digital.bean.InfoArchivo archivo, BeanInfoFirma bean) {
         final SolicitudFirma solicitud = new SolicitudFirma();
         
         solicitud.setArchivoDatos(     getArchivoDatos(     archivo));
         solicitud.setInfoConfidencial( getInfoConfidencial( bean));
         
-        return solicitudFirma.registrarArchivo( solicitud, bean.getCorreoDestinatario());
+        return solicitudFirma.registrarSolicitud( solicitud, bean.getCorreoDestinatario());
     }
     
     private RespuestaFirmaMasiva firmarDocumentos( List<mx.eureka.firma.digital.bean.InfoArchivo> archivos, BeanInfoFirma bean) {

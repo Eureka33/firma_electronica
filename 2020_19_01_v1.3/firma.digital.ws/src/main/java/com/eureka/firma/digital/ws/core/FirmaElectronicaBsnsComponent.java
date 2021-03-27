@@ -20,7 +20,6 @@ public class FirmaElectronicaBsnsComponent {
     
 	@Autowired private IConfiguracionService configService;
 	@Autowired private IStreamService        streamService;
-	@Autowired private IFirmaDigitalService   firmaService;
 	
     @Autowired private FirmaBaseBsnsComponent  service;
     

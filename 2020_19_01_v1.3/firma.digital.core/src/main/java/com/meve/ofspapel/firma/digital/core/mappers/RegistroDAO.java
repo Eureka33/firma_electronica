@@ -2,6 +2,7 @@ package com.meve.ofspapel.firma.digital.core.mappers;
 
 import com.meve.ofspapel.firma.digital.core.entidades.ArchivoDepositado;
 import com.meve.ofspapel.firma.digital.core.entidades.RegistroSolicitud;
+import java.util.Date;
 import org.apache.ibatis.annotations.Param;
 
 public interface RegistroDAO {
@@ -14,4 +15,5 @@ public interface RegistroDAO {
 
     int insertSolicitud( @Param( "item") RegistroSolicitud item);
     
+    int updateSolicitud( @Param( "id") Integer id, @Param( "estatus") Integer estatus, @Param( "timestamp") Date timestamp);
 }

@@ -69,4 +69,26 @@ public class RegistroService {
         return entidad;
     }
     
+    public void actualizaSolicitud( Integer idItem, String step) {
+        Integer estatus;
+        switch (step) {
+            case "correo": 
+                estatus = 1;
+                break;
+                
+            case "visita":
+                estatus = 2;
+                break;
+            
+            case "firma":
+                estatus = 3;
+                break;
+                
+            default:
+                throw new IllegalArgumentException( "Indicador de estatus no conocido: " + step);
+        } 
+        
+        registroDAO.updateSolicitud( idItem, estatus, new Date());
+    }
+    
 }

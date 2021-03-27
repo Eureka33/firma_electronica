@@ -23,6 +23,8 @@ public interface IStreamService {
         
     String generarURLDescarga( String serverName, String webAppContext, String folio, String nombre) throws UnsupportedEncodingException;
     
+    String generarURLSolicitud( String serverName, String webAppContext, String folio, String nombre) throws UnsupportedEncodingException;
+    
     void firmarDocumento( String pathDeposito, String baseDownloadURL, SessionFirma sf, Firma firma, String organizacion) throws FileNotFoundException;
 	
 	void eliminarDirectorio( 	File directorio);

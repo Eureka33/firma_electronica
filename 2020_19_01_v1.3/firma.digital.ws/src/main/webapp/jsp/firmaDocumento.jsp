@@ -1,8 +1,6 @@
 <%@page import="com.meve.ofspapel.firma.digital.core.entidades.Usuario"%>
 
-<%@ page contentType="text/html; charset=UTF-8" %>
-
-<!DOCTYPE html>
+<%@page language="java" contentType="text/html; charset=UTF-8" %>
 
 <%
     String[] errorMessages = (String[]) session.getAttribute( "errorMessages");
@@ -11,9 +9,9 @@
     final Usuario usuario = (Usuario) session.getAttribute( "usuario");
 %>
 
+<!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
     
@@ -23,13 +21,13 @@
     <link rel="stylesheet" href="./libs/bootstrap/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="./libs/scripts/estilos.css"            />
     
-    <script src="./libs/jquery/jquery.min.js"></script>
-    <script src="./libs/bootstrap/js/bootstrap.min.js"></script>
+    <script src="./libs/jquery/jquery.min.js"             ></script>
+    <script src="./libs/bootstrap/js/bootstrap.min.js"    ></script>
     <script src="./libs/fontawesome/js/fontawesome.min.js"></script>
-    <script src="./libs/jquery/is.min.js"></script>
+    <script src="./libs/jquery/is.min.js"                 ></script>
     <script src="./libs/scripts/util_functions.js?rnd=<%= Math.random()%>"></script>
  
-	<script>	
+    <script>
         jQuery.noConflict();
         
         jQuery( document).ready( function( $) {
@@ -119,11 +117,9 @@
     <table class="container">
 		<tr>
             <td style="text-align: center;">
- 				<img src="./images/logo_organizacion.png" style="height: 150px;" alt="organization logo"/>
+ 				<img src="./images/logo_organizacion.png" style="height: 150px; width: 100%;" alt="organization logo"/>
 			</td>
 		</tr>
-        
-        <tr><td>&nbsp;</td></tr>
         
         <tr>
 			<td>
@@ -143,8 +139,6 @@
 			</td>
 		</tr>
 		
-		<tr><td>&nbsp;</td></tr>
-        
 		<tr>
 			<td>
                 <form action="firmaDocumento" method="POST" enctype="multipart/form-data" accept-charset="UTF-8">

@@ -14,10 +14,9 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
-    
     <title>Descarga y Validación de Documentos Firmados</title>
+    
+    <%@include file="meta_no_cache.jspf"%>
     
     <link rel="stylesheet" href="./libs/fontawesome/css/all.min.css"    />
     <link rel="stylesheet" href="./libs/bootstrap/css/bootstrap.min.css"/>
@@ -77,19 +76,15 @@
         } 
         
 	</script>
-    
 </head>
 <body>
-	
-    <table style="border: none; margin-left: auto; margin-right:auto;">
+    <table class="container">
 		<tr>
             <td>
- 				<img src="./images/logo_organizacion.png" style="height: 150px;" alt="organization logo"/>
+ 				<img src="./images/logo_organizacion.png" style="height: 150px; width: 100%;" alt="organization logo"/>
 			</td>
 		</tr>
-        
-        <tr><td>&nbsp;</td></tr>
-        
+       
         <tr>
 			<td>
 				<navbar class="navbar navbar-light bg-light">
@@ -112,8 +107,6 @@
 			</td>
 		</tr>
 		
-		<tr><td>&nbsp;</td></tr>
-        
 		<tr>
 			<td>
 				<table style="width: 100%;">
@@ -137,8 +130,6 @@
 				</table>
 			</td>
 		</tr>
-		
-		<tr><td>&nbsp;</td></tr>
 		
 		<tr>
 			<td>

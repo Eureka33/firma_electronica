@@ -1,9 +1,7 @@
 <%@page import="java.net.URLEncoder"%>
 <%@page import="com.meve.ofspapel.firma.digital.core.entidades.Usuario"%>
 
-<%@ page contentType="text/html; charset=UTF-8" %>
-
-<!DOCTYPE html>
+<%@page language="java" contentType="text/html; charset=UTF-8" %>
 
 <%
     final String[] errorMessages = (String[]) session.getAttribute( "errorMessages");
@@ -12,138 +10,40 @@
     final Usuario usuario = (Usuario) session.getAttribute( "usuario");
 %>
 
+<!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
-    
     <title>Consulta de Documentos Firmados</title>
+    
+    <%@include file="meta_no_cache.jspf"%>  
     
     <link rel="stylesheet" href="./libs/fontawesome/css/all.min.css"    />
     <link rel="stylesheet" href="./libs/bootstrap/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="./libs/scripts/estilos.css"            />
-       
-    <script src="./libs/jquery/jquery.min.js"></script>
-    <script src="./libs/bootstrap/js/bootstrap.min.js"></script>
-    <script src="./libs/bootstrap/js/popper.min.js"></script>
-    
-    <script src="./libs//handlebars/handlebars.js"></script>
-    <script src="./libs/scripts/eureka33/eurk-core.min.js"></script>
-	   
+   
+    <script src="./libs/jquery/jquery.min.js"             ></script>
+    <script src="./libs/bootstrap/js/bootstrap.min.js"    ></script>
+    <script src="./libs/bootstrap/js/popper.min.js"       ></script>
+    <script src="./libs//handlebars/handlebars.js"        ></script>
     <script src="./libs/fontawesome/js/fontawesome.min.js"></script>
     <script src="./libs/jquery/is.min.js"></script>
-    <script src="./libs/scripts/util_functions.js"></script>
+    
+    <script src="./libs/scripts/eureka33/eurk-core.min.js?rnd=<%= Math.random()%>"></script>
+    <script src="./libs/scripts/util_functions.js?rnd=<%= Math.random()%>"        ></script>
+    <script src="./libs/scripts/consulta_documentos.js?rnd=<%= Math.random()%>"   ></script>
     
 	<script>	
         jQuery.noConflict();
-        
-        var env = { documento: {}};
         
         jQuery( document).ready( function( $) {
             if( is.ie()) {
                 navigation.goto( 'pages/incompatible_browser.html');
                 
             } else {
-                server.resource.load( 'componente_autocompletion', './libs/components/autocompletion/component', function() {
-                    inicializa();
-                });
-            } 
+               componente.init( {usuarioAutenticado: <%= usuario != null %>, showErrors: <%= errorMessages != null%>});
+            }
         });
-        
-		function inicializa() {
-			document.getElementById( 'mensajeResultado').style.display= "<%= (errorMessages == null)? "none" : "" %>";
-            <% if ( usuario != null) { %>
-                 server.resource.load( 'componente_tabla', './libs/components/tabla/component', function() {
-					console.log( "resource loaded: [tabla]");
-                    env.tabla = new Tabla( 'documento', env.config, env.callbacks);
-                    env.tabla.update();
-                    
-                    env.autoComplete = new AutoCompletion( 'autoComplete_documento', env.autocompletion, env.callbacks);
 		
-				});
-            <% } %>
-		}
-        
-        function validarForm( event) {
-            event.stopPropagation;
-                        
-            let errores = 0;
-            
-            errores += validation.validarArchivos(  'certificado', '.cer',   'Certificado',   1, 1);
-            errores += validation.validarArchivos( 'llavePrivada', '.key', 'Llave Privada',   1, 1);
-            
-            errores += validation.validarTexto( 'password',         'Contraseña',  20);
-            
-            let submit = (errores === 0);
-            
-            if( submit) {
-                setTimeout( function() { jQuery( '#processing').modal( 'show');}, 0);
-            }
-            
-            return submit;
-        }
-        
-        env.config = {
-            module    : "documento",
-            id        : "id",
-            pagination: true,
-            isEditable: false,
-			columns   : [
-				{value: "fechaHora", label: "Fecha Hora"},
-				{value:     "folio", label:      "Folio"},
-				{value:    "nombre", label: "Documentos"}
-			],
-            actions   : [
-                {value: 'view', icon: "download", title: "Descarga y validación del documento"}
-            ],
-            resource: "documento/firmado",
-			search: {
-                tipo: "PAGINADA", "propiedades": {}, "ordenacion": [{"campo": "fechaHora", "direccion": "desc"}]
-            }
-        };
-        
-        env.autocompletion = {
-            resource: "documento/firmado",
-            item: {
-                value: "id",
-                label: "(${fechaHora}) ${nombre} : ${folio}"
-            }
-		};
-        
-        env.callbacks = {
-        
-            show_action_view: function( item, items) {
-                return true;
-            },
-    
-            on_click_action: function( info) {
-                env.callbacks.consulta_documento( info.id);
-            },
-            
-            on_click_autocomplete : function() {
-                env.callbacks.consulta_documento( env.idItem);
-            },
-            
-            consulta_documento: function( id) {
-                server.data.get( 'documento/firmado/' + id, function(resp) {
-                    let item = resp.item;
-                    let folio = item.folio;
-                    let encodedName = encodeURIComponent( item.nombre);
-                    
-                    navigation.goto( 'validacionDocumento?folio='+ folio + '&nombre=' + encodedName);
-                });
-            }
-        };
-        
-        var componente = {
-            documento: {
-                obtener_pagina: function ( pagina) {
-                    env.tabla.mostrarPagina( pagina);
-                }
-            }
-        };
-        
 	</script>
     
 </head>
@@ -152,23 +52,22 @@
     <table class="container" <%= (usuario != null)? "hidden" : ""%>>
 		<tr>
             <td style="text-align: center;">
- 				<img src="./images/logo_organizacion.png" style="height: 150px;" alt="organization logo"/>
+ 				<img src="./images/logo_organizacion.png" style="height: 150px; width: 100%;" alt="organization logo"/>
 			</td>
 		</tr>
-        
-        <tr><td>&nbsp;</td></tr>
-        
+       
         <tr>
-            <td style="padding:10px 50px;">
-                <span style="font-family: Verdadana, sans-serif; font-size: 0.9em; text-align: justify;">
-                    <b>¡Bienvenido!</b>. Para consultar los documentos que usted ha firmado, por favor, ingrese 
-                    la siguiente información.
-                </span>
+            <td>
+                <navbar class="navbar navbar-light bg-light" style="padding:10px 50px;">
+                    <span style="font-family: Verdadana, sans-serif; font-size: 0.9em; text-align: justify;">
+                        <b>¡Bienvenido!</b>. Para consultar los documentos que usted ha firmado o solicitado firmar, 
+                        por favor, ingrese la siguiente información:
+                    </span>
+                </navbar>
             </td>
         </tr>
-        
-		<tr><td>&nbsp;</td></tr>
-		<tr>
+       
+        <tr>
 			<td>
                 <form action="consultaDocumentos" method="POST" enctype="multipart/form-data" accept-charset="UTF-8">
                     <table style="width: 100%;">
@@ -180,14 +79,10 @@
                                 <input type="file" id="certificado" name="certificado" class="form-control"
                                     accept=".cer, application/pkix-cert" title="Certificado FIEL"
                                 />
+                                <span id="error_certificado" class="error" hidden></span>
                             </td>
                     	</tr>
-                    
-                        <tr>
-                            <td>&nbsp;</td>
-                            <td><span id="error_certificado" class="error" hidden></span> 
-                        </tr>
-
+                        
                         <tr>
     						<td>
                                 <span class="prompt">Llave Privada (*):</span>
@@ -196,14 +91,10 @@
                                 <input type="file" id="llavePrivada" name="llavePrivada" class="form-control"
                                     accept=".key, application/pkcs8" title="Llave privada del certificado"
                                 />
+                                <span id="error_llavePrivada" class="error" hidden></span>
                             </td>
                         </tr>
                         
-                        <tr>
-                            <td>&nbsp;</td>
-                            <td><span id="error_llavePrivada" class="error" hidden></span> 
-                        </tr>
-        				
                         <tr>
     						<td>
                                 <span class="prompt">Contraseña (*):</span>
@@ -213,6 +104,7 @@
                                     placeholder="contraseña FIEL" autocomplete="off"
                                     title="Contraseña FIEL" maxlength="20"
                                 />
+                                <span id="error_password" class="error" hidden></span>
                             </td>
     					</tr>
                         
@@ -222,7 +114,7 @@
                                 	<tr>
                 						<td width="60%">&nbsp;</td>
                 						<td width="40%" style="text-align: right;">
-                                            <button type="submit" class="btn btn-primary" onclick="javascript: return validarForm( event);">
+                                            <button type="submit" class="btn btn-primary" onclick="javascript: return componente.validar( event);">
                                                 <i class="fas fa-pencil-square-o"></i>Aceptar
                                             </button>
                                             &nbsp;
@@ -264,9 +156,7 @@
  				<img src="./images/logo_organizacion.png" style="height: 150px;" alt="organization logo"/>
 			</td>
 		</tr>
-        
-        <tr><td>&nbsp;</td></tr>
-        
+       
         <tr>
 			<td>
 				<navbar class="navbar navbar-light bg-light">
@@ -283,8 +173,6 @@
 			</td>
 		</tr>
         
-        <tr><td>&nbsp;</td></tr>
-        
         <tr>
             <td style="padding:10px 50px;">
                 <span style="font-family: Verdadana, sans-serif; font-size: 0.9em; text-align: justify;">
@@ -294,13 +182,26 @@
             </td>
         </tr>
         
-		<tr><td>&nbsp;</td></tr>
 		<tr>
 			<td>
-                <div id="list_documento" class="card">
+                <div class="card">
                     <div class="card-header" style="color: #0056b3;">
-                        Documentos Firmados
-                        <div class="float-right col-sm-6" id="container_autoComplete_documento"></div>
+                        <div class="row">
+                            <div class="col-sm-10">Documentos Firmados</div>
+                            <div class="col-sm-1"><span class="badge badge-info" id="badgeDocumento">0</span></div>
+                            <div class="col-sm-1">
+                                <a href="#" class="toggle" data-toggle="0" data-target="documento">
+                                    <i class="fas fa-chevron-circle-down"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="list_documento" class="card toggleable" hidden>
+                    <div class="row" style="margin-top: 5px;">
+                        <div class="col-sm-1"></div>
+                        <div class="float-right col-sm-8" id="container_autoComplete_documento"></div>
                     </div>
                     <div class="card-body" style="padding: 12px;">
                         <table class="table table-striped table-hover">
@@ -312,7 +213,41 @@
                 </div>
             </td>
         </tr>
+        
+        <tr>
+            <td>
+                <div class="card">
+                    <div class="card-header" style="color: #0056b3;">
+                        <div class="row">
+                            <div class="col-sm-10">Solicitudes de Firma</div>
+                            <div class="col-sm-1"><span class="badge badge-info" id="badgeSolicitud">0</span></div>
+                            <div class="col-sm-1">
+                                <a href="#" class="toggle" data-toggle="0" data-target="solicitud">
+                                    <i class="fas fa-chevron-circle-down"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="list_solicitud" class="card toggleable" hidden>
+                    <div class="row" style="margin-top: 5px;">
+                        <div class="col-sm-1"></div>
+                        <div class="float-right col-sm-8" id="container_autoComplete_solicitud"></div>
+                    </div>
+                    <div class="card-body" style="padding: 12px;">
+                        <table class="table table-striped table-hover">
+                            <thead id="header_solicitud" class="thead-dark"></thead>
+                            <tbody id="page_solicitud"></tbody>
+                            <tfoot id="footer_solicitud"></tfoot>
+                        </table>
+                    </div>
+                </div>
+            </td>
+        </tr>
     </table>
+                
+    <br/>
+    <br/>
     
     <div class="modal fade" id="processing" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">

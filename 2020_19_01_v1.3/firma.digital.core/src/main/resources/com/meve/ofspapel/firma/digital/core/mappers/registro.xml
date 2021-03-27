@@ -41,4 +41,10 @@
         )
 	</insert>
     
+     <!--    int updateSolicitud( id: Integer, estatus: Integer, timestamp: Date)   -->
+    
+    <update id="updateSolicitud">
+        update eurk_wsss_solicitud_firma set estatus = #{estatus}, last_update = #{timestamp} where id = #{id}
+	</update>
+    
 </mapper>

@@ -82,6 +82,15 @@ public class StreamService implements IStreamService {
 	}
     
     @Override
+    public String generarURLSolicitud( String serverName, String webAppContext, String folio, String nombre) throws UnsupportedEncodingException {
+		return "{server}{rutaBase}/solicitudDocumento?folio={folio}&nombre={nombre}"
+			.replace(   "{server}", serverName)
+			.replace( "{rutaBase}", webAppContext)
+			.replace(    "{folio}", folio)
+			.replace(   "{nombre}", URLEncoder.encode( nombre, "UTF-8"));
+	}
+    
+    @Override
     public void firmarDocumento( String pathDeposito, String urlDescarga, SessionFirma sf, Firma firma, String organizacion) throws FileNotFoundException {          
         final String source   = sf.archivo.getAbsolutePath();
         final String checksum = UtilDocumento.getMd5( source);

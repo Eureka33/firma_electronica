@@ -31,6 +31,11 @@
     </servlet>
     
     <servlet>
+        <servlet-name>SolicitudDocumento</servlet-name>
+        <servlet-class>mx.eureka.firma.digital.servlet.SolicitudDocumento</servlet-class>
+    </servlet>
+    
+    <servlet>
         <servlet-name>DescargaDocumento</servlet-name>
         <servlet-class>mx.eureka.firma.digital.servlet.DescargaDocumento</servlet-class>
     </servlet>
@@ -68,6 +73,11 @@
     <servlet-mapping>
         <servlet-name>ValidacionDocumento</servlet-name>
         <url-pattern>/validacionDocumento/*</url-pattern>
+	</servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>SolicitudDocumento</servlet-name>
+        <url-pattern>/solicitudDocumento/*</url-pattern>
 	</servlet-mapping>
     
     <servlet-mapping>
