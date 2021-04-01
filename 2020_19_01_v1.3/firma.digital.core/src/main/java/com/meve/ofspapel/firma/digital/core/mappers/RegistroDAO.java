@@ -15,5 +15,4 @@ public interface RegistroDAO {
 
     int insertSolicitud( @Param( "item") RegistroSolicitud item);
     
-    int updateSolicitud( @Param( "id") Integer id, @Param( "estatus") Integer estatus, @Param( "timestamp") Date timestamp);
 }

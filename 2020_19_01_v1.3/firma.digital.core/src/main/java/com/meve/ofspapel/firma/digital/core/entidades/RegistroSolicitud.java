@@ -1,11 +1,12 @@
 package com.meve.ofspapel.firma.digital.core.entidades;
 
+import com.meve.ofspapel.firma.digital.core.enums.EnumEstatusSolicitud;
 import java.util.Date;
 
 public class RegistroSolicitud extends ArchivoDepositado {
     
     private String emailDestinatario;
-    private Integer estatus;
+    private EnumEstatusSolicitud estatus;
     private Date ultimaActualizacion;
     
     
@@ -22,15 +23,15 @@ public class RegistroSolicitud extends ArchivoDepositado {
         return emailDestinatario;
     }
 
-    public void setEmailDestinatario(String emailDestinatario) {
+    public void setEmailDestinatario( String emailDestinatario) {
         this.emailDestinatario = emailDestinatario;
     }
 
-    public Integer getEstatus() {
+    public EnumEstatusSolicitud getEstatus() {
         return estatus;
     }
 
-    public void setEstatus(Integer estatus) {
+    public void setEstatus( EnumEstatusSolicitud estatus) {
         this.estatus = estatus;
     }
 
@@ -38,7 +39,7 @@ public class RegistroSolicitud extends ArchivoDepositado {
         return ultimaActualizacion;
     }
 
-    public void setUltimaActualizacion(Date ultimaActualizacion) {
+    public void setUltimaActualizacion( Date ultimaActualizacion) {
         this.ultimaActualizacion = ultimaActualizacion;
     }
     

@@ -8,8 +8,11 @@ import com.eureka.firma.digital.ws.bean.Solicitud;
 import com.eureka.firma.digital.ws.bean.SolicitudFirma;
 import com.meve.ofspapel.firma.digital.core.entidades.RegistroSolicitud;
 import com.meve.ofspapel.firma.digital.core.entidades.Usuario;
+import com.meve.ofspapel.firma.digital.core.enums.EnumAccionSolicitud;
+import com.meve.ofspapel.firma.digital.core.enums.EnumEstatusSolicitud;
 import com.meve.ofspapel.firma.digital.core.service.IConfiguracionService;
 import com.meve.ofspapel.firma.digital.core.service.RegistroService;
+import com.meve.ofspapel.firma.digital.core.service.SolicitudService;
 import com.meve.ofspapel.firma.digital.core.service.UsuarioService;
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
@@ -23,11 +26,12 @@ import org.springframework.stereotype.Component;
 public class SolicitudFirmaBsnsComponent  {
     
     @Autowired private IConfiguracionService configService;
-    @Autowired private UsuarioService usuarioService;
-    @Autowired private RegistroService registroService;
+    @Autowired private UsuarioService     usuarioService;
+    @Autowired private RegistroService   registroService;
+    @Autowired private SolicitudService solicitudService;
     
-	@Autowired private IStreamService        streamService;
-    @Autowired private FirmaBaseBsnsComponent  service;
+	@Autowired private IStreamService      streamService;
+    @Autowired private FirmaBaseBsnsComponent    service;
     
     
 	/**
@@ -57,7 +61,6 @@ public class SolicitudFirmaBsnsComponent  {
 			
 			resultado = service.validarCertificado( sf);
 			if ( resultado.isError()) { return getRespuesta( resultado); }
- 
             
             Usuario usuario = usuarioService.obtenerUsuario( sf.firma.getRfc(), sf.firma.getTitular());
             
@@ -99,11 +102,15 @@ public class SolicitudFirmaBsnsComponent  {
         return streamService.generarURLSolicitud( serverName, webAppContext, sf.folio, nombreArchivo);
     }
     
-    public void actualizaSolicitud( Integer idSolicitud, String step) {
-        registroService.actualizaSolicitud( idSolicitud, step);
+    public EnumEstatusSolicitud registraVisitaLink( String folio, String nombre) {
+        final Integer idSolicitud = solicitudService.obtenerIdSolicitud( folio, nombre);
+        return solicitudService.actualizaSolicitud( idSolicitud, EnumAccionSolicitud.LINK_VISITADO);
     }
     
-    
+    public void registraEnvioSolicitud( Integer idSolicitud) {
+        solicitudService.actualizaSolicitud( idSolicitud, EnumAccionSolicitud.CORREO_ENVIADO);
+    }
+        
     private RespuestaSolicitud getRespuesta( Resultado<?> resultado) {
 		final RespuestaSolicitud rf = new RespuestaSolicitud();
 		

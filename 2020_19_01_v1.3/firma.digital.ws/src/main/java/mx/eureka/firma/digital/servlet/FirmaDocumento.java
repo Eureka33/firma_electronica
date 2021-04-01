@@ -181,7 +181,7 @@ public class FirmaDocumento extends BaseServlet {
                 boolean enviado = service.sendSolicitud( correoDestinatario, urlDescarga, titular, rfc, fecha, pathArchivo);
                 
                 if ( enviado) {
-                    solicitudFirma.actualizaSolicitud( solicitud.getId(), "correo");
+                    solicitudFirma.registraEnvioSolicitud( solicitud.getId());
                 }
             }
         });

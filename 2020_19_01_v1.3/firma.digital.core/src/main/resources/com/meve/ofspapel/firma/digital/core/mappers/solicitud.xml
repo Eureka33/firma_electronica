@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.meve.ofspapel.firma.digital.core.mappers.SolicitudDAO">
+     
+    <resultMap id="itemMap" type="com.meve.ofspapel.firma.digital.core.entidades.RegistroSolicitud">
+        <constructor>
+            <arg column="id" javaType="integer" />
+        </constructor>
+        
+        <result property="idUsuario"            column="id_usuario"                 />
+        <result property="fechaHora"            column="fecha_hora" javaType="Date" />
+        <result property="folio"                column="folio"                      />
+        <result property="nombre"               column="nombre"                     />
+        <result property="emailDestinatario"    column="email_destinatario"         /> 
+        <result property="estatus"              column="estatus"                    />
+        <result property="ultimaActualizacion"  column="last_update" javaType="Date"/>
+    </resultMap>
+    
+    <!--    Integer obtenerIdSolicitud( folio: String, nombre: nombre)             -->
+    
+    <select id="obtenerIdSolicitud" resultType="integer">
+        select id from eurk_wsss_solicitud_firma where folio = #{folio} and nombre = #{nombre}
+    </select>
+    
+    <!--    RegistroSolicitud obtenerItem( idItem: Integer)                         -->
+    
+    <select id="obtenerItem" resultMap="itemMap">
+        select * from eurk_wsss_solicitud_firma where id = #{idItem}
+    </select>
+    
+     <!--    int updateSolicitud( id: Integer, estatus: Integer, timestamp: Date)   -->
+    
+    <update id="updateSolicitud">
+        update eurk_wsss_solicitud_firma set estatus = #{estatus}, last_update = #{fechaHora} where id = #{id}
+	</update>
+    
+    <!--    int obtenerVisitas( idItem: Integer)                                    -->
+    
+    <select id="obtenerVisitas" resultType="integer">
+        select visitas from eurk_wsss_visitas_solicitud where id_solicitud_firma = #{idItem}
+    </select>
+    
+    <!--    int insertVisitas( idItem: Integer, fechaHora: Date, visitas: Integer)  -->
+    
+    <insert id="insertVisitas">
+        insert into eurk_wsss_visitas_solicitud ( id_solicitud_firma, fecha_hora, visitas) values ( #{idItem}, #{fechaHora}, #{visitas})
+    </insert>
+    
+    <!--    int updateVisitas( idItem: Integer, fechaHora: Date, visitas: Integer)   -->
+    
+    <update id="updateVisitas">
+        update eurk_wsss_visitas_solicitud set fecha_hora = #{fechaHora}, visitas = #{visitas} where id_solicitud_firma = #{idItem} 
+    </update>
+    
+</mapper>

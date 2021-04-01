@@ -1,33 +1,39 @@
 package mx.eureka.firma.digital.servlet;
 
+import com.eureka.firma.digital.ws.core.SolicitudFirmaBsnsComponent;
+import com.meve.ofspapel.firma.digital.core.enums.EnumEstatusSolicitud;
 import java.io.IOException;
-import java.net.URLEncoder;
-import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import mx.com.neogen.commons.exception.OperacionNoRealizadaException;
+import mx.eureka.firma.digital.bean.AppContext;
 import mx.eureka.firma.digital.bean.BeanInfoDocumento;
-import mx.eureka.firma.digital.bean.InfoArchivo;
 import mx.eureka.firma.digital.bean.UtilDocumento;
-import org.apache.commons.fileupload.DiskFileUpload;
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileUploadBase;
 
 
 public class SolicitudDocumento extends BaseServlet {
 
 	private static final long serialVersionUID = 2389655495605997697L;
+    
+    private SolicitudFirmaBsnsComponent solicitudFirma;
 
 	
 	public SolicitudDocumento() {
 		super();
 	}
+    
+
+    @Override
+    public void init() throws ServletException {
+        super.init();
+         solicitudFirma = AppContext.getBean(   SolicitudFirmaBsnsComponent.class);
+    }
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		request.setAttribute( "info", UtilDocumento.requestToInfoDocumento( request));
+        BeanInfoDocumento info = UtilDocumento.requestToInfoDocumento( request);
+		request.setAttribute( "info", info);
 			
 		final String resultado =  request.getParameter( "resultado");
 			
@@ -37,8 +43,12 @@ public class SolicitudDocumento extends BaseServlet {
 			} else {
 				request.setAttribute( "resultado", "El documento no concuerda con el original");
 			}
-		}
-		
+            
+        } else {
+            final String mensaje = registrarVisita( info);
+            request.setAttribute( "error", mensaje);
+        }
+        
 		forwardTo( request, response, "/jsp/solicitudDocumento.jsp?ts=" + Math.random());
 	}
 	
@@ -46,7 +56,7 @@ public class SolicitudDocumento extends BaseServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		final BeanInfoDocumento infoDocumento = UtilDocumento.requestToInfoDocumento(request);
-		
+		/*
         try {	
             final String cheksum = checksumStoredFile( infoDocumento);
             final String resultado = cheksum.equals( checksumUploadedFile( request))? "ok": "error";
@@ -68,36 +78,26 @@ public class SolicitudDocumento extends BaseServlet {
                 throw ex;
             }
 		}
+        */
 	}
-	
-	private String checksumUploadedFile( final HttpServletRequest request) {
-		boolean isMultipart = FileUploadBase.isMultipartContent(request);
-
-		if (!isMultipart) {
-			return "";
-		}
-			
-		final DiskFileUpload upload = new DiskFileUpload();
-        try { 
-            List items = upload.parseRequest( request);
-            for ( Object nextItem : items) {
-                FileItem item = (FileItem) nextItem;
-                if ( !item.isFormField()) {
-                    return UtilDocumento.getMd5( item.getInputStream());
-                }
-            }
+    
+    private String registrarVisita( BeanInfoDocumento info) {
+        EnumEstatusSolicitud estatus = solicitudFirma.registraVisitaLink( info.getFolio(), info.getNombre());
         
-        } catch( Exception ex) {
-            throw new OperacionNoRealizadaException( "error.infraestructura", ex);
-        
+        switch( estatus) {
+            case REGISTRADA:
+            case NOTIFICADA:
+                return "El token de esta peticion todavía no ha sido activado (solicitud registrada/notificada)";
+                
+            case ATENDIDA:
+                return "El token indicado ya ha sido utilizado (solicitud atendida)";
+                
+            case CANCELADA:
+                return "El token solicitado ya no es valido (solicitud cancelada)";
+                
+            default:
+                return null;
         }
-        
-		return "";
-	}
-	
-	public static String checksumStoredFile( BeanInfoDocumento info) { 
-        InfoArchivo infoArchivo = UtilDocumento.obtenerInfoArchivo( info);
-        return UtilDocumento.getMd5( infoArchivo.getContenido());
     }
-	
+    
 }

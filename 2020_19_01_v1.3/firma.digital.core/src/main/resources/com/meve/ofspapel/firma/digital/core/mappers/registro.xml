@@ -34,17 +34,11 @@
     
     <insert id="insertSolicitud" keyColumn="id" keyProperty="item.id" useGeneratedKeys="true">
         insert into eurk_wsss_solicitud_firma(
-            id_usuario, fecha_hora, folio, path_upload, email_destinatario, estatus, last_update
+            id_usuario, fecha_hora, folio, nombre email_destinatario, estatus, last_update
         ) values (
             #{item.idUsuario}, #{item.fechaHora}, #{item.folio}, #{item.nombre}, #{item.emailDestinatario},
-            #{item.estatus}  , #{item.ultimaActualizacion}            
+            #{item.estatus}  , #{item.ultimaActualizacion}
         )
 	</insert>
-    
-     <!--    int updateSolicitud( id: Integer, estatus: Integer, timestamp: Date)   -->
-    
-    <update id="updateSolicitud">
-        update eurk_wsss_solicitud_firma set estatus = #{estatus}, last_update = #{timestamp} where id = #{id}
-	</update>
     
 </mapper>

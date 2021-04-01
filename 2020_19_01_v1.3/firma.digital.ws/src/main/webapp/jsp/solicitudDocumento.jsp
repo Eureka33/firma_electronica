@@ -14,7 +14,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <title>Descarga y Validación de Documentos Firmados</title>
+    <title>Descarga y Firma de Documentos</title>
     
     <%@include file="meta_no_cache.jspf"%>
     
@@ -84,7 +84,7 @@
  				<img src="./images/logo_organizacion.png" style="height: 150px; width: 100%;" alt="organization logo"/>
 			</td>
 		</tr>
-       
+        
         <tr>
 			<td>
 				<navbar class="navbar navbar-light bg-light">

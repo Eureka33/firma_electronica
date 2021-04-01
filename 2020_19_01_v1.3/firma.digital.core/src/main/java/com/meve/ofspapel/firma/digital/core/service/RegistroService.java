@@ -3,6 +3,7 @@ package com.meve.ofspapel.firma.digital.core.service;
 import com.meve.ofspapel.firma.digital.core.entidades.ArchivoDepositado;
 import com.meve.ofspapel.firma.digital.core.entidades.RegistroSolicitud;
 import com.meve.ofspapel.firma.digital.core.entidades.Usuario;
+import com.meve.ofspapel.firma.digital.core.enums.EnumEstatusSolicitud;
 import com.meve.ofspapel.firma.digital.core.mappers.RegistroDAO;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -61,34 +62,12 @@ public class RegistroService {
         entidad.setNombre( pathUpload);
         entidad.setEmailDestinatario( emailDestinatario);
         
-        entidad.setEstatus( 0);
+        entidad.setEstatus( EnumEstatusSolicitud.REGISTRADA);
         entidad.setUltimaActualizacion( fechaHora);
         
         registroDAO.insertSolicitud( entidad);
         
         return entidad;
-    }
-    
-    public void actualizaSolicitud( Integer idItem, String step) {
-        Integer estatus;
-        switch (step) {
-            case "correo": 
-                estatus = 1;
-                break;
-                
-            case "visita":
-                estatus = 2;
-                break;
-            
-            case "firma":
-                estatus = 3;
-                break;
-                
-            default:
-                throw new IllegalArgumentException( "Indicador de estatus no conocido: " + step);
-        } 
-        
-        registroDAO.updateSolicitud( idItem, estatus, new Date());
     }
     
 }

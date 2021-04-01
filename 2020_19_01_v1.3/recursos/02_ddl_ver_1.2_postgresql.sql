@@ -3,6 +3,7 @@
 --	Script de generación de tablas ver. 1.4 > Registro de solicitudes de firma
 --
 
+drop table if exists eurk_wsss_visitas_solicitud;
 drop table if exists eurk_wsss_solicitud_atendida;
 drop table if exists eurk_wsss_solicitud_firma;
 
@@ -13,7 +14,7 @@ CREATE TABLE eurk_wsss_solicitud_firma (
     id_usuario 			int4 			NOT NULL,
     fecha_hora 			timestamp 		NOT NULL,
     folio 				varchar(60) 	NOT NULL,
-    path_upload			varchar(256) 	NOT NULL,
+    nombre				varchar(256) 	NOT NULL,
     email_destinatario  varchar(128) 	not null,
     
     estatus         	SMALLINT        NOT NULL DEFAULT 0,
@@ -34,4 +35,13 @@ CREATE TABLE eurk_wsss_solicitud_atendida (
     
     CONSTRAINT u_documento_firmado   UNIQUE( id_documento_firmado),
     CONSTRAINT u_solicitud_firma     UNIQUE(  id_solicitud_firma)
+);
+
+create table eurk_wsss_visitas_solicitud(
+	id_solicitud_firma		int4 not null primary key,
+	
+	fecha_hora 				timestamp	not null,
+	visitas					smallint    not null,
+	
+	CONSTRAINT fk_solicitud_vissol  FOREIGN KEY (   id_solicitud_firma) REFERENCES eurk_wsss_solicitud_firma(  id)
 );
