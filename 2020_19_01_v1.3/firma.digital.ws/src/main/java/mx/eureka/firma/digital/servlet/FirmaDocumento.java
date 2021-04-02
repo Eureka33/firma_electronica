@@ -148,15 +148,14 @@ public class FirmaDocumento extends BaseServlet {
                 firma.getTitular(), firma.getRfc(), firma.getFecha(), solicitud.getPathArchivo()
             );
             
-            request.getSession().setAttribute( "errorMessages", new String[] {"Su solicitud ha sido enviada al destinatario"});
-            
-            return firma.getUrlDescarga();
+            request.getSession().setAttribute( "sucessMessages", new String[] {"Su solicitud ha sido registrada con éxito"});
             
         } else {
             request.getSession().setAttribute( "errorMessages", respuesta.getMensaje().split( ":"));
-            
-            return "firmaDocumento?ts=" + Math.random();
+        
         }
+        
+        return "firmaDocumento?ts=" + Math.random();
     }
     
     private void sendNotificacion(  final String correo, final String urlDescarga, final String titular, 

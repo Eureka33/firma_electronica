@@ -47,6 +47,10 @@ public class SolicitudService {
         return estatus;
     }
     
+    public void registraAtencionSolicitud( Integer idDocumentoFirmado, Integer idSolicitud) {
+        dao.insertAtencion( idDocumentoFirmado, idSolicitud);
+    }    
+    
     private int registrarVisita( Integer idItem) {
         Integer value = dao.obtenerVisitas( idItem);
         Date fechaHora = new Date();

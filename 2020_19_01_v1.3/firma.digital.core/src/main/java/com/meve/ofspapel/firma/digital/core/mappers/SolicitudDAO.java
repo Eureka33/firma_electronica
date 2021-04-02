@@ -20,4 +20,6 @@ public interface SolicitudDAO {
     int insertVisitas( @Param( "idItem") Integer idItem, @Param( "fechaHora") Date fechaHora, @Param( "visitas") Integer visitas);
     
     int updateVisitas( @Param( "idItem") Integer idItem, @Param( "fechaHora") Date fechaHora, @Param( "visitas") Integer visitas);
+    
+    int insertAtencion( @Param( "idDocumento") Integer idDocumento, @Param( "idSolicitud") Integer idSolicitud);
 }

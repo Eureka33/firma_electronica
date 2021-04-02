@@ -42,7 +42,9 @@ public class SolicitudDocumento extends BaseServlet {
 		request.setAttribute( "info", info);
 			
 		final String mensaje = registrarVisita( info);
-        request.setAttribute( "errorMessages", new String[] {mensaje});
+        if ( mensaje != null) {
+            request.getSession().setAttribute( "errorMessages", new String[] {mensaje});
+        }
         
 		forwardTo( request, response, "/jsp/solicitudDocumento.jsp?ts=" + Math.random());
 	}
@@ -97,7 +99,9 @@ public class SolicitudDocumento extends BaseServlet {
         solicitud.setArchivoDatos(     archivo);
         solicitud.setInfoConfidencial( getInfoConfidencial( infoFirma));
       
-        RespuestaFirma respuesta = solicitudFirma.firmarArchivo( solicitud, UtilDocumento.obtenerFileUploaded( infoDocumento));
+        RespuestaFirma respuesta = solicitudFirma.firmarArchivo(
+            solicitud, UtilDocumento.obtenerFileUploaded( infoDocumento), infoDocumento
+        );
         
         final Firma firma = respuesta.getFirma();
         
@@ -110,7 +114,7 @@ public class SolicitudDocumento extends BaseServlet {
             return firma.getUrlDescarga();
         
         } else {
-            request.setAttribute( "errorMessages", respuesta.getMensaje().split( ":"));
+            request.getSession().setAttribute( "processMessages", respuesta.getMensaje().split( ":"));
             
             return null;
         } 

@@ -54,4 +54,11 @@
         update eurk_wsss_visitas_solicitud set fecha_hora = #{fechaHora}, visitas = #{visitas} where id_solicitud_firma = #{idItem} 
     </update>
     
+    <!--    int insertAtencion( idDocumento: Integer, idSolicitud: Integer)         -->
+    
+    <insert id="insertAtencion">
+        insert into eurk_wsss_solicitud_atendida( id_documento_firmado, id_solicitud_firma) values( #{idDocumento}, #{idSolicitud}
+        )
+    </insert>
+       
 </mapper>
