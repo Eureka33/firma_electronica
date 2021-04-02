@@ -1,13 +1,20 @@
 package mx.eureka.firma.digital.servlet;
 
+import com.eureka.firma.digital.ws.bean.Firma;
+import com.eureka.firma.digital.ws.bean.InfoArchivo;
+import com.eureka.firma.digital.ws.bean.RespuestaFirma;
+import com.eureka.firma.digital.ws.bean.SolicitudFirma;
 import com.eureka.firma.digital.ws.core.SolicitudFirmaBsnsComponent;
 import com.meve.ofspapel.firma.digital.core.enums.EnumEstatusSolicitud;
+import com.meve.ofspapel.firma.digital.core.service.MailSenderService;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import mx.com.neogen.commons.util.UtilStream;
 import mx.eureka.firma.digital.bean.AppContext;
 import mx.eureka.firma.digital.bean.BeanInfoDocumento;
+import mx.eureka.firma.digital.bean.BeanInfoFirma;
 import mx.eureka.firma.digital.bean.UtilDocumento;
 
 
@@ -16,8 +23,7 @@ public class SolicitudDocumento extends BaseServlet {
 	private static final long serialVersionUID = 2389655495605997697L;
     
     private SolicitudFirmaBsnsComponent solicitudFirma;
-
-	
+    
 	public SolicitudDocumento() {
 		super();
 	}
@@ -26,7 +32,7 @@ public class SolicitudDocumento extends BaseServlet {
     @Override
     public void init() throws ServletException {
         super.init();
-         solicitudFirma = AppContext.getBean(   SolicitudFirmaBsnsComponent.class);
+        solicitudFirma = AppContext.getBean(   SolicitudFirmaBsnsComponent.class);
     }
 
 	@Override
@@ -35,19 +41,8 @@ public class SolicitudDocumento extends BaseServlet {
         BeanInfoDocumento info = UtilDocumento.requestToInfoDocumento( request);
 		request.setAttribute( "info", info);
 			
-		final String resultado =  request.getParameter( "resultado");
-			
-		if( resultado != null) {
-			if ( "ok".equals( resultado)) {
-				request.setAttribute( "resultado", "Los documentos son idénticos");
-			} else {
-				request.setAttribute( "resultado", "El documento no concuerda con el original");
-			}
-            
-        } else {
-            final String mensaje = registrarVisita( info);
-            request.setAttribute( "error", mensaje);
-        }
+		final String mensaje = registrarVisita( info);
+        request.setAttribute( "errorMessages", new String[] {mensaje});
         
 		forwardTo( request, response, "/jsp/solicitudDocumento.jsp?ts=" + Math.random());
 	}
@@ -55,34 +50,25 @@ public class SolicitudDocumento extends BaseServlet {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		final BeanInfoDocumento infoDocumento = UtilDocumento.requestToInfoDocumento(request);
-		/*
-        try {	
-            final String cheksum = checksumStoredFile( infoDocumento);
-            final String resultado = cheksum.equals( checksumUploadedFile( request))? "ok": "error";
-            final String params = 
-                "&folio="     + infoDocumento.getFolio()  + 
-                "&nombre="    + URLEncoder.encode( infoDocumento.getNombre(), "UTF-8") +
-                "&resultado=" + resultado
-            ;
-			
-            response.sendRedirect( "validacionDocumento?ts=" + Math.random() + params);
-		
-        } catch ( Exception ex) {
-            if ( "error.negocio.entidad.inexistente".equals( ex.getMessage())) {
-                request.setAttribute( "info", infoDocumento);
-                request.setAttribute( "resultado", "No existe documento con el folio y nombre solicitados");
-                forwardTo( request, response, "/jsp/validacionDocumento.jsp?ts=" + Math.random());
-                
-            } else {
-                throw ex;
-            }
-		}
-        */
+        final BeanInfoDocumento infoDocumento = UtilDocumento.requestToInfoDocumento(request);
+		final BeanInfoFirma infoFirma = UtilDocumento.requestToInfoFirma( request);
+       
+        String pagina = firmaDocumento( request, infoFirma, infoDocumento);
+        
+        if ( pagina != null) {
+            response.sendRedirect( pagina);
+            
+        } else {
+            request.setAttribute( "info", infoDocumento);
+            forwardTo( request, response, "/jsp/solicitudDocumento.jsp?ts=" + Math.random());
+        }
 	}
     
     private String registrarVisita( BeanInfoDocumento info) {
         EnumEstatusSolicitud estatus = solicitudFirma.registraVisitaLink( info.getFolio(), info.getNombre());
+        if ( estatus == null) {
+            return "La información de la petición no esta registrada en el sistema.";
+        }
         
         switch( estatus) {
             case REGISTRADA:
@@ -100,4 +86,51 @@ public class SolicitudDocumento extends BaseServlet {
         }
     }
     
+    private String firmaDocumento( HttpServletRequest request, BeanInfoFirma infoFirma, BeanInfoDocumento infoDocumento) {
+        
+        final SolicitudFirma solicitud = new SolicitudFirma();
+        
+        InfoArchivo archivo = new InfoArchivo();
+        archivo.setNombre(    UtilStream.getNombreArchivo(    infoDocumento.getNombre()));
+		archivo.setExtension( UtilStream.getExtensionArchivo( infoDocumento.getNombre()));
+        
+        solicitud.setArchivoDatos(     archivo);
+        solicitud.setInfoConfidencial( getInfoConfidencial( infoFirma));
+      
+        RespuestaFirma respuesta = solicitudFirma.firmarArchivo( solicitud, UtilDocumento.obtenerFileUploaded( infoDocumento));
+        
+        final Firma firma = respuesta.getFirma();
+        
+        if( respuesta.getCodigo().equals( 0)) {
+            sendNotificacion(
+                infoFirma.getCorreo(), firma.getUrlDescarga(), firma.getTitular(), firma.getRfc(), firma.getFecha(),
+                infoDocumento.getNombre()
+            );
+            
+            return firma.getUrlDescarga();
+        
+        } else {
+            request.setAttribute( "errorMessages", respuesta.getMensaje().split( ":"));
+            
+            return null;
+        } 
+    }
+    
+    private void sendNotificacion(  final String correo, final String urlDescarga, final String titular, 
+                                    final String rfc, final String fecha, final String nombreArchivo) {
+        if ( correo == null || correo.isEmpty()) {
+            return;
+        }
+        
+        final Thread thread = new Thread( new Runnable() {
+            @Override
+            public void run() {
+                final MailSenderService service = AppContext.getBean( MailSenderService.class);
+                service.sendNotificacion( correo, urlDescarga, titular, rfc, fecha, nombreArchivo);
+            }
+        });
+        
+        thread.start();
+    }
+        
 }

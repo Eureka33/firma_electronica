@@ -14,7 +14,7 @@
         <result property="folio"                column="folio"                      />
         <result property="nombre"               column="nombre"                     />
         <result property="emailDestinatario"    column="email_destinatario"         /> 
-        <result property="estatus"              column="estatus"                    />
+        <result property="estatusValue"         column="estatus"                    />
         <result property="ultimaActualizacion"  column="last_update" javaType="Date"/>
     </resultMap>
     
@@ -30,10 +30,10 @@
         select * from eurk_wsss_solicitud_firma where id = #{idItem}
     </select>
     
-     <!--    int updateSolicitud( id: Integer, estatus: Integer, timestamp: Date)   -->
+     <!--    int updateSolicitud( id: Integer, estatus: EnumEstatusSolicitud, timestamp: Date)   -->
     
     <update id="updateSolicitud">
-        update eurk_wsss_solicitud_firma set estatus = #{estatus}, last_update = #{fechaHora} where id = #{id}
+        update eurk_wsss_solicitud_firma set estatus = #{estatus.value}, last_update = #{fechaHora} where id = #{id}
 	</update>
     
     <!--    int obtenerVisitas( idItem: Integer)                                    -->

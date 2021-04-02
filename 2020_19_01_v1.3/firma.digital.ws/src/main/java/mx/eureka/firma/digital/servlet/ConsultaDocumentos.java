@@ -58,31 +58,7 @@ public class ConsultaDocumentos extends BaseServlet {
         
         }
 	}
-    
-    private InfoConfidencial getInfoConfidencial( final BeanInfoFirma bean) {
-		final InfoConfidencial info = new InfoConfidencial();
-		
-		info.setPasswordLlave( bean.getPassword());
-		
-		InfoArchivo archivo;
         
-        archivo = new InfoArchivo();
-		archivo.setHandler( UtilDocumento.createInstance( bean.getLlavePrivada(), "llavePrivada.key", "key"));
-		archivo.setNombre( "llavePrivada");
-		archivo.setExtension( "key");
-		
-        info.setArchivoLlave( archivo);
-			
-		archivo = new InfoArchivo();
-		archivo.setHandler( UtilDocumento.createInstance( bean.getCertificado(), "certificado.cer", "cert"));	
-		archivo.setNombre( "certificadoPublico");
-		archivo.setExtension( "cer");
-		
-        info.setCertificado( archivo);
-		
-		return info;
-	}
-    
     private Resultado<?> autenticarUsuario( BeanInfoFirma bean) {
         final SolicitudFirma solicitud = new SolicitudFirma();
         

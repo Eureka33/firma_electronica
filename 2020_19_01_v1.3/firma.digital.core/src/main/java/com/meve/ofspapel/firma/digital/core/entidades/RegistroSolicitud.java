@@ -2,6 +2,7 @@ package com.meve.ofspapel.firma.digital.core.entidades;
 
 import com.meve.ofspapel.firma.digital.core.enums.EnumEstatusSolicitud;
 import java.util.Date;
+import org.apache.ibatis.session.AutoMappingBehavior;
 
 public class RegistroSolicitud extends ArchivoDepositado {
     
@@ -34,7 +35,15 @@ public class RegistroSolicitud extends ArchivoDepositado {
     public void setEstatus( EnumEstatusSolicitud estatus) {
         this.estatus = estatus;
     }
+    
+    public int getEstatusValue() {
+        return estatus.getValue();
+    }
 
+    public void setEstatusValue( int estatus) {
+        this.estatus = EnumEstatusSolicitud.valueOf( estatus);
+    }
+    
     public Date getUltimaActualizacion() {
         return ultimaActualizacion;
     }

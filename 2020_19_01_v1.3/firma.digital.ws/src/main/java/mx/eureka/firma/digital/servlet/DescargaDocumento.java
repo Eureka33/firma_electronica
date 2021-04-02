@@ -20,9 +20,11 @@ public class DescargaDocumento extends BaseServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         final BeanInfoDocumento infoDocumento = UtilDocumento.requestToInfoDocumento( request);
-		
+		String value = request.getParameter( "isUpload");
+        Boolean isUpload = (value == null || value.length() == 0)? false : Boolean.valueOf( value);
+        
         try {
-            final InfoArchivo infoArchivo = UtilDocumento.obtenerInfoArchivo( infoDocumento);
+            final InfoArchivo infoArchivo = UtilDocumento.obtenerInfoArchivo( infoDocumento, isUpload);
             final OutputStream out = prepararDescarga( infoArchivo, response);
         
             UtilDocumento.copiarContenido( infoArchivo.getContenido(), out);

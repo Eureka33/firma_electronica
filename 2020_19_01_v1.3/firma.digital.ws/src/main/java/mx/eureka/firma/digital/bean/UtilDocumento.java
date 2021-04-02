@@ -181,16 +181,17 @@ public class UtilDocumento {
     public static String getMd5( String pathFile) throws FileNotFoundException {
         return getMd5( new FileInputStream( new File ( pathFile)));
     } 
-    
-    public static InfoArchivo obtenerInfoArchivo( BeanInfoDocumento infoDocumento) {
-        final String rutaDeposito = obtenerRutaDeposito( infoDocumento);
-        final File file = new File( rutaDeposito);
+        
+    public static InfoArchivo obtenerInfoArchivo( BeanInfoDocumento infoDocumento, boolean isUpload) {
+        
+        final String path = isUpload? obtenerRutaUpload( infoDocumento) : obtenerRutaDeposito( infoDocumento);
+        final File file = new File( path);
         
         if( file.exists()) {
                     
             final InfoArchivo info = new InfoArchivo();
         
-            info.setPath( rutaDeposito);
+            info.setPath( path);
             info.setNombre( file.getName());
             info.setLongitud( file.length());
             
@@ -216,6 +217,19 @@ public class UtilDocumento {
         return streamService.obtenerPathDeposito( pathRepositorio, info.getFolio(), info.getNombre());
     }
     
+    
+    public static File obtenerFileUploaded( BeanInfoDocumento info) {
+        final String path = obtenerRutaUpload( info);
+        return new File( path);
+    }
+    
+    static String obtenerRutaUpload( BeanInfoDocumento info) {
+        IConfiguracionService configService = AppContext.getBean( IConfiguracionService.class);
+        IStreamService        streamService = AppContext.getBean(        IStreamService.class);
+        
+        final String pathRepositorio = configService.getPropiedad( "path.directorio.descarga");
+        return streamService.obtenerPathDeposito( pathRepositorio, info.getFolio(), info.getNombre());
+    }
     
     public static DataHandler createInstance(final InputStream inputStream, final String nombre, final String tipo) {
     

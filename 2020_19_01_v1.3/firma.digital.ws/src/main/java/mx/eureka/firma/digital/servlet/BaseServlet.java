@@ -1,11 +1,15 @@
 package mx.eureka.firma.digital.servlet;
 
+import com.eureka.firma.digital.ws.bean.InfoArchivo;
+import com.eureka.firma.digital.ws.bean.InfoConfidencial;
 import java.io.IOException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import mx.eureka.firma.digital.bean.BeanInfoFirma;
+import mx.eureka.firma.digital.bean.UtilDocumento;
 
 public class BaseServlet extends HttpServlet {
     
@@ -13,6 +17,31 @@ public class BaseServlet extends HttpServlet {
 	protected void forwardTo( HttpServletRequest request, HttpServletResponse response, String pagina) throws IOException, ServletException {	
 		final RequestDispatcher dispatcher = getServletContext().getRequestDispatcher( pagina);
 		dispatcher.forward( request, response);
+	}
+    
+    
+    protected InfoConfidencial getInfoConfidencial( final BeanInfoFirma bean) {
+		final InfoConfidencial info = new InfoConfidencial();
+		
+		info.setPasswordLlave( bean.getPassword());
+		
+		InfoArchivo archivo;
+        
+        archivo = new InfoArchivo();
+		archivo.setHandler( UtilDocumento.createInstance( bean.getLlavePrivada(), "llavePrivada.key", "key"));
+		archivo.setNombre( "llavePrivada");
+		archivo.setExtension( "key");
+		
+        info.setArchivoLlave( archivo);
+			
+		archivo = new InfoArchivo();
+		archivo.setHandler( UtilDocumento.createInstance( bean.getCertificado(), "certificado.cer", "cert"));	
+		archivo.setNombre( "certificadoPublico");
+		archivo.setExtension( "cer");
+		
+        info.setCertificado( archivo);
+		
+		return info;
 	}
     
 }

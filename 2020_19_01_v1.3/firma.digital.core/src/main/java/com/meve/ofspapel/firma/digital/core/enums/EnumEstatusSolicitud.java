@@ -13,13 +13,13 @@ public enum EnumEstatusSolicitud {
         this.estatus = estatus;
     }
     
-    public int getEstatus() {
+    public int getValue() {
         return estatus;    
     }
     
     public static EnumEstatusSolicitud valueOf( int estatus) {
         for( EnumEstatusSolicitud item : values()) {
-            if( estatus == item.getEstatus()) {
+            if( item.getValue() == estatus) {
                 return item;
             }
         }

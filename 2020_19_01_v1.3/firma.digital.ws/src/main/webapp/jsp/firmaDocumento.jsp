@@ -12,10 +12,9 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
-    
     <title>Firma y Resguardo de Documentos Digitales</title>
+    
+    <%@include file="meta_no_cache.jspf"%>
     
     <link rel="stylesheet" href="./libs/fontawesome/css/all.min.css"    />
     <link rel="stylesheet" href="./libs/bootstrap/css/bootstrap.min.css"/>
@@ -87,7 +86,7 @@
             if( idOperacion === 0) {
                 jQuery( "#titulo").html( "Firma de Documento");
                 hide( "rowDestinatario");
-                jQuery( "#btnSubmit").html( '<i class="fas fa-pencil-alt"></i> FirmarDocumento');
+                jQuery( "#btnSubmit").html( '<i class="fas fa-file-signature"></i> FirmarDocumento');
                 show( "footer");
             } else {
                 jQuery( "#titulo").html( "Solicitud de Firma de Documento");
@@ -186,72 +185,14 @@
                                         <span id="error_documento" class="error" hidden></span>
                                     </td>
                             	</tr>
-                      
-                                <tr>
-                                    <td>
-                                        <span class="prompt">Certificado (*):</span>
-                                    </td>
-                                    <td>
-                                        <input type="file" id="certificado" name="certificado" class="form-control"
-                                            accept=".cer, application/pkix-cert" title="Archivo de su certificado FIEL"
-                                        />
-                                        <span id="error_certificado" class="error" hidden></span>
-                                    </td>
-                            	</tr>
                                 
-                                <tr>
-                					<td>
-                                        <span class="prompt">Llave Privada (*):</span>
-                                    </td>
-                        			<td>
-                                        <input type="file" id="llavePrivada" name="llavePrivada" class="form-control"
-                                            accept=".key, application/pkcs8" title="Archivo de llave privada de su certificado FIEL"
-                                        />
-                                        <span id="error_llavePrivada" class="error" hidden></span>
-                                    </td>
-                                </tr>
-                            
-                                <tr>
-                					<td>
-                                        <span class="prompt">Contraseña (*):</span>
-                                    </td>
-                            		<td>
-                                        <input type="password" id="password" name="password" class="form-control col-sm-4"
-                                            placeholder="contraseña FIEL" autocomplete="off"
-                                            title="Contraseña de su certificado FIEL" maxlength="20"
-                                        />
-                                        <span id="error_password" class="error" hidden></span>
-                                    </td>
-                        		</tr>
-                                
-                                <tr id="rowDestinatario" hidden>
-            						<td>
-                                        <span class="prompt">Correo Destinatario:</span>
-                                    </td>
-                                	<td>
-                                        <input type="text" id="correoDestinatario" name="correoDestinatario" class="form-control col-sm-8"
-                                            title="Correo electrónico del destinatario de la solicitud"
-                                        />
-                                        <span id="error_correoDestinatario" class="error" hidden></span>
-                                    </td>
-                                </tr>
-                                
-                                <tr>
-            						<td>
-                                        <span class="prompt">Mi Correo Electr&oacute;nico:</span>
-                                    </td>
-                                	<td>
-                                        <input type="text" id="correo" name="correo" class="form-control col-sm-8"
-                                            title="Correo electrónico a donde le enviaremos la información para consultar el archivo firmado"
-                                        />
-                                        <span id="error_correo" class="error" hidden></span>
-                                    </td>
-                                </tr>
+                                <%@include file="../WEB-INF/pages/fragments/campos_fiel.jspf" %>
                             </table>
                             
                             <div class="row">
                                 <div class="col-sm-12" style="text-align: right;">
-                                    <button type="submit" id="btnSubmit" class="btn btn-primary firma" onclick="javascript: return validarForm( event);"></button>
+                                    <button type="submit" id="btnSubmit" class="btn btn-primary firma" onclick="javascript: return validarForm( event);">
+                                    </button>
                                     &nbsp;
                                     <button type="button" class="btn btn-info" onclick="javascript: navigation.goto( 'firmaDocumento');" title="Cancelar Operación">
                                         Cancelar
@@ -291,20 +232,8 @@
 			</td>
 		</tr>
 	</table>
-                        
-    <div class="modal fade" id="processing" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Firma Digital</h5>
-                </div>
-                <div class="modal-body">
-                    Su documento esta siendo procesado. Por favor espere.
-                </div>
-            </div>
-        </div>
-    </div>
     
+    <%@include file="../WEB-INF/pages/fragments/processing.jspf" %>
     <a id="download" href=""></a>
 </body>
 </html>

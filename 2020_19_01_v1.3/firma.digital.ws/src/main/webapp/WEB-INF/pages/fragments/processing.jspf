@@ -1,0 +1,12 @@
+<div class="modal fade" id="processing" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Validaci&oacute;n / Firma / Almacenamiento</h5>
+            </div>
+            <div class="modal-body">
+                Su documento esta siendo procesado. Por favor espere.
+            </div>
+        </div>
+    </div>
+</div>

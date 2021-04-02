@@ -147,7 +147,6 @@
 						<td width="60%">&nbsp;</td>
 						<td width="20%" style="text-align: right;">
                             <button type="button" class="btn btn-primary" onclick="javascript: descargar();"><i class="fas fa-download"></i>&nbsp;Descargar</button>
-							<a id="download" href=""></a>
 						</td>
                         <td width="20%" style="text-align: right;" <%= info.getNombre().endsWith( ".zip")? "hidden": ""%>>
 							<button type="button" class="btn btn-success" onclick="javascript: mostrarFormulario();"><i class="fas fa-clipboard-check"></i>&nbsp;Validar</button>
@@ -207,18 +206,8 @@
 		</tr>
 	</table>
                         
-    <div class="modal fade" id="processing" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Validación de Documento</h5>
-                </div>
-                <div class="modal-body">
-                    Su documento esta siendo procesado. Por favor espere.
-                </div>
-            </div>
-        </div>
-    </div>
-	
+    <%@include file="../WEB-INF/pages/fragments/processing.jspf" %>
+	<a id="download" href=""></a>
+    
 </body>
 </html>

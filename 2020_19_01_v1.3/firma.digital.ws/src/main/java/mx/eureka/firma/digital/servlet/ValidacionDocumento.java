@@ -96,7 +96,7 @@ public class ValidacionDocumento extends BaseServlet {
 	}
 	
 	public static String checksumStoredFile( BeanInfoDocumento info) { 
-        InfoArchivo infoArchivo = UtilDocumento.obtenerInfoArchivo( info);
+        InfoArchivo infoArchivo = UtilDocumento.obtenerInfoArchivo( info, false);
         return UtilDocumento.getMd5( infoArchivo.getContenido());
     }
 	

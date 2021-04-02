@@ -1,0 +1,61 @@
+
+<tr class="fiel">
+    <td>
+        <span class="prompt">Certificado (*):</span>
+    </td>
+    <td>
+        <input type="file" id="certificado" name="certificado" class="form-control"
+            accept=".cer, application/pkix-cert" title="Archivo de su certificado FIEL"
+        />
+        <span id="error_certificado" class="error" hidden></span>
+    </td>
+</tr>
+
+<tr class="fiel">
+    <td>
+        <span class="prompt">Llave Privada (*):</span>
+    </td>
+    <td>
+        <input type="file" id="llavePrivada" name="llavePrivada" class="form-control"
+            accept=".key, application/pkcs8" title="Archivo de llave privada de su certificado FIEL"
+        />
+        <span id="error_llavePrivada" class="error" hidden></span>
+    </td>
+</tr>
+
+<tr class="fiel">
+	<td>
+        <span class="prompt">Contraseña (*):</span>
+    </td>
+    <td>
+        <input type="password" id="password" name="password" class="form-control col-sm-4"
+            placeholder="contraseña FIEL" autocomplete="off"
+            title="Contraseña de su certificado FIEL" maxlength="20"
+        />
+        <span id="error_password" class="error" hidden></span>
+    </td>
+</tr>
+
+<tr id="rowDestinatario" hidden>
+    <td>
+        <span class="prompt">Correo Destinatario (*):</span>
+    </td>
+    <td>
+        <input type="text" id="correoDestinatario" name="correoDestinatario" class="form-control col-sm-8"
+            title="Correo electrónico del destinatario de la solicitud"
+        />
+        <span id="error_correoDestinatario" class="error" hidden></span>
+    </td>
+</tr>
+
+<tr class="fiel">
+    <td>
+        <span class="prompt">Mi Correo Electr&oacute;nico:</span>
+    </td>
+    <td>
+        <input type="text" id="correo" name="correo" class="form-control col-sm-8"
+            title="Correo electrónico a donde le enviaremos la información para consultar el archivo firmado"
+        />
+        <span id="error_correo" class="error" hidden></span>
+    </td>
+</tr>

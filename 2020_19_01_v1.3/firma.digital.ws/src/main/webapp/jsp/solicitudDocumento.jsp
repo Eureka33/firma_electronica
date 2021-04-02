@@ -7,6 +7,7 @@
 <%
 	BeanInfoDocumento info = (BeanInfoDocumento) request.getAttribute( "info");
     String resultado = (String) request.getAttribute( "resultado");
+    String error     = (String) request.getAttribute(     "error");
     
     final Usuario usuario = (Usuario) session.getAttribute( "usuario");
 %>
@@ -40,31 +41,35 @@
         });
         
 		function inicializa() {
-			document.getElementById( 'formValidacion').style.display='none';
-			document.getElementById( 'mensajeResultado').style.display="<%= (resultado == null)? "none": ""%>"; 
-		}
+			document.getElementById( 'mensajeResultado').style.display="<%= (resultado == null && error == null)? "none": ""%>"; 
+            
+            jQuery( ".fiel").hide();
+            jQuery( "#btnDownload").hide();
+            jQuery( "#btnSign").hide();
+            
+            <% if( error == null) { %>
+                jQuery( ".fiel").show();
+                jQuery( "#btnDownload").show();
+                jQuery( "#btnSign").show();
+            <% } %>
+        }
 		
 		function descargar() {
 			var link = document.getElementById( 'download');
-			link.href= './descargaDocumento?folio=<%= info.getFolio() %>&nombre=<%= URLEncoder.encode( info.getNombre(), "UTF-8") %>';
+			link.href= './descargaDocumento?isUpload=true&folio=<%= info.getFolio() %>&nombre=<%= URLEncoder.encode( info.getNombre(), "UTF-8") %>';
 			link.click();
 		}
-	
-		function mostrarFormulario() {
-			var formulario = document.getElementById( 'formValidacion');
-			formulario.style.display = '';
-			
-			var mensaje = document.getElementById( 'mensajeResultado');
-			if ( mensaje) {	mensaje.style.display = 'none'; }
-			
-		} 
         
-        function validar(event) {
+        function validarForm( event) {
             event.stopPropagation;
                         
             let errores = 0;
             
-            errores += validation.validarArchivos( 'archivo', '.pdf', 'Documento', 100, 25);
+            errores += validation.validarArchivos(  'certificado', '.cer',   'Certificado',   1, 1);
+            errores += validation.validarArchivos( 'llavePrivada', '.key', 'Llave Privada',   1, 1);
+            errores += validation.validarTexto( 'password', 'Contraseña',  20);
+            
+            errores += validation.validarCorreo(  'correo', 'Correo Electrónico', 150);
             
             let submit = (errores === 0);
             
@@ -73,8 +78,7 @@
             }
             
             return submit;
-        } 
-        
+        }
 	</script>
 </head>
 <body>
@@ -109,107 +113,82 @@
 		
 		<tr>
 			<td>
-				<table style="width: 100%;">
-					<tr>
-						<td style="width: 150px;">
-                            <span style="font-size: 1.2em; font-weight: bold;">Folio:</span>
-                        </td>
-						<td>
-                            <input type="text" value="<%= info.getFolio() %>" style="font-size: 1.2em; width: 100%" disabled/>
-                        </td>
-					</tr>
-					<tr><td colspan="2">&nbsp;</td></tr>
-					<tr>
-						<td style="width: 150px;">
-                            <span style="font-size: 1.2em; font-weight: bold;">Nombre:</span>
-                        </td>
-						<td>
-                            <input type="text" value="<%= info.getNombre() %>" style="font-size: 1.2em; width: 100%" disabled/>
-                        </td>
-					</tr>
-				</table>
+                <form action="solicitudDocumento?&folio=<%= info.getFolio() %>&nombre=<%= URLEncoder.encode( info.getNombre(), "UTF-8") %>"
+                    method="POST" enctype="multipart/form-data" accept-charset="UTF-8"
+                >
+                    <div class="card">
+                        <div class="card-header">
+                            <span>Solicitud de Firma de Documento</span>
+                        </div>
+                        <div class="card-body" id="paso1">
+                            <table style="width: 100%;">
+                                <tr>
+                                    <td style="width: 150px;">
+                                        <span style="font-size: 1.2em; font-weight: bold;">Folio:</span>
+                                    </td>
+                                    <td>
+                                        <input type="text" value="<%= info.getFolio() %>" style="font-size: 1.2em; width: 100%" disabled/>
+                                    </td>
+                                </tr>
+					
+                                <tr>
+                                    <td style="width: 150px;">
+                                        <span style="font-size: 1.2em; font-weight: bold;">Nombre:</span>
+                                    </td>
+                                    <td>
+                                        <div class="row">
+                                            <div class="col-sm-8">
+                                                <input type="text" value="<%= info.getNombre() %>" style="font-size: 1.2em; width: 100%" disabled/>
+                                            </div>
+                                            <div class="col-sm-4" style="text-align: right;">
+                                                <button type="button" id="btnDownload" class="btn btn-info" 
+                                                    title="Descargar documento" onclick="javascript: descargar();"
+                                                >
+                                                    <i class="fas fa-download"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+		
+                                <%@include file="../WEB-INF/pages/fragments/campos_fiel.jspf" %>
+                            </table>
+                    
+                            <br/>
+                    
+                            <div class="row">
+                               <div class="col-sm-12" style="text-align: right;">
+                                    <button type="submit" id="btnSign" class="btn btn-primary" onclick="javascript: validarForm( event);">
+                                        <i class="fas fa-file-signature"></i>&nbsp;Firmar Documento
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
 			</td>
 		</tr>
-		
-		<tr>
-			<td>
-				<table style="width: 100%">
-					<tr>
-						<td width="60%">&nbsp;</td>
-						<td width="20%" style="text-align: right;">
-                            <button type="button" class="btn btn-primary" onclick="javascript: descargar();"><i class="fas fa-download"></i>&nbsp;Descargar</button>
-							<a id="download" href=""></a>
-						</td>
-                        <td width="20%" style="text-align: right;" <%= info.getNombre().endsWith( ".zip")? "hidden": ""%>>
-							<button type="button" class="btn btn-success" onclick="javascript: mostrarFormulario();"><i class="fas fa-clipboard-check"></i>&nbsp;Validar</button>
-						</td>
-					</tr>
-				</table>
-			</td>
-		</tr>
-		
-		<tr><td>&nbsp;</td></tr>
+    
+        <tr><td>&nbsp;</td></tr>
 	
 		<tr id="mensajeResultado" style="display: none;">
 			<td>
 				<table width="100%">
 					<tr>
 						<td style="text-align: center;" width="100%">
-							<span style="font-size: 1.4em; font-weight: bold; color: red;" ><%= resultado %></span>
+							<span style="font-size: 1.4em; font-weight: bold; color: red;">
+                                <% if (resultado != null) { %><%= resultado %><% } %>
+                                <% if (error != null) { %><%= error %><% } %>
+                            </span>
 						</td>
 					</tr>
 				</table>
 			</td>
 		</tr>
 		
-		<tr id="formValidacion" style="display: none;">
-			<td>
-                <div class="card">
-                    <form action="validacionDocumento?&folio=<%= info.getFolio() %>&nombre=<%= URLEncoder.encode( info.getNombre(), "UTF-8") %>"
-                        method="post" enctype="multipart/form-data"
-                    >
-                        <table style="margin: 20px; width: 95%;">
-                            <tr>
-                                <td>
-                                    <span style="font-size: 1.2em;">Seleccione el documento para validar</span>
-                                </td>
-    						</tr>
-                           <tr>
-                                <td>
-                                    <input type="file" id="archivo" name="archivo"/>
-    							</td>
-        					</tr>
-            				
-                            <tr>
-                                <td><span id="error_archivo" class="error" hidden></span> 
-                            </tr>
-                            
-                            <tr>
-                                <td style="text-align: right;">
-                                    <button type="submit" class="btn btn-info" onclick="javascript: return validar(event);">
-                                        <i class="fas fa-spell-check"></i>&nbsp;Comparar
-                                    </button>
-        						</td>
-            				</tr>
-                		</table>
-                    </form>
-                </div>
-           	</td>
-		</tr>
 	</table>
                         
-    <div class="modal fade" id="processing" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Validación de Documento</h5>
-                </div>
-                <div class="modal-body">
-                    Su documento esta siendo procesado. Por favor espere.
-                </div>
-            </div>
-        </div>
-    </div>
-	
+    <%@include file="../WEB-INF/pages/fragments/processing.jspf" %>
+	<a id="download" href=""></a>
 </body>
 </html>

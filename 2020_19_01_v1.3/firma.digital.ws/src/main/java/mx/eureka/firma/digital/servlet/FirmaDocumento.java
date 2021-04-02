@@ -2,7 +2,6 @@ package mx.eureka.firma.digital.servlet;
 
 import com.eureka.firma.digital.ws.bean.Firma;
 import com.eureka.firma.digital.ws.bean.InfoArchivo;
-import com.eureka.firma.digital.ws.bean.InfoConfidencial;
 import com.eureka.firma.digital.ws.bean.RespuestaFirma;
 import com.eureka.firma.digital.ws.bean.RespuestaFirmaMasiva;
 import com.eureka.firma.digital.ws.bean.RespuestaSolicitud;
@@ -27,6 +26,7 @@ import mx.eureka.firma.digital.bean.ArchivoDepositado;
 import mx.eureka.firma.digital.bean.BeanInfoFirma;
 import mx.eureka.firma.digital.bean.UtilDocumento;
 import mx.eureka.firma.digital.bean.ZipCreator;
+import mx.neogen.log.Log;
 
 
 public class FirmaDocumento extends BaseServlet {
@@ -132,6 +132,14 @@ public class FirmaDocumento extends BaseServlet {
         
         if( respuesta.getCodigo().equals( 0)) {
             
+            Log.info(  
+                "\turl descarga: " + firma.getUrlDescarga() +
+                "\ttitular     : " + firma.getTitular() +
+                "\tRFC         : " + firma.getRfc() +
+                "\tfecha-hora  : " + firma.getFecha() +
+                "\tpathArchivo : " + solicitud.getPathArchivo()
+            );
+            
             sendSolicitud( solicitud, bean.getCorreoDestinatario(),
                 firma.getUrlDescarga(), firma.getTitular(), firma.getRfc(), firma.getFecha(), solicitud.getPathArchivo()
             );
@@ -206,31 +214,7 @@ public class FirmaDocumento extends BaseServlet {
         
         thread.start();
     }
-    
-    private static InfoConfidencial getInfoConfidencial( final BeanInfoFirma bean) {
-		final InfoConfidencial info = new InfoConfidencial();
-		
-		info.setPasswordLlave( bean.getPassword());
-		
-		InfoArchivo archivo;
         
-        archivo = new InfoArchivo();
-		archivo.setHandler( UtilDocumento.createInstance( bean.getLlavePrivada(), "llavePrivada.key", "key"));
-		archivo.setNombre( "llavePrivada");
-		archivo.setExtension( "key");
-		
-        info.setArchivoLlave( archivo);
-			
-		archivo = new InfoArchivo();
-		archivo.setHandler( UtilDocumento.createInstance( bean.getCertificado(), "certificado.cer", "cert"));	
-		archivo.setNombre( "certificadoPublico");
-		archivo.setExtension( "cer");
-		
-        info.setCertificado( archivo);
-		
-		return info;
-	}
-    
     private RespuestaFirma firmarDocumento( mx.eureka.firma.digital.bean.InfoArchivo archivo, BeanInfoFirma bean) {
         final SolicitudFirma solicitud = new SolicitudFirma();
         
@@ -280,10 +264,10 @@ public class FirmaDocumento extends BaseServlet {
         return zip;
     }
     
-    private static InfoArchivo getArchivoDatos( final mx.eureka.firma.digital.bean.InfoArchivo info) {
+    private InfoArchivo getArchivoDatos( final mx.eureka.firma.digital.bean.InfoArchivo info) {
 		final InfoArchivo archivo = new InfoArchivo();
         
-		archivo.setHandler( UtilDocumento.createInstance( info.getContenido(), info.getNombre(), "documento"));	
+		archivo.setHandler( UtilDocumento.createInstance( info.getContenido(), info.getNombre(), "document"));	
 		archivo.setNombre(    UtilStream.getNombreArchivo(    info.getNombre()));
 		archivo.setExtension( UtilStream.getExtensionArchivo( info.getNombre()));
 		

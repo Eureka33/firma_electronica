@@ -1,6 +1,8 @@
 package com.eureka.firma.digital.ws.core;
 
 import com.eureka.firma.digital.ws.bean.Firma;
+import com.eureka.firma.digital.ws.bean.InfoArchivo;
+import com.eureka.firma.digital.ws.bean.RespuestaFirma;
 import com.eureka.firma.digital.ws.bean.RespuestaSolicitud;
 import com.eureka.firma.digital.ws.bean.Resultado;
 import com.eureka.firma.digital.ws.bean.SessionFirma;
@@ -14,6 +16,7 @@ import com.meve.ofspapel.firma.digital.core.service.IConfiguracionService;
 import com.meve.ofspapel.firma.digital.core.service.RegistroService;
 import com.meve.ofspapel.firma.digital.core.service.SolicitudService;
 import com.meve.ofspapel.firma.digital.core.service.UsuarioService;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
@@ -64,12 +67,12 @@ public class SolicitudFirmaBsnsComponent  {
             
             Usuario usuario = usuarioService.obtenerUsuario( sf.firma.getRfc(), sf.firma.getTitular());
             
-            sf.folio = streamService.obtenerFolioArchivo();
+            sf.folio = obtenerFolioUpload( sf.archivo);
             
             sf.firma.setUrlDescarga( generarDownloadURL( sf));
             
             RegistroSolicitud entidad = registroService.registraSolicitud(
-                usuario, sf.folio, sf.archivo.getAbsolutePath(), emailDestinatario
+                usuario, sf.folio, sf.archivo.getName(), emailDestinatario
             );
             
 			return getRespuesta( resultado, entidad, sf.firma);
@@ -84,6 +87,48 @@ public class SolicitudFirmaBsnsComponent  {
 			);   
 		}
     }
+    
+    public RespuestaFirma firmarArchivo( final SolicitudFirma solicitud, File archivo) {
+	
+		SessionFirma sf = new SessionFirma( solicitud);
+		Resultado<?> resultado;
+		
+		try {
+			resultado = service.validarInfoConfidencial( solicitud);
+			if ( resultado.isError()) { return service.getRespuesta( resultado); }
+			
+			resultado = service.descargarInfoConfidencial( sf);
+			if ( resultado.isError()) { return service.getRespuesta( resultado); }
+            
+			resultado = service.validarCertificado( sf);
+			if ( resultado.isError()) { return service.getRespuesta( resultado); }
+ 
+            Usuario usuario = usuarioService.obtenerUsuario( sf.firma.getRfc(), sf.firma.getTitular());
+            
+            sf.archivo = archivo;
+            
+            resultado = service.generaFirma( sf);
+            
+            sf.folio = streamService.obtenerFolioArchivo(); 
+            
+            service.actualizarArchivo( sf, (Resultado<Firma>) resultado);
+            
+            registroService.registraDocumento( usuario, sf.firma.getFecha(), sf.folio, sf.archivo.getName());
+            
+			return service.getRespuesta( resultado);
+				
+		} catch ( Exception ex) {
+			ex.printStackTrace();
+			
+            return service.getRespuesta( 
+				ResultadoEnum.ERROR_DESCONOCIDO.getResultado( ex.getMessage())
+			);
+			
+		} finally {
+			service.eliminarDirectorioUpload( sf);
+		
+        }
+	}
     
     public String generarDownloadURL( SessionFirma sf) throws UnsupportedEncodingException, FileNotFoundException {
         if( sf.archivo == null ) {
@@ -104,13 +149,20 @@ public class SolicitudFirmaBsnsComponent  {
     
     public EnumEstatusSolicitud registraVisitaLink( String folio, String nombre) {
         final Integer idSolicitud = solicitudService.obtenerIdSolicitud( folio, nombre);
+        if ( idSolicitud == null) {
+            return null;
+        }
         return solicitudService.actualizaSolicitud( idSolicitud, EnumAccionSolicitud.LINK_VISITADO);
     }
     
     public void registraEnvioSolicitud( Integer idSolicitud) {
         solicitudService.actualizaSolicitud( idSolicitud, EnumAccionSolicitud.CORREO_ENVIADO);
     }
-        
+    
+    private String obtenerFolioUpload( File file) {
+        return file.getParentFile().getName();
+    }
+    
     private RespuestaSolicitud getRespuesta( Resultado<?> resultado) {
 		final RespuestaSolicitud rf = new RespuestaSolicitud();
 		
