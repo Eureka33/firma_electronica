@@ -1,14 +1,15 @@
 package com.meve.ofspapel.firma.digital.core.enums;
 
 public enum EnumEstatusSolicitud {
-    REGISTRADA( 10),
-    NOTIFICADA( 11),
-    VISITADA(   12),
-    ATENDIDA(   13),
-    CANCELADA(  14);
+    REGISTRADA( 0),
+    NOTIFICADA( 1),
+    VISITADA(   2),
+    ATENDIDA(   3),
+    CANCELADA(  4);
     
     private final int estatus;
-
+    
+    
     EnumEstatusSolicitud( int estatus) {
         this.estatus = estatus;
     }

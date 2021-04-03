@@ -1,7 +1,6 @@
 package com.meve.ofspapel.firma.digital.core.service;
 
 import com.eurk.core.beans.consulta.Consulta;
-import com.meve.ofspapel.firma.digital.core.components.DocumentoFirmadoBsnsComponent;
 import com.meve.ofspapel.firma.digital.core.components.DocumentoSolicitadoBsnsComponent;
 import java.util.List;
 import mx.com.neogen.commons.bean.Propiedades;

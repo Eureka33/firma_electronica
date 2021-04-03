@@ -3,6 +3,7 @@ package com.meve.ofspapel.firma.digital.core.service;
 import com.meve.ofspapel.firma.digital.core.entidades.RegistroSolicitud;
 import com.meve.ofspapel.firma.digital.core.enums.EnumAccionSolicitud;
 import com.meve.ofspapel.firma.digital.core.enums.EnumEstatusSolicitud;
+import com.meve.ofspapel.firma.digital.core.mappers.DocumentoSolicitadoDAO;
 import com.meve.ofspapel.firma.digital.core.mappers.SolicitudDAO;
 import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,8 @@ import org.springframework.stereotype.Component;
 public class SolicitudService {
 
     @Autowired private SolicitudDAO dao;
+    @Autowired private DocumentoSolicitadoDAO documentoDAO;
+    
     @Autowired private IConfiguracionService config;
 
     
@@ -20,7 +23,7 @@ public class SolicitudService {
     }
     
     public EnumEstatusSolicitud actualizaSolicitud( Integer idItem, EnumAccionSolicitud accion) {
-        RegistroSolicitud entidad = dao.obtenerItem( idItem);
+        RegistroSolicitud entidad = documentoDAO.obtenerItemById( idItem);
         EnumEstatusSolicitud estatus = entidad.getEstatus();
         
         switch ( accion) {

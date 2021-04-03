@@ -4,8 +4,9 @@ import com.eurk.core.beans.consulta.Consulta;
 import com.eurk.core.beans.consulta.Ordenacion;
 import com.meve.ofspapel.firma.digital.beans.ConsultaBase;
 import com.meve.ofspapel.firma.digital.beans.DocumentoFirmado;
-import com.meve.ofspapel.firma.digital.core.entidades.ArchivoDepositado;
-import com.meve.ofspapel.firma.digital.core.mappers.DocumentoFirmadoDAO;
+import com.meve.ofspapel.firma.digital.beans.DocumentoSolicitado;
+import com.meve.ofspapel.firma.digital.core.entidades.RegistroSolicitud;
+import com.meve.ofspapel.firma.digital.core.mappers.DocumentoSolicitadoDAO;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,20 +17,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class DocumentoSolicitadoBsnsComponent extends ConsultaBase<ArchivoDepositado, Integer> {
+public class DocumentoSolicitadoBsnsComponent extends ConsultaBase<RegistroSolicitud, Integer> {
     
-    @Autowired private DocumentoFirmadoDAO data;
+    @Autowired private DocumentoSolicitadoDAO data;
     
         
     public DocumentoFirmado obtenerItem( String claveOrganizacion, Invoker invocador, String idItemStr, Propiedades propiedades) {
         return entidadToItem( obtenerItem(claveOrganizacion, invocador, Integer.valueOf( idItemStr)));
     }
     
-    public List<DocumentoFirmado> listarItems( String claveOrganizacion, Invoker invocador, Consulta consulta) {
-        final List<ArchivoDepositado> entidades = consultar( claveOrganizacion, invocador, consulta);
-        final List<DocumentoFirmado> items = new ArrayList<>();
+    public List<DocumentoSolicitado> listarItems( String claveOrganizacion, Invoker invocador, Consulta consulta) {
+        final List<RegistroSolicitud> entidades = consultar( claveOrganizacion, invocador, consulta);
+        final List<DocumentoSolicitado> items = new ArrayList<>();
         
-        for( ArchivoDepositado entidad : entidades) {
+        for( RegistroSolicitud entidad : entidades) {
             items.add( entidadToItem( entidad));
         }
         
@@ -43,17 +44,15 @@ public class DocumentoSolicitadoBsnsComponent extends ConsultaBase<ArchivoDeposi
     }
 
     @Override
-    protected List<ArchivoDepositado> listarItems(Consulta consulta, Invoker invocador, List<String> ordenacion, RowBounds rowBounds) {
+    protected List<RegistroSolicitud> listarItems(Consulta consulta, Invoker invocador, List<String> ordenacion, RowBounds rowBounds) {
         return data.listarItems( consulta, invocador, ordenacion, rowBounds);
     }
 
     @Override
-    protected ArchivoDepositado obtenerItem(String claveOrganizacion, Invoker invocador, Integer idItem) {
+    protected RegistroSolicitud obtenerItem(String claveOrganizacion, Invoker invocador, Integer idItem) {
         return data.obtenerItem(claveOrganizacion, invocador, idItem);
     }
     
-    
-
     @Override
 	protected List<String> createOrdenacion(Consulta consulta) {
 		final List<String> clausulas = new ArrayList<>();
@@ -76,13 +75,14 @@ public class DocumentoSolicitadoBsnsComponent extends ConsultaBase<ArchivoDeposi
 		return clausulas;
 	}
     
-    private DocumentoFirmado entidadToItem( ArchivoDepositado entidad) {
-        final DocumentoFirmado item = new DocumentoFirmado();
+    private DocumentoSolicitado entidadToItem( RegistroSolicitud entidad) {
+        final DocumentoSolicitado item = new DocumentoSolicitado();
         
         item.setId( entidad.getId());
         item.setFechaHora( new SimpleDateFormat( "dd/MM/yyyy HH:mm:ss").format( entidad.getFechaHora()));
         item.setFolio( entidad.getFolio());
         item.setNombre( entidad.getNombre());
+        item.setEstatus( entidad.getEstatus());
         
         return item;
     }

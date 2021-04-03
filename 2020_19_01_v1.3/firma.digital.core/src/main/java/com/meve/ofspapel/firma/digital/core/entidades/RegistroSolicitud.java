@@ -2,7 +2,6 @@ package com.meve.ofspapel.firma.digital.core.entidades;
 
 import com.meve.ofspapel.firma.digital.core.enums.EnumEstatusSolicitud;
 import java.util.Date;
-import org.apache.ibatis.session.AutoMappingBehavior;
 
 public class RegistroSolicitud extends ArchivoDepositado {
     

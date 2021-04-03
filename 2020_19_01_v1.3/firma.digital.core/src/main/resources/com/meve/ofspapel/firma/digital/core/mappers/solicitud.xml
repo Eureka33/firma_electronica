@@ -4,30 +4,10 @@
 
 <mapper namespace="com.meve.ofspapel.firma.digital.core.mappers.SolicitudDAO">
      
-    <resultMap id="itemMap" type="com.meve.ofspapel.firma.digital.core.entidades.RegistroSolicitud">
-        <constructor>
-            <arg column="id" javaType="integer" />
-        </constructor>
-        
-        <result property="idUsuario"            column="id_usuario"                 />
-        <result property="fechaHora"            column="fecha_hora" javaType="Date" />
-        <result property="folio"                column="folio"                      />
-        <result property="nombre"               column="nombre"                     />
-        <result property="emailDestinatario"    column="email_destinatario"         /> 
-        <result property="estatusValue"         column="estatus"                    />
-        <result property="ultimaActualizacion"  column="last_update" javaType="Date"/>
-    </resultMap>
-    
     <!--    Integer obtenerIdSolicitud( folio: String, nombre: nombre)             -->
     
     <select id="obtenerIdSolicitud" resultType="integer">
         select id from eurk_wsss_solicitud_firma where folio = #{folio} and nombre = #{nombre}
-    </select>
-    
-    <!--    RegistroSolicitud obtenerItem( idItem: Integer)                         -->
-    
-    <select id="obtenerItem" resultMap="itemMap">
-        select * from eurk_wsss_solicitud_firma where id = #{idItem}
     </select>
     
      <!--    int updateSolicitud( id: Integer, estatus: EnumEstatusSolicitud, timestamp: Date)   -->
