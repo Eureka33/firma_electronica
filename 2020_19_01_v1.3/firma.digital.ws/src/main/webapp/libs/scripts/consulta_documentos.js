@@ -77,7 +77,7 @@ env.config.documentos = {
     columns   : [
         {value: "fechaHora", label: "Fecha Hora"},
         {value:     "folio", label:      "Folio"},
-        {value:    "nombre", label: "Documentos"}
+        {value:    "nombre", label:  "Documento"}
     ],
     actions   : [
         {value: 'view', icon: "download", title: "Descarga y validación del documento"}
@@ -104,12 +104,13 @@ env.config.solicitudes = {
     columns   : [
         {value: "fechaHora", label: "Fecha Hora"},
         {value:     "folio", label:      "Folio"},
-        {value:    "nombre", label: "Documentos"}
+        {value:    "nombre", label:  "Documento"},
+        {value:   "estatus", label:    "Estatus"}
     ],
     actions   : [
-        {value: 'view', icon: "download", title: "Descarga y validación del documento"}
+        {value: 'view', icon: "info-circle", title: "Descarga y validación del documento"}
     ],
-    resource: "documento/firmado",
+    resource: "documento/solicitado",
     search: {
         tipo: "PAGINADA", "propiedades": {}, "ordenacion": [{"campo": "fechaHora", "direccion": "desc"}]
     }
