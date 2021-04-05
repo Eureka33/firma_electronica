@@ -77,7 +77,7 @@ public class SolicitudFirmaBsnsComponent  {
                 usuario, sf.folio, sf.archivo.getName(), emailDestinatario
             );
             
-			return getRespuesta( resultado, entidad, sf.firma);
+			return getRespuesta( resultado, entidad, sf.firma, sf.archivo.getAbsolutePath());
             
 		} catch ( Exception ex) {
 			Log.error( ex);
@@ -182,13 +182,13 @@ public class SolicitudFirmaBsnsComponent  {
 		return rf;
 	}
     
-    private RespuestaSolicitud getRespuesta( Resultado<?> resultado, RegistroSolicitud entidad, Firma firma) {
+    private RespuestaSolicitud getRespuesta( Resultado<?> resultado, RegistroSolicitud entidad, Firma firma, String pathArchivo) {
 		final RespuestaSolicitud rf = new RespuestaSolicitud();
 		
 		rf.setCodigo(   resultado.getCodigo());
 		rf.setMensaje( resultado.getMensaje());
 		
-        rf.setSolicitud( entidadToItem( entidad));
+        rf.setSolicitud( entidadToItem( entidad, pathArchivo));
         rf.setFirma( firma);
         
         DateFormat formatter = new SimpleDateFormat( "dd/MM/yyyy HH:mm");
@@ -197,11 +197,11 @@ public class SolicitudFirmaBsnsComponent  {
 		return rf;
 	}
     
-    private Solicitud entidadToItem( RegistroSolicitud entidad) {
+    private Solicitud entidadToItem( RegistroSolicitud entidad, String pathArchivo) {
         Solicitud item = new Solicitud();
         
         item.setId( entidad.getId());
-        item.setPathArchivo( entidad.getNombre());
+        item.setPathArchivo( pathArchivo);
         
         return item;
     }
