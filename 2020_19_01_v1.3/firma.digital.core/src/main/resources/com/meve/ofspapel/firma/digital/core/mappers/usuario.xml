@@ -18,8 +18,16 @@
         select * from eurk_wsss_usuario where clave = #{clave}
     </select>
     
+    <!--     Usuario obtenerItem( idItem: Integer)                                          -->
+    
+    <select id="obtenerItem" resultMap="usuario">
+        select * from eurk_wsss_usuario where id =#{idItem}
+    </select>
+    
     <insert id="insert" keyColumn="id" keyProperty="item.id" useGeneratedKeys="true">
         insert into eurk_wsss_usuario( clave, nombre) values ( #{item.clave}, #{item.nombre})
 	</insert>
+    
+    
     
 </mapper>

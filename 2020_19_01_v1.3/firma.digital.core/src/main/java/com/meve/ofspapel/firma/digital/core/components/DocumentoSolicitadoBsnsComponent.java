@@ -5,8 +5,12 @@ import com.eurk.core.beans.consulta.Ordenacion;
 import com.meve.ofspapel.firma.digital.beans.ConsultaBase;
 import com.meve.ofspapel.firma.digital.beans.DocumentoFirmado;
 import com.meve.ofspapel.firma.digital.beans.DocumentoSolicitado;
+import com.meve.ofspapel.firma.digital.core.entidades.ArchivoDepositado;
 import com.meve.ofspapel.firma.digital.core.entidades.RegistroSolicitud;
+import com.meve.ofspapel.firma.digital.core.entidades.Usuario;
 import com.meve.ofspapel.firma.digital.core.mappers.DocumentoSolicitadoDAO;
+import com.meve.ofspapel.firma.digital.core.mappers.UsuarioDAO;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,11 +23,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class DocumentoSolicitadoBsnsComponent extends ConsultaBase<RegistroSolicitud, Integer> {
     
+    @Autowired private DocumentoFirmadoBsnsComponent docBsnsComponent;
     @Autowired private DocumentoSolicitadoDAO data;
+    @Autowired private UsuarioDAO usuarioDAO;
     
         
     public DocumentoFirmado obtenerItem( String claveOrganizacion, Invoker invocador, String idItemStr, Propiedades propiedades) {
-        return entidadToItem( obtenerItem(claveOrganizacion, invocador, Integer.valueOf( idItemStr)));
+        return entidadToItem( obtenerItem(claveOrganizacion, invocador, Integer.valueOf( idItemStr)), claveOrganizacion, invocador);
     }
     
     public List<DocumentoSolicitado> listarItems( String claveOrganizacion, Invoker invocador, Consulta consulta) {
@@ -31,12 +37,11 @@ public class DocumentoSolicitadoBsnsComponent extends ConsultaBase<RegistroSolic
         final List<DocumentoSolicitado> items = new ArrayList<>();
         
         for( RegistroSolicitud entidad : entidades) {
-            items.add( entidadToItem( entidad));
+            items.add( entidadToItem( entidad, claveOrganizacion, invocador));
         }
         
         return items;
     }
-    
     
     @Override
     protected int contarItems(Consulta consulta, Invoker invocador) {
@@ -75,14 +80,26 @@ public class DocumentoSolicitadoBsnsComponent extends ConsultaBase<RegistroSolic
 		return clausulas;
 	}
     
-    private DocumentoSolicitado entidadToItem( RegistroSolicitud entidad) {
+    private DocumentoSolicitado entidadToItem( RegistroSolicitud entidad, String claveOrganizacion, Invoker invocador) {
         final DocumentoSolicitado item = new DocumentoSolicitado();
+        final DateFormat formatter = new SimpleDateFormat( "dd/MM/yyyy HH:mm:ss");
         
         item.setId( entidad.getId());
-        item.setFechaHora( new SimpleDateFormat( "dd/MM/yyyy HH:mm:ss").format( entidad.getFechaHora()));
+        item.setFechaHora( formatter.format( entidad.getFechaHora()));
         item.setFolio( entidad.getFolio());
         item.setNombre( entidad.getNombre());
         item.setEstatus( entidad.getEstatus());
+        
+        if (entidad.getIdDocumentoFirmado() != null) {
+            final ArchivoDepositado documento = docBsnsComponent.obtenerItem( claveOrganizacion, invocador, entidad.getIdDocumentoFirmado());
+            final Usuario usuario = usuarioDAO.obtenerItem( documento.getIdUsuario());
+            
+            item.setDestinatario( usuario.getNombre() + "(" + usuario.getClave() + ")");
+            item.setFechaHoraFirma( formatter.format( documento.getFechaHora()));
+        } else {
+            item.setDestinatario( entidad.getEmailDestinatario());
+            item.setFechaHoraFirma( "");
+        }
         
         return item;
     }

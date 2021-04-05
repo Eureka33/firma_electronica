@@ -102,10 +102,12 @@ env.config.solicitudes = {
     pagination: true,
     isEditable: false,
     columns   : [
-        {value: "fechaHora", label: "Fecha Hora"},
-        {value:     "folio", label:      "Folio"},
-        {value:    "nombre", label:  "Documento"},
-        {value:   "estatus", label:    "Estatus"}
+        {value:      "fechaHora", label: "Fecha Hora Solicitud"},
+        {value:          "folio", label:                "Folio"},
+        {value:         "nombre", label:            "Documento"},
+        {value:        "estatus", label:              "Estatus"},
+        {value:   "destinatario", label:         "Destinatario"},
+        {value: "fechaHoraFirma", label:     "Fecha Hora Firma"}
     ],
     actions   : [
         {value: 'view', icon: "info-circle", title: "Descarga y validación del documento"}
@@ -175,9 +177,13 @@ env.callbacks.solicitudes = {
         let resource = env.config.solicitudes.resource;
         search.propiedades.actualizarTotalItems=true;
     
-        server.data.list( resource, search, function( r){
-            dom.setText( "badgeSolicitud", r.consulta.paginacion.totalItems);
-            callback( r.items, r.consulta);
+        server.data.list( resource, search, function( r) {
+            if( r.consulta.paginacion.totalItems === 0) {
+                dom.getById( 'badgeSolicitud').parents( ".card").hide();
+            } else {
+                dom.setText( "badgeSolicitud", r.consulta.paginacion.totalItems);
+                callback( r.items, r.consulta);
+            }
         });
     },
     

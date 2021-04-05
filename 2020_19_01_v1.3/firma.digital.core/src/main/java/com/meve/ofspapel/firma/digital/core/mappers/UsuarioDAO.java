@@ -8,5 +8,7 @@ public interface UsuarioDAO {
     int insert( @Param( "item") Usuario usuario);
     
     Usuario find( @Param( "clave") String clave);
+
+    Usuario obtenerItem( @Param( "idItem") Integer idItem);
     
 }

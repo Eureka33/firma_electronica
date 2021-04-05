@@ -21,7 +21,7 @@
     
     <link rel="stylesheet" href="./libs/fontawesome/css/all.min.css"    />
     <link rel="stylesheet" href="./libs/bootstrap/css/bootstrap.min.css"/>
-    <link rel="stylesheet" href="./libs/scripts/estilos.css"            />
+    <link rel="stylesheet" href="./libs/scripts/estilos.css?rnd=<%= Math.random()%>"/>
     
     <script src="./libs/jquery/jquery.min.js"             ></script>
     <script src="./libs/bootstrap/js/bootstrap.min.js"    ></script>
@@ -81,15 +81,11 @@
 </head>
 <body>
 	
-    <table style="border: none; margin-left: auto; margin-right:auto;">
-		<tr>
-            <td>
- 				<img src="./images/logo_organizacion.png" style="height: 150px;" alt="organization logo"/>
-			</td>
-		</tr>
-        
-        <tr><td>&nbsp;</td></tr>
-        
+    <div class="container" style="text-align: center;">
+		<img src="./images/logo_organizacion.png" style="height: 150px;" alt="organization logo"/>
+    </div>
+    
+    <table class="container" style="margin-top: 5px;">
         <tr>
 			<td>
 				<navbar class="navbar navbar-light bg-light">

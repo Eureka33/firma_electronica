@@ -6,7 +6,8 @@ import com.meve.ofspapel.firma.digital.core.enums.EnumEstatusSolicitud;
 public class DocumentoSolicitado extends DocumentoFirmado {
 
     private String estatus;
-    private DocumentoFirmado atencion;
+    private String destinatario;
+    private String fechaHoraFirma;
  
     
     public DocumentoSolicitado() {
@@ -26,12 +27,20 @@ public class DocumentoSolicitado extends DocumentoFirmado {
         this.estatus = estatus.toString();
     }
 
-    public DocumentoFirmado getAtencion() {
-        return atencion;
+    public String getDestinatario() {
+        return destinatario;
     }
 
-    public void setAtencion(DocumentoFirmado atencion) {
-        this.atencion = atencion;
+    public void setDestinatario(String destinatario) {
+        this.destinatario = destinatario;
     }
 
+    public String getFechaHoraFirma() {
+        return fechaHoraFirma;
+    }
+
+    public void setFechaHoraFirma(String fechaHoraFirma) {
+        this.fechaHoraFirma = fechaHoraFirma;
+    }
+    
 }

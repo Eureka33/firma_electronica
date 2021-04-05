@@ -19,7 +19,7 @@
     
     <link rel="stylesheet" href="./libs/fontawesome/css/all.min.css"    />
     <link rel="stylesheet" href="./libs/bootstrap/css/bootstrap.min.css"/>
-    <link rel="stylesheet" href="./libs/scripts/estilos.css"            />
+    <link rel="stylesheet" href="./libs/scripts/estilos.css?rnd=<%= Math.random()%>"/>
    
     <script src="./libs/jquery/jquery.min.js"             ></script>
     <script src="./libs/bootstrap/js/bootstrap.min.js"    ></script>
@@ -48,15 +48,12 @@
     
 </head>
 <body>
-	
+    <div class="container" style="text-align: center;">
+		<img src="./images/logo_organizacion.png" style="height: 150px;" alt="organization logo"/>
+    </div>
+    
     <table class="container" <%= (usuario != null)? "hidden" : ""%>>
 		<tr>
-            <td style="text-align: center;">
- 				<img src="./images/logo_organizacion.png" style="height: 150px; width: 100%;" alt="organization logo"/>
-			</td>
-		</tr>
-       
-        <tr>
             <td>
                 <navbar class="navbar navbar-light bg-light" style="padding:10px 50px;">
                     <span style="font-family: Verdadana, sans-serif; font-size: 0.9em; text-align: justify;">
@@ -151,12 +148,6 @@
 	</table>
                         
     <table class="container" <%= (usuario == null)? "hidden" : ""%>>
-		<tr>
-            <td style="text-align: center;">
- 				<img src="./images/logo_organizacion.png" style="height: 150px;" alt="organization logo"/>
-			</td>
-		</tr>
-       
         <tr>
 			<td>
 				<navbar class="navbar navbar-light bg-light">

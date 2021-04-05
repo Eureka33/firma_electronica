@@ -8,6 +8,7 @@ public class RegistroSolicitud extends ArchivoDepositado {
     private String emailDestinatario;
     private EnumEstatusSolicitud estatus;
     private Date ultimaActualizacion;
+    private Integer idDocumentoFirmado;
     
     
     public RegistroSolicitud() {
@@ -49,6 +50,14 @@ public class RegistroSolicitud extends ArchivoDepositado {
 
     public void setUltimaActualizacion( Date ultimaActualizacion) {
         this.ultimaActualizacion = ultimaActualizacion;
+    }
+
+    public Integer getIdDocumentoFirmado() {
+        return idDocumentoFirmado;
+    }
+
+    public void setIdDocumentoFirmado( Integer value) {
+        this.idDocumentoFirmado = value;
     }
     
 }

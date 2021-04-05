@@ -27,7 +27,7 @@
     
     <link rel="stylesheet" href="./libs/fontawesome/css/all.min.css"    />
     <link rel="stylesheet" href="./libs/bootstrap/css/bootstrap.min.css"/>
-    <link rel="stylesheet" href="./libs/scripts/estilos.css"            />
+    <link rel="stylesheet" href="./libs/scripts/estilos.css?rnd=<%= Math.random()%>"/>
     
     <script src="./libs/jquery/jquery.min.js"             ></script>
     <script src="./libs/bootstrap/js/bootstrap.min.js"    ></script>
