@@ -1,6 +1,6 @@
 -- [NOTA] Este script esta hecho a la medida para una base de datos MSSQL SERVER
 --
---	Script de generación de tablas ver. 1.3
+--	Script de generacion de tablas ver. 1.3
 --
 
 CREATE TABLE eurk_wsss_configuracion (
