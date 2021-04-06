@@ -182,15 +182,19 @@
 			</table>
         </form>
         
-        <% if ( info.getDocumentoFirmado() != null) { %>        
-			<div class="row text-right">
-                <div class="col-sm-12 text-right">
-                    <button type="button" class="btn btn-primary" onclick="javascript: descargar();"><i class="fas fa-download"></i>&nbsp;Descargar</button>
+        <div class="row text-right">
+            <div class="col-sm-12 text-right">
+                <% if ( info.getDocumentoFirmado() != null) { %>        
+	                <button type="button" class="btn btn-primary" onclick="javascript: descargar();"><i class="fas fa-download"></i>&nbsp;Descargar</button>
                     &nbsp;
                     <button type="button" class="btn btn-success" onclick="javascript: mostrarFormulario();"><i class="fas fa-clipboard-check"></i>&nbsp;Validar</button>
-                </div>
-			</div>
-        <% } %>
+                <% } %>
+                &nbsp;
+                <button type="button" class="btn btn-secondary" onclick="javascript: navigation.goto( 'consultaDocumentos');" title="Regresar">
+                    <i class="fas fa-step-backward"></i>&nbsp;Regresar
+                </button>
+            </div>
+        </div>
 	</div>
     
 	<div class="container" id="mensajeResultado" style="margin-top: 10px; display: none;">

@@ -140,12 +140,22 @@
 			<td>
 				<table style="width: 100%">
 					<tr>
-						<td width="60%">&nbsp;</td>
-						<td width="20%" style="text-align: right;">
-                            <button type="button" class="btn btn-primary" onclick="javascript: descargar();"><i class="fas fa-download"></i>&nbsp;Descargar</button>
-						</td>
-                        <td width="20%" style="text-align: right;" <%= info.getNombre().endsWith( ".zip")? "hidden": ""%>>
-							<button type="button" class="btn btn-success" onclick="javascript: mostrarFormulario();"><i class="fas fa-clipboard-check"></i>&nbsp;Validar</button>
+						<td width="50%">&nbsp;</td>
+						<td width="50%" style="text-align: right;">
+                            <button type="button" class="btn btn-primary" onclick="javascript: descargar();">
+                                <i class="fas fa-download"></i>&nbsp;Descargar
+                            </button>
+                            &nbsp;
+                            <button type="button" class="btn btn-success" onclick="javascript: mostrarFormulario();" <%= info.getNombre().endsWith( ".zip")? "hidden": ""%>>
+                                <i class="fas fa-clipboard-check"></i>&nbsp;Validar
+                            </button>
+                            
+                            <% if ( usuario != null) { %>
+                                &nbsp;
+                                <button type="button" class="btn btn-secondary" onclick="javascript: navigation.goto( 'consultaDocumentos');" title="Regresar">
+                                    <i class="fas fa-step-backward"></i>&nbsp;Regresar
+                                </button>
+                            <% } %>
 						</td>
 					</tr>
 				</table>
