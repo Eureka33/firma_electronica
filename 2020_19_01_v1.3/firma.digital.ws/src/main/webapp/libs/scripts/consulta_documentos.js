@@ -188,13 +188,7 @@ env.callbacks.solicitudes = {
     },
     
     consulta_solicitud: function( id) {
-        server.data.get( 'documento/solicitado/' + id, resp => {
-            let item = resp.item;
-            let folio = item.folio;
-            let encodedName = encodeURIComponent( item.nombre);
-
-            navigation.goto( 'validacionDocumento?folio='+ folio + '&nombre=' + encodedName);
-        });
+        navigation.goto( 'validacionSolicitud?rand=' + id + '-' + Math.random());
     }
 };
 

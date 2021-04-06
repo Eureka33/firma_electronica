@@ -76,7 +76,7 @@ public class DocumentoFirmadoBsnsComponent extends ConsultaBase<ArchivoDepositad
 		return clausulas;
 	}
     
-    private DocumentoFirmado entidadToItem( ArchivoDepositado entidad) {
+    public DocumentoFirmado entidadToItem( ArchivoDepositado entidad) {
         final DocumentoFirmado item = new DocumentoFirmado();
         
         item.setId( entidad.getId());

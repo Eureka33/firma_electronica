@@ -169,7 +169,7 @@
 		<tr id="formValidacion" style="display: none;">
 			<td>
                 <div class="card">
-                    <form action="validacionDocumento?&folio=<%= info.getFolio() %>&nombre=<%= URLEncoder.encode( info.getNombre(), "UTF-8") %>"
+                    <form action="validacionDocumento?folio=<%= info.getFolio() %>&nombre=<%= URLEncoder.encode( info.getNombre(), "UTF-8") %>"
                         method="post" enctype="multipart/form-data"
                     >
                         <table style="margin: 20px; width: 95%;">

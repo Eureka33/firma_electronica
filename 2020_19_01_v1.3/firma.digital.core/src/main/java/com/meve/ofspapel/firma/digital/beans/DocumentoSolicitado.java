@@ -8,7 +8,8 @@ public class DocumentoSolicitado extends DocumentoFirmado {
     private String estatus;
     private String destinatario;
     private String fechaHoraFirma;
- 
+    private DocumentoFirmado documentoFirmado;
+    
     
     public DocumentoSolicitado() {
         super();
@@ -41,6 +42,14 @@ public class DocumentoSolicitado extends DocumentoFirmado {
 
     public void setFechaHoraFirma(String fechaHoraFirma) {
         this.fechaHoraFirma = fechaHoraFirma;
+    }
+
+    public DocumentoFirmado getDocumentoFirmado() {
+        return documentoFirmado;
+    }
+
+    public void setDocumentoFirmado(DocumentoFirmado documentoFirmado) {
+        this.documentoFirmado = documentoFirmado;
     }
     
 }

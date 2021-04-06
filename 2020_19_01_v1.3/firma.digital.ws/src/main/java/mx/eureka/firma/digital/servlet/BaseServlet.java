@@ -3,13 +3,20 @@ package mx.eureka.firma.digital.servlet;
 import com.eureka.firma.digital.ws.bean.InfoArchivo;
 import com.eureka.firma.digital.ws.bean.InfoConfidencial;
 import java.io.IOException;
+import java.util.List;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import mx.com.neogen.commons.exception.OperacionNoRealizadaException;
+import mx.eureka.firma.digital.bean.BeanInfoDocumento;
 import mx.eureka.firma.digital.bean.BeanInfoFirma;
 import mx.eureka.firma.digital.bean.UtilDocumento;
+import org.apache.commons.fileupload.DiskFileUpload;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUploadBase;
+
 
 public class BaseServlet extends HttpServlet {
     
@@ -43,5 +50,35 @@ public class BaseServlet extends HttpServlet {
 		
 		return info;
 	}
+    
+    protected String checksumUploadedFile( final HttpServletRequest request) {
+		boolean isMultipart = FileUploadBase.isMultipartContent(request);
+
+		if (!isMultipart) {
+			return "";
+		}
+			
+		final DiskFileUpload upload = new DiskFileUpload();
+        try { 
+            List items = upload.parseRequest( request);
+            for ( Object nextItem : items) {
+                FileItem item = (FileItem) nextItem;
+                if ( !item.isFormField()) {
+                    return UtilDocumento.getMd5( item.getInputStream());
+                }
+            }
+        
+        } catch( Exception ex) {
+            throw new OperacionNoRealizadaException( "error.infraestructura", ex);
+        
+        }
+        
+		return "";
+	}
+	
+	protected String checksumStoredFile( BeanInfoDocumento info) { 
+        mx.eureka.firma.digital.bean.InfoArchivo infoArchivo = UtilDocumento.obtenerInfoArchivo( info, false);
+        return UtilDocumento.getMd5( infoArchivo.getContenido());
+    }
     
 }

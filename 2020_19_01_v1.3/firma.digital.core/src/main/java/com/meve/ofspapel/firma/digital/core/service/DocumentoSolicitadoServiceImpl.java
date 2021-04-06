@@ -18,7 +18,7 @@ public class DocumentoSolicitadoServiceImpl implements IConsultableService {
     
     @Transactional( readOnly = true)
     @Override
-    public Object getItem(String claveOrganizacion, Invoker invocador, String idItem, Propiedades propiedades) {
+    public Object getItem( String claveOrganizacion, Invoker invocador, String idItem, Propiedades propiedades) {
         return bsnsComponent.obtenerItem( claveOrganizacion, invocador, idItem, propiedades);
     }
 

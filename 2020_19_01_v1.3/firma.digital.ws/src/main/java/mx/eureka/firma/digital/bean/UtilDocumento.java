@@ -1,6 +1,7 @@
 package mx.eureka.firma.digital.bean;
 
 import com.eureka.firma.digital.ws.core.IStreamService;
+import com.meve.ofspapel.firma.digital.beans.DocumentoSolicitado;
 import com.meve.ofspapel.firma.digital.core.service.IConfiguracionService;
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -28,15 +29,25 @@ public class UtilDocumento {
     public static BeanInfoDocumento requestToInfoDocumento( HttpServletRequest request) throws UnsupportedEncodingException {
 		final BeanInfoDocumento info = new BeanInfoDocumento();
 		
-		info.setFolio(  request.getParameter(  "folio"));
-     
+		info.setFolio( request.getParameter( "folio"));
+        
         final String queryString = request.getQueryString();
         
         final int idx = queryString.indexOf( "&nombre=");
         int endIdx = queryString.indexOf( '&', idx + 8);
         endIdx = (endIdx < 0)? queryString.length() : endIdx;
 		info.setNombre( URLDecoder.decode( request.getQueryString().substring( idx + 8, endIdx), "UTF-8"));
+	
+        
+		return info;
+	}
+    
+    public static BeanInfoDocumento requestToInfoDocumento( DocumentoSolicitado documento)  {
+		final BeanInfoDocumento info = new BeanInfoDocumento();
 		
+		info.setFolio(  documento.getDocumentoFirmado().getFolio());
+        info.setNombre( documento.getDocumentoFirmado().getNombre());
+	
 		return info;
 	}
     

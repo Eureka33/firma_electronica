@@ -3,7 +3,6 @@ package com.meve.ofspapel.firma.digital.core.components;
 import com.eurk.core.beans.consulta.Consulta;
 import com.eurk.core.beans.consulta.Ordenacion;
 import com.meve.ofspapel.firma.digital.beans.ConsultaBase;
-import com.meve.ofspapel.firma.digital.beans.DocumentoFirmado;
 import com.meve.ofspapel.firma.digital.beans.DocumentoSolicitado;
 import com.meve.ofspapel.firma.digital.core.entidades.ArchivoDepositado;
 import com.meve.ofspapel.firma.digital.core.entidades.RegistroSolicitud;
@@ -28,7 +27,7 @@ public class DocumentoSolicitadoBsnsComponent extends ConsultaBase<RegistroSolic
     @Autowired private UsuarioDAO usuarioDAO;
     
         
-    public DocumentoFirmado obtenerItem( String claveOrganizacion, Invoker invocador, String idItemStr, Propiedades propiedades) {
+    public DocumentoSolicitado obtenerItem( String claveOrganizacion, Invoker invocador, String idItemStr, Propiedades propiedades) {
         return entidadToItem( obtenerItem(claveOrganizacion, invocador, Integer.valueOf( idItemStr)), claveOrganizacion, invocador);
     }
     
@@ -94,8 +93,11 @@ public class DocumentoSolicitadoBsnsComponent extends ConsultaBase<RegistroSolic
             final ArchivoDepositado documento = docBsnsComponent.obtenerItem( claveOrganizacion, invocador, entidad.getIdDocumentoFirmado());
             final Usuario usuario = usuarioDAO.obtenerItem( documento.getIdUsuario());
             
-            item.setDestinatario( usuario.getNombre() + "(" + usuario.getClave() + ")");
+            item.setDestinatario( usuario.getNombre() + " (" + usuario.getClave() + ")");
             item.setFechaHoraFirma( formatter.format( documento.getFechaHora()));
+            
+            item.setDocumentoFirmado( docBsnsComponent.entidadToItem( documento));
+            
         } else {
             item.setDestinatario( entidad.getEmailDestinatario());
             item.setFechaHoraFirma( "");
