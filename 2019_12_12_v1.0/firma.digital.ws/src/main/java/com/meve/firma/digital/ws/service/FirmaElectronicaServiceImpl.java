@@ -24,7 +24,7 @@ import com.meve.ofspapel.firma.digital.core.service.IConfiguracionService;
 /**
  *  Este comando genera las clases cliente necesarias:
  *  
- *  >> c:\software\apache-cxf-2.7.6\bin\wsdl2java -client -verbose -frontend jaxws21 http://localhost:8080/digitalSignWS/servicios/FirmaElectronica?wsdl
+ *  >> c:\software\apache-cxf-2.7.6\bin\wsdl2java -client -verbose -frontend jaxws21 http://<server>:<port>/digitalSignWS/servicios/FirmaElectronica?wsdl
  *  
  *  - Cambiar byte[] por DataHandler donde corresponda.
  *

@@ -27,11 +27,11 @@
     
     <dependencies>
         <dependency>
-            <groupId>javax</groupId>
-            <artifactId>javaee-web-api</artifactId>
-            <version>6.0</version>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>4.0.1</version>
             <scope>provided</scope>
-        </dependency>
+        </dependency>	
        
         <dependency>
             <groupId>javax.xml.bind</groupId>
@@ -106,13 +106,6 @@
         </dependency>
 
     </dependencies>
-        
-    <repositories>
-        <repository>
-            <id>central</id>
-            <url>http://repo.maven.apache.org/maven2/</url>
-        </repository>
-    </repositories>
     
     <build>
         <finalName>digitalSignWS</finalName>
@@ -153,6 +146,5 @@
         </plugins>
     </build>
 
-    <reporting/>
     
 </project>

@@ -14,9 +14,18 @@ import javax.xml.ws.Service;
  * Generated source version: 2.7.6
  * 
  */
+/** ENV: DEVELOPMENT
 @WebServiceClient(
 	name = "FirmaElectronicaService", 
     wsdlLocation = "http://localhost:8080/digitalSignWS/servicios/FirmaElectronica?wsdl",
+    targetNamespace = "http://service.ws.digital.firma.meve.com/"
+)
+*/
+
+/** ENV: PRODUCTION **/
+@WebServiceClient(
+	name = "FirmaElectronicaService", 
+    wsdlLocation = "http://172.16.2.249:8081/digitalSignWS/servicios/FirmaElectronica?wsdl",
     targetNamespace = "http://service.ws.digital.firma.meve.com/"
 )
 public class FirmaElectronicaService extends Service {
@@ -28,11 +37,25 @@ public class FirmaElectronicaService extends Service {
     static {
         URL url = null;
         try {
+ 
+            /** ENV: DEVELOPMENT
             url = new URL("http://localhost:8080/digitalSignWS/servicios/FirmaElectronica?wsdl");
+            */
+            
+            /** ENV: PRODUCTION **/
+            url = new URL("http://172.16.2.249:8081/digitalSignWS/servicios/FirmaElectronica?wsdl");
+            
         } catch (MalformedURLException e) {
             java.util.logging.Logger.getLogger(FirmaElectronicaService.class.getName())
                 .log(java.util.logging.Level.INFO, 
-                     "Can not initialize the default wsdl from {0}", "http://localhost:8080/digitalSignWS/servicios/FirmaElectronica?wsdl");
+                     "Can not initialize the default wsdl from {0}",
+                    /** ENV: DEVELOPMENT 
+                    "http://localhost:8080/digitalSignWS/servicios/FirmaElectronica?wsdl"
+                    */
+                     
+                     /** ENV: PRODUCTION **/
+                    "http://172.16.2.249:8081/digitalSignWS/servicios/FirmaElectronica?wsdl"
+                );
         }
         WSDL_LOCATION = url;
     }
