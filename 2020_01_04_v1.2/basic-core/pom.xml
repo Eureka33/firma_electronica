@@ -9,10 +9,10 @@
 	
 	<groupId>com.meve</groupId>
 	<artifactId>meve-core-basic</artifactId>
-	<version>1.1</version>
+	<version>1.2</version>
 	<packaging>jar</packaging>
 	
-	<name>core.basic.v1.1</name>
+	<name>core.basic.v1.2</name>
 	
     <description>
 		Proyecto con clases de propósito general y de utilería para todo tipo de proyecto

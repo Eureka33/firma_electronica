@@ -64,9 +64,7 @@ public class FirmaElectronicaServiceImpl implements IFirmaElectronica {
 			if ( resultado.isError()) { return getRespuesta( resultado); }
         
             resultado = generaFirma( sf);
-            
-            //actualizarArchivo( sf,  (Resultado<Firma>) resultado);
-                        
+                                   
 			return getRespuesta( resultado);
 				
 		} catch ( Exception ex) {
@@ -263,24 +261,4 @@ public class FirmaElectronicaServiceImpl implements IFirmaElectronica {
 		return resultado;
 	}
     
-    /*
-    void actualizarArchivo( SessionFirma sf, Resultado<Firma> resultado) {
-        if( sf.archivo == null ) {
-            return;
-        }
-        
-        final String extension = sf.solicitud.getArchivoDatos().getExtension();
-        if( !"pdf".equalsIgnoreCase( extension)) {
-            return;
-        }
-        
-        String pathRepositorio = configService.getPropiedad( "path.repositorio.fs");
-        String baseDownloadURL = configService.getPropiedad( "url.download.base");
-        String nombreArchivo   = sf.archivo.getName();
-        String firma           = resultado.getResultado().getFirmaElectronica();
-        
-        final String pathDeposito = streamService.obtenerPathDeposito( pathRepositorio, nombreArchivo, firma);
-        streamService.firmarDocumento( pathDeposito, baseDownloadURL, sf, resultado.getResultado());  
-    }
-    */
 }

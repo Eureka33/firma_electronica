@@ -2,9 +2,9 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.meve.ofspapel</groupId>
   <artifactId>firma.digital.core</artifactId>
-  <version>1.1</version>
+  <version>1.2</version>
   
-  <name>firma.electronica.core.v1.1</name>
+  <name>firma.electronica.core.v1.2</name>
   
   <properties>
 
@@ -32,7 +32,7 @@
 		<dependency>
 			<groupId>com.meve</groupId>
             <artifactId>meve-core-basic</artifactId>
-			<version>1.1</version>
+			<version>1.2</version>
 		</dependency>
 		
 		<!-- Spring and Transactions -->

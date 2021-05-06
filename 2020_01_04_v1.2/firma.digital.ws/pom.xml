@@ -8,10 +8,10 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.eureka.ofspapel</groupId>
     <artifactId>firma.digital.ws</artifactId>
-    <version>1.1</version>
+    <version>1.2</version>
     <packaging>war</packaging>
     
-    <name>web.firma.electronica.v1.1</name>
+    <name>web.firma.electronica.v1.2</name>
     
     <description>
     	Servicio WEB capaz de obtener la firma digital de archivos utilizando
@@ -79,7 +79,7 @@
  		<dependency>
 			<groupId>com.meve.ofspapel</groupId>
 			<artifactId>firma.digital.core</artifactId>
-			<version>1.1</version>
+			<version>1.2</version>
         </dependency>
         
         <dependency>
