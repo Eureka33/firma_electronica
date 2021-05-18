@@ -14,6 +14,7 @@
         <result property="folio"                column="folio"                      />
         <result property="nombre"               column="nombre"                     />
         <result property="emailDestinatario"    column="email_destinatario"         /> 
+        <result property="emailSolicitante"     column="email_solicitante"          />
         <result property="estatusValue"         column="estatus"                    />
         <result property="ultimaActualizacion"  column="last_update" javaType="Date"/>
         <result property="idDocumentoFirmado"   column="id_documento_firmado"       />

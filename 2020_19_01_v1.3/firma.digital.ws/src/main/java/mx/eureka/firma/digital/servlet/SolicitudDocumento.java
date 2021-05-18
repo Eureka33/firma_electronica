@@ -116,6 +116,11 @@ public class SolicitudDocumento extends BaseServlet {
                 info.getNombre()
             );
             
+            sendNotificacion(
+                info.getSolicitud().getEmailSolicitante(), firma.getUrlDescarga(), firma.getTitular(), firma.getRfc(), firma.getFecha(),
+                info.getNombre()
+            );
+            
             return firma.getUrlDescarga();
         
         } else {
@@ -125,8 +130,9 @@ public class SolicitudDocumento extends BaseServlet {
         } 
     }
     
-    private void sendNotificacion(  final String correo, final String urlDescarga, final String titular, 
-                                    final String rfc, final String fecha, final String nombreArchivo) {
+    private void sendNotificacion(
+                                    final String correo, final String urlDescarga, final String titular      , 
+                                    final String rfc   , final String fecha      , final String nombreArchivo) {
         if ( correo == null || correo.isEmpty()) {
             return;
         }
@@ -141,5 +147,5 @@ public class SolicitudDocumento extends BaseServlet {
         
         thread.start();
     }
-        
+    
 }

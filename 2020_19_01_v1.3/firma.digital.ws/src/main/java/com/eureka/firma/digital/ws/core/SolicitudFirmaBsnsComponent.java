@@ -42,7 +42,7 @@ public class SolicitudFirmaBsnsComponent  {
 	/**
 	 * 	Firma el archivo recibido como argumento y devuelve el archivo firmado
 	 */
-	public RespuestaSolicitud registrarSolicitud( final SolicitudFirma solicitud, String emailDestinatario) {
+	public RespuestaSolicitud registrarSolicitud( final SolicitudFirma solicitud, String emailDestinatario, String emailSolicitante) {
 	
 		SessionFirma sf = new SessionFirma( solicitud);
 		Resultado<?> resultado;
@@ -74,7 +74,7 @@ public class SolicitudFirmaBsnsComponent  {
             sf.firma.setUrlDescarga( generarDownloadURL( sf));
             
             RegistroSolicitud entidad = registroService.registraSolicitud(
-                usuario, sf.folio, sf.archivo.getName(), emailDestinatario
+                usuario, sf.folio, sf.archivo.getName(), emailDestinatario, emailSolicitante
             );
             
 			return getRespuesta( resultado, entidad, sf.firma, sf.archivo.getAbsolutePath());

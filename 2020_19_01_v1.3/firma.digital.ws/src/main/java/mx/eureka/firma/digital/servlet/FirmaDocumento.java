@@ -229,7 +229,7 @@ public class FirmaDocumento extends BaseServlet {
         solicitud.setArchivoDatos(     getArchivoDatos(     archivo));
         solicitud.setInfoConfidencial( getInfoConfidencial( bean));
         
-        return solicitudFirma.registrarSolicitud( solicitud, bean.getCorreoDestinatario());
+        return solicitudFirma.registrarSolicitud( solicitud, bean.getCorreoDestinatario(), bean.getCorreo());
     }
     
     private RespuestaFirmaMasiva firmarDocumentos( List<mx.eureka.firma.digital.bean.InfoArchivo> archivos, BeanInfoFirma bean) {

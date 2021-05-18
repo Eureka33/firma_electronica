@@ -1,7 +1,5 @@
 package com.meve.ofspapel.firma.digital.beans;
 
-import com.meve.ofspapel.firma.digital.core.enums.EnumEstatusSolicitud;
-
 
 public class DocumentoFirmado {
 

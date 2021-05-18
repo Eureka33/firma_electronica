@@ -52,7 +52,7 @@ public class RegistroService {
         });
     }
     
-    public RegistroSolicitud registraSolicitud( Usuario usuario, String folio, String pathUpload, String emailDestinatario) {
+    public RegistroSolicitud registraSolicitud( Usuario usuario, String folio, String pathUpload, String emailDestinatario, String emailSolicitante) {
         final RegistroSolicitud entidad = new RegistroSolicitud();
         final Date fechaHora = new Date();
         
@@ -61,6 +61,7 @@ public class RegistroService {
         entidad.setFolio( folio);
         entidad.setNombre( pathUpload);
         entidad.setEmailDestinatario( emailDestinatario);
+        entidad.setEmailSolicitante( emailSolicitante);
         
         entidad.setEstatus( EnumEstatusSolicitud.REGISTRADA);
         entidad.setUltimaActualizacion( fechaHora);

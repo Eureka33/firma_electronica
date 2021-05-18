@@ -9,14 +9,14 @@ public class SolicitudFirma {
     private String fechaHora;
     private String folio;
     private String solicitante;
+    private String emailSolicitante;
     private String estatus;
                
     
     public SolicitudFirma() {
         super();
     }
-    
-    
+        
     
     public Integer getId() {
         return id;
@@ -48,6 +48,14 @@ public class SolicitudFirma {
 
     public void setSolicitante(String solicitante) {
         this.solicitante = solicitante;
+    }
+    
+    public String getEmailSolicitante() {
+        return emailSolicitante;
+    }
+
+    public void setEmailSolicitante(String emailSolicitante) {
+        this.emailSolicitante = emailSolicitante;
     }
     
     public String getEstatus() {

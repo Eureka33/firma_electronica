@@ -6,6 +6,7 @@ import java.util.Date;
 public class RegistroSolicitud extends ArchivoDepositado {
     
     private String emailDestinatario;
+    private String emailSolicitante;
     private EnumEstatusSolicitud estatus;
     private Date ultimaActualizacion;
     private Integer idDocumentoFirmado;
@@ -28,6 +29,14 @@ public class RegistroSolicitud extends ArchivoDepositado {
         this.emailDestinatario = emailDestinatario;
     }
 
+    public String getEmailSolicitante() {
+        return emailSolicitante;
+    }
+
+    public void setEmailSolicitante( String email) {
+        this.emailSolicitante = email;
+    }
+    
     public EnumEstatusSolicitud getEstatus() {
         return estatus;
     }

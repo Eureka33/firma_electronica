@@ -129,11 +129,12 @@ public class DocumentoSolicitadoBsnsComponent extends ConsultaBase<RegistroSolic
                        
         final SolicitudFirma solicitud = new SolicitudFirma();
         
-        solicitud.setId(          entidad.getId());
-        solicitud.setFechaHora(   formatter.format( entidad.getFechaHora()));
-        solicitud.setFolio(       entidad.getFolio());
-        solicitud.setEstatus(     entidad.getEstatus());
-        solicitud.setSolicitante( entidad.getEmailDestinatario());
+        solicitud.setId(                entidad.getId());
+        solicitud.setFechaHora(         formatter.format( entidad.getFechaHora()));
+        solicitud.setFolio(             entidad.getFolio());
+        solicitud.setSolicitante(       entidad.getEmailDestinatario());
+        solicitud.setEmailSolicitante(  entidad.getEmailSolicitante());
+        solicitud.setEstatus(           entidad.getEstatus());
         
         return solicitud;
     }
