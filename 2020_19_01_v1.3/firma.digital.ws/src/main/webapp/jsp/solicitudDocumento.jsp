@@ -52,11 +52,14 @@
             jQuery( ".fiel").hide();
             jQuery( "#btnDownload").hide();
             jQuery( "#btnSign").hide();
+            jQuery( "#btnPreview").hide();
+            jQuery( "#divPreview").hide();
             
             <% if( errorMessages == null) { %>
                 jQuery( ".fiel").show();
                 jQuery( "#btnDownload").show();
                 jQuery( "#btnSign").show();
+                jQuery( "#btnPreview").show();            
             <% } %>
         }
 		
@@ -64,6 +67,20 @@
 			var link = document.getElementById( 'download');
 			link.href= './descargaDocumento?isUpload=true&folio=<%= info.getSolicitud().getFolio() %>&nombre=<%= URLEncoder.encode( info.getNombre(), "UTF-8") %>';
 			link.click();
+		}
+        
+        
+        function preview_documento() {
+            let div = jQuery( '#divPreview');
+            let loaded = parseInt( div.data( 'loaded'), 10);
+            
+            if( loaded === 0) {
+                let item = document.getElementById( 'preview');
+                item.src= './descargaDocumento?isUpload=true&folio=<%= info.getSolicitud().getFolio() %>&nombre=<%= URLEncoder.encode( info.getNombre(), "UTF-8") %>&inline=true';
+                div.data( 'loaded', 1);
+            }
+            
+            div.show();
 		}
         
         function validarForm( event) {
@@ -162,7 +179,29 @@
                                     >
                                         <i class="fas fa-download"></i>
                                     </button>
+                                    
+                                    <button type="button" id="btnPreview" class="btn btn-info" 
+                                        title="Descargar documento" onclick="javascript: preview_documento();"
+                                    >
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    
                                 </div>
+                            </div>
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td></td>
+                        <td>
+                            <div id="divPreview" data-loaded="0" style="text-align: center;">
+                                <embed id="preview" style="width: 100%; height: 450px;"/>
+                                <!--
+                                <iframe style="width: 100%; height: 450px; border: none;"></iframe>
+                                -->
+                                <button type="button" class="btn btn-info" style="width: 80%;"  onclick="javascript: jQuery( '#divPreview').hide();">
+                                    Ocultar
+                                </button>
                             </div>
                         </td>
                     </tr>

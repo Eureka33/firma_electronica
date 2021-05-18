@@ -43,9 +43,12 @@ public class DescargaDocumento extends BaseServlet {
 		String value = request.getParameter( "isUpload");
         Boolean isUpload = (value == null || value.length() == 0)? false : Boolean.valueOf( value);
         
+        value = request.getParameter( "inline");
+        Boolean isInline = (value == null || value.length() == 0)? false : Boolean.valueOf( value);
+        
         try {
             final InfoArchivo infoArchivo = UtilDocumento.obtenerInfoArchivo( info, isUpload);
-            final OutputStream out = prepararDescarga( infoArchivo, response);
+            final OutputStream out = prepararDescarga( infoArchivo, isInline, response);
         
             UtilDocumento.copiarContenido( infoArchivo.getContenido(), out);
         
@@ -60,11 +63,10 @@ public class DescargaDocumento extends BaseServlet {
             } else {
                 throw ex;
             }
-		}
-		
+		}		
 	}
 
-    private OutputStream prepararDescarga( InfoArchivo infoArchivo, HttpServletResponse response) {
+    private OutputStream prepararDescarga( InfoArchivo infoArchivo, boolean isInline, HttpServletResponse response) {
 
         if( infoArchivo.getNombre().endsWith( "zip")) {
             response.setContentType( "application/zip");
@@ -74,7 +76,9 @@ public class DescargaDocumento extends BaseServlet {
         
         }
         
-        response.setHeader("Content-disposition","attachment; filename=\"" + infoArchivo.getNombre() + "\"");
+        if ( !isInline) {
+            response.setHeader("Content-disposition","attachment; filename=\"" + infoArchivo.getNombre() + "\"");
+        }
         
         try {
             return response.getOutputStream();
