@@ -13,9 +13,10 @@ CREATE TABLE eurk_wsss_solicitud_firma (
     
     id_usuario 			integer			NOT NULL,
     fecha_hora 			datetime 		NOT NULL,
-    folio 				varchar(60) 	NOT NULL,
-    nombre				varchar(256) 	NOT NULL,
-    email_destinatario  varchar(128) 	not null,
+    folio 				varchar( 60) 	NOT NULL,
+    nombre				varchar( 256) 	NOT NULL,
+    email_destinatario  varchar( 128) 	not null,
+    email_solicitante   varchar( 128)   ,
     
     estatus         	SMALLINT        NOT NULL DEFAULT 0,
     last_update			datetime		NOT NULL,
