@@ -8,6 +8,7 @@ import com.eureka.firma.digital.ws.bean.Resultado;
 import com.eureka.firma.digital.ws.bean.SessionFirma;
 import com.eureka.firma.digital.ws.bean.Solicitud;
 import com.eureka.firma.digital.ws.bean.SolicitudFirma;
+import com.meve.ofspapel.firma.digital.beans.DocumentoFirmado;
 import com.meve.ofspapel.firma.digital.core.entidades.ArchivoDepositado;
 import com.meve.ofspapel.firma.digital.core.entidades.RegistroSolicitud;
 import com.meve.ofspapel.firma.digital.core.entidades.Usuario;
@@ -22,7 +23,6 @@ import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import mx.eureka.firma.digital.bean.BeanInfoDocumento;
 import mx.neogen.log.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -90,7 +90,7 @@ public class SolicitudFirmaBsnsComponent  {
 		}
     }
     
-    public RespuestaFirma firmarArchivo( final SolicitudFirma solicitud, File archivo, BeanInfoDocumento infoDocumento) {
+    public RespuestaFirma firmarArchivo( final SolicitudFirma solicitud, File archivo, DocumentoFirmado infoDocumento) {
 	
 		SessionFirma sf = new SessionFirma( solicitud);
 		Resultado<?> resultado;
@@ -158,8 +158,8 @@ public class SolicitudFirmaBsnsComponent  {
         return solicitudService.actualizaSolicitud( idSolicitud, EnumAccionSolicitud.LINK_VISITADO);
     }
     
-    public void registraAtencionSolicitud( ArchivoDepositado documentoFirmado, BeanInfoDocumento infoDocumento) {
-        final Integer idSolicitud = solicitudService.obtenerIdSolicitud( infoDocumento.getFolio(), infoDocumento.getNombre());
+    public void registraAtencionSolicitud( ArchivoDepositado documentoFirmado, DocumentoFirmado infoDocumento) {
+        final Integer idSolicitud = solicitudService.obtenerIdSolicitud( infoDocumento.getSolicitud().getFolio(), infoDocumento.getNombre());
         
         solicitudService.registraAtencionSolicitud( documentoFirmado.getId(), idSolicitud);
         solicitudService.actualizaSolicitud( idSolicitud, EnumAccionSolicitud.DOCUMENTO_FIRMADO);

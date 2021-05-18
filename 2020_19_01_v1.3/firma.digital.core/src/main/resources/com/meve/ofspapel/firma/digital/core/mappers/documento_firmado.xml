@@ -49,10 +49,15 @@
     <!--    ArchivoDepositado obtenerItem( claveOrganizacion: String, invocador: Invoker, idItem: Integer)  -->
     
     <select id="obtenerItem" resultMap="archivo">
-		select * from eurk_wsss_documento_firmado
-		where id = #{idItem} and id_usuario = #{invocador.id}
+		select * from eurk_wsss_documento_firmado where id = #{idItem} and id_usuario = #{invocador.id}
 	</select>
-	
+    
+    <!-- ArchivoDepositado obtenerItemByFolio( claveOrganizacion: String, invocador: Invoker, folio: String, nombre: String) -->
+    
+	<select id="obtenerItemByFolio" resultMap="archivo">
+		select * from eurk_wsss_documento_firmado where folio = #{folio} and nombre = #{nombre}
+	</select>
+    
 	<!-- 	int contarItems( consulta: Consulta, invocador: Invoker)	-->
 	
 	<select id="contarItems" resultType="integer">

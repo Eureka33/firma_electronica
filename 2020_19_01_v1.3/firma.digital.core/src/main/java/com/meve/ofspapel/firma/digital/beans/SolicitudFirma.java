@@ -3,21 +3,20 @@ package com.meve.ofspapel.firma.digital.beans;
 import com.meve.ofspapel.firma.digital.core.enums.EnumEstatusSolicitud;
 
 
-public class DocumentoFirmado {
+public class SolicitudFirma {
 
     private Integer id;
     private String fechaHora;
     private String folio;
-    private String nombre;
-    private String firmante;
+    private String solicitante;
+    private String estatus;
+               
     
-    private SolicitudFirma solicitud;
-
-    
-    public DocumentoFirmado() {
+    public SolicitudFirma() {
         super();
     }
-
+    
+    
     
     public Integer getId() {
         return id;
@@ -34,7 +33,7 @@ public class DocumentoFirmado {
     public void setFechaHora(String fechaHora) {
         this.fechaHora = fechaHora;
     }
-
+    
     public String getFolio() {
         return folio;
     }
@@ -42,30 +41,25 @@ public class DocumentoFirmado {
     public void setFolio(String folio) {
         this.folio = folio;
     }
-
-    public String getNombre() {
-        return nombre;
+    
+    public String getSolicitante() {
+        return solicitante;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void setSolicitante(String solicitante) {
+        this.solicitante = solicitante;
     }
     
-    public String getFirmante() {
-        return firmante;
-    }
-    
-    public void setFirmante( String firmante) {
-        this.firmante = firmante;
+    public String getEstatus() {
+        return estatus;
     }
 
-    public SolicitudFirma getSolicitud() {
-        return solicitud;
+    public void setEstatus(String estatus) {
+        this.estatus = estatus;
     }
 
-    public void setSolicitud(SolicitudFirma solicitud) {
-        this.solicitud = solicitud;
+    public void setEstatus(EnumEstatusSolicitud estatus) {
+        this.estatus = estatus.toString();
     }
-    
     
 }

@@ -9,16 +9,25 @@ import org.apache.ibatis.session.RowBounds;
 
 public interface DocumentoFirmadoDAO {
 
-    List<ArchivoDepositado> listarItems(    @Param(   "consulta") Consulta       consulta, 
-                                            @Param(  "invocador") Invoker       invocador,
-                                            @Param( "ordenacion") List<String> ordenacion,
-                                            RowBounds rowBounds
-                                        );
+    List<ArchivoDepositado> listarItems(
+                                @Param(   "consulta") Consulta       consulta, 
+                                @Param(  "invocador") Invoker       invocador,
+                                @Param( "ordenacion") List<String> ordenacion,
+                                RowBounds rowBounds
+                            );
     
-    ArchivoDepositado obtenerItem(  @Param( "claveOrganizacion") String claveOrganizacion,
-                                    @Param(         "invocador") Invoker        invocador,
-                                    @Param(            "idItem") Integer           idItem
-                                );
+    ArchivoDepositado obtenerItem(
+                                @Param( "claveOrganizacion") String claveOrganizacion,
+                                @Param(         "invocador") Invoker        invocador,
+                                @Param(            "idItem") Integer           idItem
+                            );
+    
+    ArchivoDepositado obtenerItemByFolio(
+                                @Param( "claveOrganizacion") String claveOrganizacion,
+                                @Param(         "invocador") Invoker        invocador,
+                                @Param(             "folio") String             folio,
+                                @Param(            "nombre") String            nombre
+                            );
     
 	int contarItems( @Param( "consulta") Consulta consulta, @Param( "invocador") Invoker invocador);
     

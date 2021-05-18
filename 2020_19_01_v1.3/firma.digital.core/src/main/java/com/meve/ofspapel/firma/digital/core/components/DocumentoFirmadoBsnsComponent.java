@@ -5,7 +5,9 @@ import com.eurk.core.beans.consulta.Ordenacion;
 import com.meve.ofspapel.firma.digital.beans.ConsultaBase;
 import com.meve.ofspapel.firma.digital.beans.DocumentoFirmado;
 import com.meve.ofspapel.firma.digital.core.entidades.ArchivoDepositado;
+import com.meve.ofspapel.firma.digital.core.entidades.Usuario;
 import com.meve.ofspapel.firma.digital.core.mappers.DocumentoFirmadoDAO;
+import com.meve.ofspapel.firma.digital.core.mappers.UsuarioDAO;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,10 +21,23 @@ import org.springframework.stereotype.Component;
 public class DocumentoFirmadoBsnsComponent extends ConsultaBase<ArchivoDepositado, Integer> {
     
     @Autowired private DocumentoFirmadoDAO data;
+    @Autowired private UsuarioDAO usuarioDAO;
+
     
-        
     public DocumentoFirmado obtenerItem( String claveOrganizacion, Invoker invocador, String idItemStr, Propiedades propiedades) {
-        return entidadToItem( obtenerItem(claveOrganizacion, invocador, Integer.valueOf( idItemStr)));
+        ArchivoDepositado entidad;
+        
+        if( idItemStr == null) {
+            entidad = obtenerItemByFolio( claveOrganizacion, invocador, propiedades.getPropiedad( "folio"), propiedades.getPropiedad( "nombre"));
+        } else {
+            entidad = obtenerItem(claveOrganizacion, invocador, Integer.valueOf( idItemStr));
+        }
+        
+        if ( entidad == null) {
+            return null;
+        } else {
+            return entidadToItem( entidad);
+        }
     }
     
     public List<DocumentoFirmado> listarItems( String claveOrganizacion, Invoker invocador, Consulta consulta) {
@@ -52,7 +67,10 @@ public class DocumentoFirmadoBsnsComponent extends ConsultaBase<ArchivoDepositad
         return data.obtenerItem(claveOrganizacion, invocador, idItem);
     }
     
-    
+    protected ArchivoDepositado obtenerItemByFolio( String claveOrganizacion, Invoker invocador, String folio, String nombre) {
+        return data.obtenerItemByFolio( claveOrganizacion, invocador, folio, nombre);
+    }
+
 
     @Override
 	protected List<String> createOrdenacion(Consulta consulta) {
@@ -83,6 +101,13 @@ public class DocumentoFirmadoBsnsComponent extends ConsultaBase<ArchivoDepositad
         item.setFechaHora( new SimpleDateFormat( "dd/MM/yyyy HH:mm:ss").format( entidad.getFechaHora()));
         item.setFolio( entidad.getFolio());
         item.setNombre( entidad.getNombre());
+        
+        if( entidad.getIdUsuario() != null) {
+            final Usuario usuario = usuarioDAO.obtenerItem( entidad.getIdUsuario());
+            item.setFirmante( usuario.getNombre() + " (" + usuario.getClave() + ")");
+        } else {
+            item.setFirmante( "");
+        }
         
         return item;
     }

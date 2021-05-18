@@ -98,16 +98,16 @@ env.autocompletion.documentos = {
 
 env.config.solicitudes = {
     module    : "solicitud",
-    id        : "id",
+    id        : "idSolicitud",
     pagination: true,
     isEditable: false,
     columns   : [
-        {value:      "fechaHora", label: "Fecha Hora Solicitud"},
-        {value:          "folio", label:                "Folio"},
-        {value:         "nombre", label:            "Documento"},
-        {value:        "estatus", label:              "Estatus"},
-        {value:   "destinatario", label:         "Destinatario"},
-        {value: "fechaHoraFirma", label:     "Fecha Hora Firma"}
+        {value: "fechaHoraSolicitud", label:  "Fecha Hora Solicitud"},
+        {value:     "folioSolicitud", label:                 "Folio"},
+        {value:             "nombre", label:             "Documento"},
+        {value:   "estatusSolicitud", label:               "Estatus"},
+        {value:       "destinatario", label: "Destinatario/Firmante"},
+        {value:          "fechaHora", label:      "Fecha Hora Firma"}
     ],
     actions   : [
         {value: 'view', icon: "info-circle", title: "Descarga y validación del documento"}
@@ -182,13 +182,20 @@ env.callbacks.solicitudes = {
                 dom.getById( 'badgeSolicitud').parents( ".card").hide();
             } else {
                 dom.setText( "badgeSolicitud", r.consulta.paginacion.totalItems);
+                for( let item of r.items) {
+                    item.idSolicitud        = item.solicitud.id;
+                    item.fechaHoraSolicitud = item.solicitud.fechaHora;
+                    item.folioSolicitud     = item.solicitud.folio;
+                    item.estatusSolicitud   = item.solicitud.estatus;
+                    item.destinatario       = item.solicitud.solicitante + (item.firmante? " / " + item.firmante : "");
+                }
                 callback( r.items, r.consulta);
             }
         });
     },
     
     consulta_solicitud: function( id) {
-        navigation.goto( 'validacionSolicitud?rand=' + id + '-' + Math.random());
+        navigation.goto( 'validacionDocumento?rand=' + id + '-' + Math.random());
     }
 };
 

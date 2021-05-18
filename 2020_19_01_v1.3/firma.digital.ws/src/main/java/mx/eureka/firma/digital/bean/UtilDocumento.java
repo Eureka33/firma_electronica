@@ -1,7 +1,10 @@
 package mx.eureka.firma.digital.bean;
 
+import com.eureka.firma.digital.web.UtilWeb;
 import com.eureka.firma.digital.ws.core.IStreamService;
-import com.meve.ofspapel.firma.digital.beans.DocumentoSolicitado;
+import com.meve.ofspapel.firma.digital.beans.DocumentoFirmado;
+import com.meve.ofspapel.firma.digital.core.components.DocumentoSolicitadoBsnsComponent;
+import com.meve.ofspapel.firma.digital.core.entidades.Usuario;
 import com.meve.ofspapel.firma.digital.core.service.IConfiguracionService;
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -18,6 +21,7 @@ import java.util.List;
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.servlet.http.HttpServletRequest;
+import mx.com.neogen.commons.bean.Propiedades;
 import mx.com.neogen.commons.exception.OperacionNoRealizadaException;
 import mx.com.neogen.commons.util.UtilStream;
 import org.apache.commons.fileupload.DiskFileUpload;
@@ -25,31 +29,64 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadBase;
 
 public class UtilDocumento {
-
-    public static BeanInfoDocumento requestToInfoDocumento( HttpServletRequest request) throws UnsupportedEncodingException {
-		final BeanInfoDocumento info = new BeanInfoDocumento();
-		
-		info.setFolio( request.getParameter( "folio"));
+    
+    private final DocumentoSolicitadoBsnsComponent solicitudService; 
+    
+    
+    public UtilDocumento( DocumentoSolicitadoBsnsComponent solicitudService) {
+        super();
+        this.solicitudService = solicitudService;
+    }
+    
+    
+    public DocumentoFirmado requestToDocumento( HttpServletRequest request) throws UnsupportedEncodingException {
+            
+        // el id de la solicitud puede venir oculta en el parametro rand
+        
+        final String idSolicitudStr = obtenerIdSolicitud( request);
+        
+        if ( idSolicitudStr != null) {
+            final Usuario invocador = UtilWeb.getUsuarioPuesto( request);
+            return solicitudService.obtenerItem( "", invocador, idSolicitudStr, new Propiedades());
+        }
+        
+        // un documento firmado puede indicarse por folio y nombre
+        Propiedades propiedades = obtenerInfoDocumento( request);
+        return solicitudService.obtenerItem( "", null, null, propiedades);
+    }
+    
+    private Propiedades obtenerInfoDocumento( HttpServletRequest request) throws UnsupportedEncodingException {
+        
+        final Propiedades info = new Propiedades();
+        
+		info.setPropiedad( "folio", request.getParameter( "folio"));
         
         final String queryString = request.getQueryString();
         
         final int idx = queryString.indexOf( "&nombre=");
         int endIdx = queryString.indexOf( '&', idx + 8);
         endIdx = (endIdx < 0)? queryString.length() : endIdx;
-		info.setNombre( URLDecoder.decode( request.getQueryString().substring( idx + 8, endIdx), "UTF-8"));
-	
+		
+        info.setPropiedad( "nombre", URLDecoder.decode( request.getQueryString().substring( idx + 8, endIdx), "UTF-8"));
         
-		return info;
+        return info;
 	}
     
-    public static BeanInfoDocumento requestToInfoDocumento( DocumentoSolicitado documento)  {
-		final BeanInfoDocumento info = new BeanInfoDocumento();
-		
-		info.setFolio(  documento.getDocumentoFirmado().getFolio());
-        info.setNombre( documento.getDocumentoFirmado().getNombre());
-	
-		return info;
-	}
+    private String obtenerIdSolicitud( HttpServletRequest request) {
+        final String rand = request.getParameter( "rand");
+        
+        if ( rand == null) {
+            return null;
+        }
+        
+        String[] numeros = rand.split( "-");
+        
+        if ( numeros.length != 2) {
+            return null;
+        }
+         
+        return numeros[0];    
+    }
     
     public static BeanInfoFirma requestToInfoFirma( HttpServletRequest request) {
         boolean isMultipart = FileUploadBase.isMultipartContent( request);
@@ -193,7 +230,7 @@ public class UtilDocumento {
         return getMd5( new FileInputStream( new File ( pathFile)));
     } 
         
-    public static InfoArchivo obtenerInfoArchivo( BeanInfoDocumento infoDocumento, boolean isUpload) {
+    public static InfoArchivo obtenerInfoArchivo( DocumentoFirmado infoDocumento, boolean isUpload) {
         
         final String path = isUpload? obtenerRutaUpload( infoDocumento) : obtenerRutaDeposito( infoDocumento);
         final File file = new File( path);
@@ -220,7 +257,7 @@ public class UtilDocumento {
         }
     }
        
-    static String obtenerRutaDeposito( BeanInfoDocumento info) {
+    static String obtenerRutaDeposito( DocumentoFirmado info) {
         IConfiguracionService configService = AppContext.getBean( IConfiguracionService.class);
         IStreamService        streamService = AppContext.getBean(        IStreamService.class);
         
@@ -229,17 +266,17 @@ public class UtilDocumento {
     }
     
     
-    public static File obtenerFileUploaded( BeanInfoDocumento info) {
+    public static File obtenerFileUploaded( DocumentoFirmado info) {
         final String path = obtenerRutaUpload( info);
         return new File( path);
     }
     
-    static String obtenerRutaUpload( BeanInfoDocumento info) {
+    static String obtenerRutaUpload( DocumentoFirmado info) {
         IConfiguracionService configService = AppContext.getBean( IConfiguracionService.class);
         IStreamService        streamService = AppContext.getBean(        IStreamService.class);
         
         final String pathRepositorio = configService.getPropiedad( "path.directorio.descarga");
-        return streamService.obtenerPathDeposito( pathRepositorio, info.getFolio(), info.getNombre());
+        return streamService.obtenerPathDeposito( pathRepositorio, info.getSolicitud().getFolio(), info.getNombre());
     }
     
     public static DataHandler createInstance(final InputStream inputStream, final String nombre, final String tipo) {

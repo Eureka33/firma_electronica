@@ -2,6 +2,7 @@ package mx.eureka.firma.digital.servlet;
 
 import com.eureka.firma.digital.ws.bean.InfoArchivo;
 import com.eureka.firma.digital.ws.bean.InfoConfidencial;
+import com.meve.ofspapel.firma.digital.beans.DocumentoFirmado;
 import java.io.IOException;
 import java.util.List;
 import javax.servlet.RequestDispatcher;
@@ -10,7 +11,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import mx.com.neogen.commons.exception.OperacionNoRealizadaException;
-import mx.eureka.firma.digital.bean.BeanInfoDocumento;
 import mx.eureka.firma.digital.bean.BeanInfoFirma;
 import mx.eureka.firma.digital.bean.UtilDocumento;
 import org.apache.commons.fileupload.DiskFileUpload;
@@ -76,7 +76,7 @@ public class BaseServlet extends HttpServlet {
 		return "";
 	}
 	
-	protected String checksumStoredFile( BeanInfoDocumento info) { 
+	protected String checksumStoredFile( DocumentoFirmado info) { 
         mx.eureka.firma.digital.bean.InfoArchivo infoArchivo = UtilDocumento.obtenerInfoArchivo( info, false);
         return UtilDocumento.getMd5( infoArchivo.getContenido());
     }

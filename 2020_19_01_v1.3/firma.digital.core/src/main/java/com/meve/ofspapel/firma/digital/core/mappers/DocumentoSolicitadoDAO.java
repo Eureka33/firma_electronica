@@ -9,18 +9,31 @@ import org.apache.ibatis.session.RowBounds;
 
 public interface DocumentoSolicitadoDAO {
 
-    List<RegistroSolicitud> listarItems(    @Param(   "consulta") Consulta       consulta, 
-                                            @Param(  "invocador") Invoker       invocador,
-                                            @Param( "ordenacion") List<String> ordenacion,
-                                            RowBounds rowBounds
-                                        );
+    List<RegistroSolicitud> listarItems(
+                                @Param(   "consulta") Consulta       consulta, 
+                                @Param(  "invocador") Invoker       invocador,
+                                @Param( "ordenacion") List<String> ordenacion,
+                                RowBounds rowBounds
+                            );
     
-    RegistroSolicitud obtenerItem(  @Param( "claveOrganizacion") String claveOrganizacion,
-                                    @Param(         "invocador") Invoker        invocador,
-                                    @Param(            "idItem") Integer           idItem
-                                );
+    RegistroSolicitud obtenerItem(
+                                @Param( "claveOrganizacion") String claveOrganizacion,
+                                @Param(         "invocador") Invoker        invocador,
+                                @Param(            "idItem") Integer           idItem
+                            );
    
-    RegistroSolicitud obtenerItemById( @Param( "idItem") Integer idItem);
+    RegistroSolicitud obtenerItemById(
+                                @Param( "idItem") Integer idItem
+                            );
+    
+    RegistroSolicitud obtenerItemByIdDocumento(
+                                @Param( "idDocumento") Integer idDocumento
+                            );
+    
+    RegistroSolicitud obtenerItemByFolio(
+                                @Param(  "folio") String  folio,
+                                @Param( "nombre") String nombre
+                            );
     
 	int contarItems( @Param( "consulta") Consulta consulta, @Param( "invocador") Invoker invocador);
     

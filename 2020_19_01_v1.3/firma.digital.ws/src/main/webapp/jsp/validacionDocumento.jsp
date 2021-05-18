@@ -1,11 +1,11 @@
+<%@page import="com.meve.ofspapel.firma.digital.beans.DocumentoFirmado"%>
 <%@page import="com.meve.ofspapel.firma.digital.core.entidades.Usuario"%>
-<%@page import="mx.eureka.firma.digital.bean.BeanInfoDocumento"%>
 <%@page import="java.net.URLEncoder"%>
 
 <%@page language="java" contentType="text/html; charset=UTF-8" %>
 
 <%
-	BeanInfoDocumento info = (BeanInfoDocumento) request.getAttribute( "info");
+	DocumentoFirmado info = (DocumentoFirmado) request.getAttribute( "info");
     String resultado = (String) request.getAttribute( "resultado");
     
     final Usuario usuario = (Usuario) session.getAttribute( "usuario");
@@ -47,8 +47,11 @@
 		
 		function descargar() {
 			var link = document.getElementById( 'download');
-			link.href= './descargaDocumento?folio=<%= info.getFolio() %>&nombre=<%= URLEncoder.encode( info.getNombre(), "UTF-8") %>';
-			link.click();
+            
+            <% if ( info != null && info.getFolio() != null) { %>
+            link.href= './descargaDocumento?folio=<%= info.getFolio() %>&nombre=<%= URLEncoder.encode( info.getNombre(), "UTF-8") %>';
+            link.click();
+            <% } %>
 		}
 	
 		function mostrarFormulario() {
@@ -85,132 +88,186 @@
 		<img src="./images/logo_organizacion.png" style="height: 150px;" alt="organization logo"/>
     </div>
     
-    <table class="container" style="margin-top: 5px;">
-        <tr>
-			<td>
-				<navbar class="navbar navbar-light bg-light">
-                    <a class="navbar-brand" href="#">&nbsp;</a>
+    <div class="container" style="margin-top: 5px;">
+		<navbar class="navbar navbar-light bg-light">
+            <a class="navbar-brand" href="#">&nbsp;</a>
                     
-                    <button type="button" class="btn btn-sm btn-link" onclick="javascript: navigation.goto( 'firmaDocumento');" title="Firmar Documento(s)">
-                        <i class="fas fa-file-signature"></i>&nbsp;Firmar Documento(s)
-                    </button>
+            <button type="button" class="btn btn-sm btn-link" onclick="javascript: navigation.goto( 'firmaDocumento');" title="Firmar Documento(s)">
+                <i class="fas fa-file-signature"></i>&nbsp;Firmar Documento(s)
+            </button>
+             
+            <% if ( usuario != null) { %>
+                <button type="button" class="btn btn-sm btn-link" onclick="javascript: navigation.goto( 'consultaDocumentos');" title="Mis documentos firmados">
+                    <i class="fas fa-list"></i>&nbsp;Mis Documentos
+                </button>
+            
+                <button type="button" class="btn btn-sm btn-link" onclick="javascript: navigation.logout();" title="Salir (logout)">
+                    <i class="fas fa-sign-out-alt"></i>&nbsp;Salir
+                </button>
+            <% } %>
+        </navbar>
+    </div>
+
+    <div class="container" style="margin-top: 5px;">
+        <form>
+            <table style="width: 100%">
+                <% if( info.getSolicitud() != null) { %>
+                    <tr>
+                        <td style="width: 250px;">
+                            <span style="font-size: 1.2em; font-weight: bold;">Fecha Hora de Solicitud:</span>
+                        </td>
+                    	<td>
+                            <input type="text" value="<%= info.getSolicitud().getFechaHora() %>" style="font-size: 1.2em; width: 100%" disabled/>
+                        </td>
+                    </tr>
+				<% } %>	
+				
+                <% if( info.getSolicitud() != null) { %>
+                    <tr>
+                        <td style="width: 250px;">
+                            <span style="font-size: 1.2em; font-weight: bold;">Folio Solicitud:</span>
+                        </td>
+                        <td>
+                            <input type="text" value="<%= info.getSolicitud().getFolio() %>" style="font-size: 1.2em; width: 100%" disabled/>
+                        </td>
+                    </tr>
+                <% } %>
+				
+                <tr>
+                    <td style="width: 250px;">
+                        <span style="font-size: 1.2em; font-weight: bold;">Nombre Documento:</span>
+                    </td>
+                    <td>
+                        <input type="text" value="<%= info.getNombre() %>" style="font-size: 1.2em; width: 100%" disabled/>
+                    </td>
+				</tr>
+                
+                <% if( info.getSolicitud() != null) { %>
+                    <tr>
+                        <td style="width: 250px;">
+                            <span style="font-size: 1.2em; font-weight: bold;">Estatus:</span>
+                        </td>
+                        <td>
+                            <input type="text" value="<%= info.getSolicitud().getEstatus() %>" style="font-size: 1.2em; width: 100%" disabled/>
+                        </td>
+                    </tr>
+				<% } %>
+                
+                <tr>
+					<td style="width: 250px;">
+                        <span style="font-size: 1.2em; font-weight: bold;">
+                            <% if( info.getSolicitud() == null || info.getSolicitud().getEstatus().equals( "ATENDIDA")) { %>
+                                Firmante:
+                            <% } else { %>
+                                Destinatario:
+                            <% } %>
+                        </span>
+                    </td>
+					<td>
+                        <input type="text" value="<%=
+                            (info.getSolicitud() == null? "" : info.getSolicitud().getSolicitante()) +
+                            ((info.getSolicitud() != null && info.getFirmante() != null)?  " / " : "") +
+                            (info.getFirmante() != null? info.getFirmante() : "")
+                        %>" style="font-size: 1.2em; width: 100%" disabled/>
+                    </td>
+                </tr>
+                   
+                <% if ( info.getId() != null) { %>
                     
-                    <% if ( usuario != null) { %>
-                        <button type="button" class="btn btn-sm btn-link" onclick="javascript: navigation.goto( 'consultaDocumentos');" title="Mis documentos firmados">
-                            <i class="fas fa-list"></i>&nbsp;Mis Documentos
-                        </button>
-                    
-                        <button type="button" class="btn btn-sm btn-link" onclick="javascript: navigation.logout();" title="Salir (logout)">
-                            <i class="fas fa-sign-out-alt"></i>&nbsp;Salir
-                        </button>
-                    <% } %>
-                </navbar>
-			</td>
-		</tr>
-		
-		<tr><td>&nbsp;</td></tr>
-        
-		<tr>
-			<td>
-				<table style="width: 100%;">
+                    <tr>
+						<td style="width: 250px;">
+                            <span style="font-size: 1.2em; font-weight: bold;">Fecha de Firma:</span>
+                        </td>
+						<td>
+                            <input type="text" value="<%= info.getFechaHora() %>" style="font-size: 1.2em; width: 100%" disabled/>
+                        </td>
+                    </tr>                    
+					
 					<tr>
-						<td style="width: 150px;">
-                            <span style="font-size: 1.2em; font-weight: bold;">Folio:</span>
+						<td style="width: 250px;">
+                            <span style="font-size: 1.2em; font-weight: bold;">Folio de Firma:</span>
                         </td>
 						<td>
                             <input type="text" value="<%= info.getFolio() %>" style="font-size: 1.2em; width: 100%" disabled/>
                         </td>
 					</tr>
-					<tr><td colspan="2">&nbsp;</td></tr>
-					<tr>
-						<td style="width: 150px;">
-                            <span style="font-size: 1.2em; font-weight: bold;">Nombre:</span>
+                    
+                <% } %>
+				
+			</table>
+        </form>
+        
+        <div class="row text-right">
+            <div class="col-sm-12 text-right">
+                <% if ( info.getId() != null) { %>        
+	                <button type="button" class="btn btn-primary" onclick="javascript: descargar();"><i class="fas fa-download"></i>&nbsp;Descargar</button>
+                <% } %>
+                &nbsp;
+                <button type="button" class="btn btn-secondary" onclick="javascript: navigation.goto( 'consultaDocumentos');" title="Regresar">
+                    <i class="fas fa-step-backward"></i>&nbsp;Regresar
+                </button>
+            </div>
+        </div>
+	</div>
+    
+	<div class="container" id="mensajeResultado" style="margin-top: 10px; display: none;">
+        <div class="alert alert-danger text-center" role="alert">
+            <span style="font-size: 1.4em; font-weight: bold;" ><%= resultado %></span>
+        </div>
+	</div>
+
+    <% if ( info.getId() != null) { %>
+        <div class="container" style="margin-top: 15px;">
+            <div class="alert alert-info" role="alert">
+                <span style="font-size: 1.2em;">
+                    Si desea validar la integridad del documento pulse 
+                    <a onclick="javascript: mostrarFormulario();" style="text-decoration: underline;">
+                        <b>aqu&iacute;</b>
+                    </a>
+                </span>
+            </div>
+        </div>
+    <% } %>
+    
+    <div class="container" style="margin-top: 15px;" id="formValidacion" style="display: none;">
+        <div class="card">
+            <%
+                String query = "folio=" + info.getFolio() + "&nombre=" + URLEncoder.encode( info.getNombre(), "UTF-8");
+            %>
+            
+            <form action="validacionDocumento?<%= query %>" method="post" enctype="multipart/form-data">
+                <table style="margin: 20px; width: 95%;">
+                    <tr>
+                        <td>
+                            <div class="alert alert-success" role="alert">
+                                <span style="font-size: 1.2em;">1. Seleccione el documento para validar</span>
+                            </div>
                         </td>
-						<td>
-                            <input type="text" value="<%= info.getNombre() %>" style="font-size: 1.2em; width: 100%" disabled/>
-                        </td>
-					</tr>
-				</table>
-			</td>
-		</tr>
-		
-		<tr><td>&nbsp;</td></tr>
-		
-		<tr>
-			<td>
-				<table style="width: 100%">
-					<tr>
-						<td width="50%">&nbsp;</td>
-						<td width="50%" style="text-align: right;">
-                            <button type="button" class="btn btn-primary" onclick="javascript: descargar();">
-                                <i class="fas fa-download"></i>&nbsp;Descargar
-                            </button>
-                            &nbsp;
-                            <button type="button" class="btn btn-success" onclick="javascript: mostrarFormulario();" <%= info.getNombre().endsWith( ".zip")? "hidden": ""%>>
-                                <i class="fas fa-clipboard-check"></i>&nbsp;Validar
-                            </button>
-                            
-                            <% if ( usuario != null) { %>
-                                &nbsp;
-                                <button type="button" class="btn btn-secondary" onclick="javascript: navigation.goto( 'consultaDocumentos');" title="Regresar">
-                                    <i class="fas fa-step-backward"></i>&nbsp;Regresar
+    				</tr>
+                    <tr>
+                        <td>
+                            <input type="file" id="archivo" name="archivo"/>
+    					</td>
+        			</tr>
+            		<tr>
+                        <td><span id="error_archivo" class="error" hidden></span>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="alert alert-success" role="alert">
+                                <span style="font-size: 1.2em;">2. Pulse el botón para iniciar la validación</span>
+                            </div>
+                            <div style="text-align: right;">
+                                <button type="submit" class="btn btn-info" onclick="javascript: return validar(event);">
+                                    <i class="fas fa-spell-check"></i>&nbsp;Validar
                                 </button>
-                            <% } %>
-						</td>
-					</tr>
-				</table>
-			</td>
-		</tr>
-		
-		<tr><td>&nbsp;</td></tr>
-	
-		<tr id="mensajeResultado" style="display: none;">
-			<td>
-				<table width="100%">
-					<tr>
-						<td style="text-align: center;" width="100%">
-							<span style="font-size: 1.4em; font-weight: bold; color: red;" ><%= resultado %></span>
-						</td>
-					</tr>
-				</table>
-			</td>
-		</tr>
-		
-		<tr id="formValidacion" style="display: none;">
-			<td>
-                <div class="card">
-                    <form action="validacionDocumento?folio=<%= info.getFolio() %>&nombre=<%= URLEncoder.encode( info.getNombre(), "UTF-8") %>"
-                        method="post" enctype="multipart/form-data"
-                    >
-                        <table style="margin: 20px; width: 95%;">
-                            <tr>
-                                <td>
-                                    <span style="font-size: 1.2em;">Seleccione el documento para validar</span>
-                                </td>
-    						</tr>
-                           <tr>
-                                <td>
-                                    <input type="file" id="archivo" name="archivo"/>
-    							</td>
-        					</tr>
-            				
-                            <tr>
-                                <td><span id="error_archivo" class="error" hidden></span> 
-                            </tr>
-                            
-                            <tr>
-                                <td style="text-align: right;">
-                                    <button type="submit" class="btn btn-info" onclick="javascript: return validar(event);">
-                                        <i class="fas fa-spell-check"></i>&nbsp;Comparar
-                                    </button>
-        						</td>
-            				</tr>
-                		</table>
-                    </form>
-                </div>
-           	</td>
-		</tr>
-	</table>
+                            </div>
+        				</td>
+            		</tr>
+                </table>
+            </form>
+        </div>
+	</div>
                         
     <%@include file="../WEB-INF/pages/fragments/processing.jspf" %>
 	<a id="download" href=""></a>

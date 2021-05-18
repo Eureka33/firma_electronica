@@ -3,12 +3,10 @@ package com.meve.ofspapel.firma.digital.core.components;
 import com.eurk.core.beans.consulta.Consulta;
 import com.eurk.core.beans.consulta.Ordenacion;
 import com.meve.ofspapel.firma.digital.beans.ConsultaBase;
-import com.meve.ofspapel.firma.digital.beans.DocumentoSolicitado;
-import com.meve.ofspapel.firma.digital.core.entidades.ArchivoDepositado;
+import com.meve.ofspapel.firma.digital.beans.DocumentoFirmado;
+import com.meve.ofspapel.firma.digital.beans.SolicitudFirma;
 import com.meve.ofspapel.firma.digital.core.entidades.RegistroSolicitud;
-import com.meve.ofspapel.firma.digital.core.entidades.Usuario;
 import com.meve.ofspapel.firma.digital.core.mappers.DocumentoSolicitadoDAO;
-import com.meve.ofspapel.firma.digital.core.mappers.UsuarioDAO;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -24,16 +22,39 @@ public class DocumentoSolicitadoBsnsComponent extends ConsultaBase<RegistroSolic
     
     @Autowired private DocumentoFirmadoBsnsComponent docBsnsComponent;
     @Autowired private DocumentoSolicitadoDAO data;
-    @Autowired private UsuarioDAO usuarioDAO;
     
+     
+    public DocumentoFirmado obtenerItem( String claveOrganizacion, Invoker invocador, String idItemStr, Propiedades propiedades) {
+        DocumentoFirmado item;
         
-    public DocumentoSolicitado obtenerItem( String claveOrganizacion, Invoker invocador, String idItemStr, Propiedades propiedades) {
-        return entidadToItem( obtenerItem(claveOrganizacion, invocador, Integer.valueOf( idItemStr)), claveOrganizacion, invocador);
+        if ( idItemStr != null) {
+            item = entidadToItem( obtenerItem(claveOrganizacion, invocador, Integer.valueOf( idItemStr)), claveOrganizacion, invocador);
+        
+        } else {
+            // obtiene solicitud relacionada con documento firmado (folio, nombre)
+            item = docBsnsComponent.obtenerItem( claveOrganizacion, invocador, null, propiedades);
+            RegistroSolicitud solicitud;
+            if( item == null) {
+                // no hay documento firmado con el folio
+                solicitud = obtenerItemByFolio( propiedades);
+                item = entidadToItem( solicitud, claveOrganizacion, invocador);
+                
+            } else {
+                // si hay documento firmado
+                solicitud =  obtenerItemByIdDocumento( item.getId());
+            }
+            
+            if ( solicitud != null) {
+                item.setSolicitud( entidadToItem( solicitud));
+            }
+        }
+        
+        return item; 
     }
     
-    public List<DocumentoSolicitado> listarItems( String claveOrganizacion, Invoker invocador, Consulta consulta) {
+    public List<DocumentoFirmado> listarItems( String claveOrganizacion, Invoker invocador, Consulta consulta) {
         final List<RegistroSolicitud> entidades = consultar( claveOrganizacion, invocador, consulta);
-        final List<DocumentoSolicitado> items = new ArrayList<>();
+        final List<DocumentoFirmado> items = new ArrayList<>();
         
         for( RegistroSolicitud entidad : entidades) {
             items.add( entidadToItem( entidad, claveOrganizacion, invocador));
@@ -54,7 +75,15 @@ public class DocumentoSolicitadoBsnsComponent extends ConsultaBase<RegistroSolic
 
     @Override
     protected RegistroSolicitud obtenerItem(String claveOrganizacion, Invoker invocador, Integer idItem) {
-        return data.obtenerItem(claveOrganizacion, invocador, idItem);
+        return data.obtenerItem( claveOrganizacion, invocador, idItem);
+    }
+    
+    protected RegistroSolicitud obtenerItemByIdDocumento( Integer idDocumento) {
+        return data.obtenerItemByIdDocumento( idDocumento);
+    }
+    
+    protected RegistroSolicitud obtenerItemByFolio( Propiedades propiedades) {
+        return data.obtenerItemByFolio( propiedades.getPropiedad( "folio"), propiedades.getPropiedad( "nombre"));
     }
     
     @Override
@@ -79,30 +108,35 @@ public class DocumentoSolicitadoBsnsComponent extends ConsultaBase<RegistroSolic
 		return clausulas;
 	}
     
-    private DocumentoSolicitado entidadToItem( RegistroSolicitud entidad, String claveOrganizacion, Invoker invocador) {
-        final DocumentoSolicitado item = new DocumentoSolicitado();
-        final DateFormat formatter = new SimpleDateFormat( "dd/MM/yyyy HH:mm:ss");
-        
-        item.setId( entidad.getId());
-        item.setFechaHora( formatter.format( entidad.getFechaHora()));
-        item.setFolio( entidad.getFolio());
-        item.setNombre( entidad.getNombre());
-        item.setEstatus( entidad.getEstatus());
+    private DocumentoFirmado entidadToItem( RegistroSolicitud entidad, String claveOrganizacion, Invoker invocador) {
+        final DocumentoFirmado item;
         
         if (entidad.getIdDocumentoFirmado() != null) {
-            final ArchivoDepositado documento = docBsnsComponent.obtenerItem( claveOrganizacion, invocador, entidad.getIdDocumentoFirmado());
-            final Usuario usuario = usuarioDAO.obtenerItem( documento.getIdUsuario());
-            
-            item.setDestinatario( usuario.getNombre() + " (" + usuario.getClave() + ")");
-            item.setFechaHoraFirma( formatter.format( documento.getFechaHora()));
-            
-            item.setDocumentoFirmado( docBsnsComponent.entidadToItem( documento));
+            item = docBsnsComponent.obtenerItem( claveOrganizacion, invocador, entidad.getIdDocumentoFirmado().toString(), null);
             
         } else {
-            item.setDestinatario( entidad.getEmailDestinatario());
-            item.setFechaHoraFirma( "");
+            item = new DocumentoFirmado();
+            item.setNombre(  entidad.getNombre());
         }
         
+        item.setSolicitud( entidadToItem( entidad));
+                
         return item;
     }
+    
+    private SolicitudFirma entidadToItem( RegistroSolicitud entidad) {
+        final DateFormat formatter = new SimpleDateFormat( "dd/MM/yyyy HH:mm:ss");
+                       
+        final SolicitudFirma solicitud = new SolicitudFirma();
+        
+        solicitud.setId(          entidad.getId());
+        solicitud.setFechaHora(   formatter.format( entidad.getFechaHora()));
+        solicitud.setFolio(       entidad.getFolio());
+        solicitud.setEstatus(     entidad.getEstatus());
+        solicitud.setSolicitante( entidad.getEmailDestinatario());
+        
+        return solicitud;
+    }
+    
+    
 }

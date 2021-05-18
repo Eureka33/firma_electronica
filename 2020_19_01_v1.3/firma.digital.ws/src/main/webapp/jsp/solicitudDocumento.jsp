@@ -1,11 +1,11 @@
+<%@page import="com.meve.ofspapel.firma.digital.beans.DocumentoFirmado"%>
 <%@page import="com.meve.ofspapel.firma.digital.core.entidades.Usuario"%>
-<%@page import="mx.eureka.firma.digital.bean.BeanInfoDocumento"%>
 <%@page import="java.net.URLEncoder"%>
 
 <%@page language="java" contentType="text/html; charset=UTF-8" %>
 
 <%
-	BeanInfoDocumento info = (BeanInfoDocumento) request.getAttribute( "info");
+	DocumentoFirmado info = (DocumentoFirmado) request.getAttribute( "info");
 
     String[] errorMessages = (String[]) session.getAttribute( "errorMessages");
     session.removeAttribute( "errorMessages");
@@ -62,7 +62,7 @@
 		
 		function descargar() {
 			var link = document.getElementById( 'download');
-			link.href= './descargaDocumento?isUpload=true&folio=<%= info.getFolio() %>&nombre=<%= URLEncoder.encode( info.getNombre(), "UTF-8") %>';
+			link.href= './descargaDocumento?isUpload=true&folio=<%= info.getSolicitud().getFolio() %>&nombre=<%= URLEncoder.encode( info.getNombre(), "UTF-8") %>';
 			link.click();
 		}
         
@@ -129,7 +129,7 @@
         <% } %>
     </div>
     
-    <form action="solicitudDocumento?folio=<%= info.getFolio() %>&amp;nombre=<%= URLEncoder.encode( info.getNombre(), "UTF-8") %>"
+    <form action="solicitudDocumento?folio=<%= info.getSolicitud().getFolio() %>&amp;nombre=<%= URLEncoder.encode( info.getNombre(), "UTF-8") %>"
         class="container" style="margin-top: 5px;" method="POST" enctype="multipart/form-data" accept-charset="UTF-8"
     >
         <div class="card">
@@ -143,7 +143,7 @@
                             <span style="font-size: 1.2em; font-weight: bold;">Folio:</span>
                         </td>
                         <td>
-                            <input type="text" value="<%= info.getFolio() %>" style="font-size: 1.2em; width: 100%" disabled/>
+                            <input type="text" value="<%= info.getSolicitud().getFolio() %>" style="font-size: 1.2em; width: 100%" disabled/>
                         </td>
                     </tr>
 

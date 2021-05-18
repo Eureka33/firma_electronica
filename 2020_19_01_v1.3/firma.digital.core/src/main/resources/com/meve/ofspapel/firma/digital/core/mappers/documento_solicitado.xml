@@ -62,13 +62,31 @@
 		where item.id = #{idItem} and item.id_usuario = #{invocador.id}
 	</select>
 	
-    <!--    RegistroSolicitud obtenerItem( idItem: Integer)                         -->
+    <!--    RegistroSolicitud obtenerItemById( idItem: Integer)                         -->
     
     <select id="obtenerItemById" resultMap="itemMap">
         select item.*, atencion.id_documento_firmado
         from eurk_wsss_solicitud_firma item 
         left outer join eurk_wsss_solicitud_atendida atencion on atencion.id_solicitud_firma = item.id
         where item.id = #{idItem}
+    </select>
+    
+    <!--    RegistroSolicitud obtenerItemByIdDocumento( idDocumento: Integer)                       -->
+
+    <select id="obtenerItemByIdDocumento" resultMap="itemMap">
+        select item.*, atencion.id_documento_firmado
+        from eurk_wsss_solicitud_firma item 
+        left outer join eurk_wsss_solicitud_atendida atencion on atencion.id_solicitud_firma = item.id
+        where atencion.id_documento_firmado = #{idDocumento}
+    </select>
+    
+    <!--    RegistroSolicitud obtenerItemByFolio( folio: String, nombre: String)                    -->
+    
+    <select id="obtenerItemByFolio" resultMap="itemMap">
+        select item.*, atencion.id_documento_firmado
+        from eurk_wsss_solicitud_firma item 
+        left outer join eurk_wsss_solicitud_atendida atencion on atencion.id_solicitud_firma = item.id
+        where item.folio = #{folio} and item.nombre = #{nombre}
     </select>
     
 	<!-- 	int contarItems( consulta: Consulta, invocador: Invoker)	-->
