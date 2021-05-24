@@ -47,4 +47,5 @@ create table eurk_wsss_visitas_solicitud(
 	CONSTRAINT fk_solicitud_vissol  FOREIGN KEY (   id_solicitud_firma) REFERENCES eurk_wsss_solicitud_firma(  id)
 );
 
-INSERT INTO eurk_wsss_configuracion (clave, valor) VALUES (         'link.maximo.visitas', '1');
+INSERT INTO eurk_wsss_configuracion (clave, valor) VALUES (      'link.maximo.visitas',             '1');
+insert into eurk_wsss_configuracion( clave, valor) values ( 'string.formato.solicitud', 'ASA/%4s-%06d');
