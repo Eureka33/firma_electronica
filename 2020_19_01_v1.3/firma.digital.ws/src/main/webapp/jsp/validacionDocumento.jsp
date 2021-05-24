@@ -54,8 +54,9 @@
 			var link = document.getElementById( 'download');
             
             if ( isSolicitud) {
-                link.href= './descargaDocumento?isUpload=true&folio=<%= info.getSolicitud().getFolio() %>&nombre=<%= URLEncoder.encode( info.getNombre(), "UTF-8") %>';
-            
+                <% if ( info.getSolicitud() != null) { %>
+                    link.href= './descargaDocumento?isUpload=true&folio=<%= info.getSolicitud().getFolio() %>&nombre=<%= URLEncoder.encode( info.getNombre(), "UTF-8") %>';
+                <% } %>
             } else {
                 link.href= './descargaDocumento?folio=<%= info.getFolio() %>&nombre=<%= URLEncoder.encode( info.getNombre(), "UTF-8") %>';
             }
@@ -71,7 +72,9 @@
                 let item = document.getElementById( 'preview');
                 
                 if ( isSolicitud) {
-                    item.src= './descargaDocumento?isUpload=true&folio=<%= info.getSolicitud().getFolio() %>&nombre=<%= URLEncoder.encode( info.getNombre(), "UTF-8") %>&inline=true';
+                    <% if ( info.getSolicitud() != null) { %>
+                        item.src= './descargaDocumento?isUpload=true&folio=<%= info.getSolicitud().getFolio() %>&nombre=<%= URLEncoder.encode( info.getNombre(), "UTF-8") %>&inline=true';
+                    <% } %>        
                 } else { 
                     item.src= './descargaDocumento?folio=<%= info.getFolio() %>&nombre=<%= URLEncoder.encode( info.getNombre(), "UTF-8") %>&inline=true';
                 }

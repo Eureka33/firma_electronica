@@ -48,4 +48,5 @@ create table eurk_wsss_visitas_solicitud(
 );
 
 
-INSERT INTO eurk_wsss_configuracion (clave, valor) VALUES (         'link.maximo.visitas', '1');
+INSERT INTO eurk_wsss_configuracion (clave, valor) VALUES (      'link.maximo.visitas',            '1');
+insert into eurk_wsss_configuracion( clave, valor) values ( 'string.formato.solicitud', 'ASA/%4s-%06d');

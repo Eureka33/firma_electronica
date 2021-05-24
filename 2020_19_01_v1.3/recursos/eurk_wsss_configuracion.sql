@@ -19,3 +19,4 @@ INSERT INTO eurk_wsss_configuracion (clave, valor) VALUES (      'path.certifica
 INSERT INTO eurk_wsss_configuracion (clave, valor) VALUES (         'path.repositorio.fs','C:\SIGMADOC\firmaDigitalv3\repositorio');
 
 INSERT INTO eurk_wsss_configuracion (clave, valor) VALUES (         'link.maximo.visitas', '1');
+insert into eurk_wsss_configuracion( clave, valor) values (    'string.formato.solicitud', 'EURK/%4s-%06d');
