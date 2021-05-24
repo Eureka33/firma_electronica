@@ -139,132 +139,144 @@
         </navbar>
     </div>
 
-    <div class="container" style="margin-top: 5px;">
+    <div class="container" style="margin-top: 10px; margin-bottom: 15px;">
         <form>
-            <table style="width: 100%">
+            
+            <div class="card">
+                <div class="card-header" style="color: #0056b3;">
+                    Documento Firmado
+                </div>
                 
-                <% if( info.getSolicitud() != null) { %>
-                    <tr>
-                        <td style="width: 250px;">
-                            <span style="font-size: 1.2em; font-weight: bold;">Folio Solicitud:</span>
-                        </td>
-                        <td>
-                            <%  String formato = configService.getPropiedad( "string.formato.solicitud");   %>
-                            <input type="text" value="<%= String.format( formato, info.getSolicitud().getFechaHora().substring(6, 10), info.getSolicitud().getId())%>" style="font-size: 1.2em; width: 100%" disabled/>
-                        </td>
-                    </tr>
-                <% } %>
-				
-                <% if( info.getSolicitud() != null) { %>
-                    <tr>
-                        <td style="width: 250px;">
-                            <span style="font-size: 1.2em; font-weight: bold;">Fecha Hora de Solicitud:</span>
-                        </td>
-                    	<td>
-                            <input type="text" value="<%= info.getSolicitud().getFechaHora()%>" style="font-size: 1.2em; width: 100%" disabled/>
-                        </td>
-                    </tr>
-				<% } %>
-				
-                <% if( info.getSolicitud() != null) { %>
-                    <tr>
-                        <td style="width: 250px;">
-                            <span style="font-size: 1.2em; font-weight: bold;">Estatus:</span>
-                        </td>
-                        <td>
-                            <input type="text" value="<%= info.getSolicitud().getEstatus() %>" style="font-size: 1.2em; width: 100%" disabled/>
-                        </td>
-                    </tr>
-				<% } %>
+                <div class="card-body" style="padding: 12px;">
                 
-                <tr>
-                    <td style="width: 250px;">
-                        <span style="font-size: 1.2em; font-weight: bold;">Nombre Documento:</span>
-                    </td>
-                    <td>
-                        <div class="row">
-                            <div class="col-sm-8">
-                                <input type="text" value="<%= info.getNombre() %>" style="font-size: 1.2em; width: 100%" disabled/>
-                            </div>
-                            <div class="col-sm-4" style="text-align: right;">
-                                <%  boolean isSolicitud = info.getSolicitud() != null && !info.getSolicitud().getEstatus().equals( "FIRMADA"); %>
-                                
-                                <% if ( info.getSolicitud() == null || !info.getSolicitud().getEstatus().equals( "CANCELADA")) { %>
+                    <table style="width: 100%">
+                        <tr>
+                            <td style="width: 250px;">
+                                <span style="font-size: 1.2em; font-weight: bold;">Nombre Documento:</span>
+                            </td>
+                            <td>
+                                <div class="row">
+                                        <div class="col-sm-8">
+                                        <input type="text" value="<%= info.getNombre() %>" style="font-size: 1.2em; width: 100%" disabled/>
+                                    </div>
+                                    <div class="col-sm-4" style="text-align: right;">
+                                        <%  boolean isSolicitud = info.getSolicitud() != null && !info.getSolicitud().getEstatus().equals( "FIRMADA"); %>
+                                        <% if ( info.getSolicitud() == null || !info.getSolicitud().getEstatus().equals( "CANCELADA")) { %>
                                    
-                                    <button type="button" class="btn btn-info" 
-                                        title="Descargar documento" onclick="javascript: descargar( <%= isSolicitud %>);"
-                                    >
-                                        <i class="fas fa-download"></i>
-                                    </button>
+                                            <button type="button" class="btn btn-info" 
+                                                title="Descargar documento" onclick="javascript: descargar( <%= isSolicitud %>);"
+                                            >
+                                                <i class="fas fa-download"></i>
+                                            </button>
                                         
-                                    <button type="button" class="btn btn-info" 
-                                        title="Previsualizar documento" onclick="javascript: preview_documento( <%= isSolicitud %>);"
-                                    >
-                                        <i class="fas fa-eye"></i>
+                                            <button type="button" class="btn btn-info" 
+                                                title="Previsualizar documento" onclick="javascript: preview_documento( <%= isSolicitud %>);"
+                                            >
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                        <% } %>
+                                    </div>
+                                </div>
+                            </td>
+                		</tr>
+                
+                        <tr id="divPreview" data-loaded="0">
+                            <td></td>
+                            <td>
+                                <div style="text-align: center;">
+                                    <embed id="preview" style="width: 100%; height: 450px;"/>
+                                    <!--        
+                                    <iframe style="width: 100%; height: 450px; border: none;"></iframe>
+                                    -->
+                                    <button type="button" class="btn btn-info" style="width: 80%;"  onclick="javascript: jQuery( '#divPreview').hide();">
+                                        Ocultar
                                     </button>
-                                <% } %>
-                            </div>
-                        </div>
-                    </td>
-				</tr>
+                                </div>
+                            </td>
+                        </tr>
                 
-                <tr id="divPreview" data-loaded="0">
-                    <td></td>
-                    <td>
-                        <div style="text-align: center;">
-                            <embed id="preview" style="width: 100%; height: 450px;"/>
-                            <!--
-                            <iframe style="width: 100%; height: 450px; border: none;"></iframe>
-                            -->
-                            <button type="button" class="btn btn-info" style="width: 80%;"  onclick="javascript: jQuery( '#divPreview').hide();">
-                                Ocultar
-                            </button>
-                        </div>
-                    </td>
-                </tr>
-                
-                <tr>
-					<td style="width: 250px;">
-                        <span style="font-size: 1.2em; font-weight: bold;">
-                            <% if( info.getSolicitud() == null || info.getSolicitud().getEstatus().equals( "FIRMADA")) { %>
-                                Firmante:
-                            <% } else { %>
-                                Destinatario:
-                            <% } %>
-                        </span>
-                    </td>
-					<td>
-                        <input type="text" value="<%=
-                            (info.getSolicitud() == null? "" : info.getSolicitud().getSolicitante()) +
-                            ((info.getSolicitud() != null && info.getFirmante() != null)?  " / " : "") +
-                            (info.getFirmante() != null? info.getFirmante() : "")
-                        %>" style="font-size: 1.2em; width: 100%" disabled/>
-                    </td>
-                </tr>
+                        <tr>
+                        	<td style="width: 250px;">
+                                <span style="font-size: 1.2em; font-weight: bold;">
+                                    <% if( info.getSolicitud() == null || info.getSolicitud().getEstatus().equals( "FIRMADA")) { %>
+                                        Firmante:
+                                    <% } else { %>
+                                        Destinatario:
+                                    <% } %>
+                                </span>
+                            </td>
+        					<td>
+                                <input type="text" value="<%=
+                                    (info.getSolicitud() == null? "" : info.getSolicitud().getSolicitante()) +
+                                    ((info.getSolicitud() != null && info.getFirmante() != null)?  " / " : "") +
+                                    (info.getFirmante() != null? info.getFirmante() : "")
+                                %>" style="font-size: 1.2em; width: 100%" disabled/>
+                            </td>
+                        </tr>
                    
-                <% if ( info.getId() != null) { %>
-                    
-                    <tr>
-						<td style="width: 250px;">
-                            <span style="font-size: 1.2em; font-weight: bold;">Fecha de Firma:</span>
-                        </td>
-						<td>
-                            <input type="text" value="<%= info.getFechaHora() %>" style="font-size: 1.2em; width: 100%" disabled/>
-                        </td>
-                    </tr>                    
+                        <% if ( info.getId() != null) { %>
+                            <tr>
+                                <td style="width: 250px;">
+                                    <span style="font-size: 1.2em; font-weight: bold;">Fecha de Firma:</span>
+                                </td>
+                				<td>
+                                    <input type="text" value="<%= info.getFechaHora() %>" style="font-size: 1.2em; width: 100%" disabled/>
+                                </td>
+                            </tr>                    
 					
-					<tr>
-						<td style="width: 250px;">
-                            <span style="font-size: 1.2em; font-weight: bold;">Folio de Firma:</span>
-                        </td>
-						<td>
-                            <input type="text" value="<%= info.getFolio() %>" style="font-size: 1.2em; width: 100%" disabled/>
-                        </td>
-					</tr>
-                    
-                <% } %>
+                			<tr>
+                        		<td style="width: 250px;">
+                                    <span style="font-size: 1.2em; font-weight: bold;">Folio de Firma:</span>
+                                </td>
+                				<td>
+                                    <input type="text" value="<%= info.getFolio() %>" style="font-size: 1.2em; width: 100%" disabled/>
+                                </td>
+                            </tr>
+                        <% } %>
 				
-			</table>
+        			</table>
+                </div>
+            </div>
+            
+            <% if( info.getSolicitud() != null) { %>
+                <div class="card">
+                    <div class="card-header" style="color: #0056b3;">
+                        Solicitud
+                    </div>
+                    <div class="card-body" style="padding: 12px;">
+                        <table style="width: 100%">
+                            <tr>
+                                <td style="width: 250px;">
+                                    <span style="font-size: 1.2em; font-weight: bold;">Folio Solicitud:</span>
+                                </td>
+                                <td>
+                                    <%  String formato = configService.getPropiedad( "string.formato.solicitud");   %>
+                                    <input type="text" value="<%= String.format( formato, info.getSolicitud().getFechaHora().substring(6, 10), info.getSolicitud().getId())%>" style="font-size: 1.2em; width: 100%" disabled/>
+                                </td>
+                            </tr>
+                                
+                            <tr>
+                                <td style="width: 250px;">
+                                    <span style="font-size: 1.2em; font-weight: bold;">Fecha Hora de Solicitud:</span>
+                                </td>
+                            	<td>
+                                    <input type="text" value="<%= info.getSolicitud().getFechaHora()%>" style="font-size: 1.2em; width: 100%" disabled/>
+                                </td>
+                            </tr>
+                	
+                            <tr>
+                                <td style="width: 250px;">
+                                    <span style="font-size: 1.2em; font-weight: bold;">Estatus:</span>
+                                </td>
+                                <td>
+                                    <input type="text" value="<%= info.getSolicitud().getEstatus() %>" style="font-size: 1.2em; width: 100%" disabled/>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            <% } %>
+            
         </form>
         
         <div class="row text-right">
