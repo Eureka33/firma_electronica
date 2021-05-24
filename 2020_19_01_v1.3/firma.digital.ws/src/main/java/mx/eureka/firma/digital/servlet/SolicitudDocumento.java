@@ -82,7 +82,7 @@ public class SolicitudDocumento extends BaseServlet {
             case NOTIFICADA:
                 return "El token de esta peticion todavía no ha sido activado (solicitud registrada/notificada)";
                 
-            case ATENDIDA:
+            case FIRMADA:
                 return "El token indicado ya ha sido utilizado (solicitud atendida)";
                 
             case CANCELADA:

@@ -105,8 +105,9 @@
 	</script>
 </head>
 <body>
-    <div class="container">
-		<img src="./images/logo_organizacion.png" style="height: 150px; width: 100%;" alt="organization logo"/>
+    
+    <div class="container" style="text-align: center;">
+		<img src="./images/logo_organizacion.png" style="height: 150px;" alt="organization logo"/>
     </div>
     
     <div class="container" style="margin-top: 5px;">
@@ -181,7 +182,7 @@
                                     </button>
                                     
                                     <button type="button" id="btnPreview" class="btn btn-info" 
-                                        title="Descargar documento" onclick="javascript: preview_documento();"
+                                        title="Previsualizar documento" onclick="javascript: preview_documento();"
                                     >
                                         <i class="fas fa-eye"></i>
                                     </button>
@@ -191,14 +192,14 @@
                         </td>
                     </tr>
                     
-                    <tr>
+                    <tr id="divPreview" data-loaded="0">
                         <td></td>
                         <td>
-                            <div id="divPreview" data-loaded="0" style="text-align: center;">
+                            <div style="text-align: center;">
                                 <embed id="preview" style="width: 100%; height: 450px;"/>
                                 <!--
                                 <iframe style="width: 100%; height: 450px; border: none;"></iframe>
-                                -->
+                                 -->
                                 <button type="button" class="btn btn-info" style="width: 80%;"  onclick="javascript: jQuery( '#divPreview').hide();">
                                     Ocultar
                                 </button>

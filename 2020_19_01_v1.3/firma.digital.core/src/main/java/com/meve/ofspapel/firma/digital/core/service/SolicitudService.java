@@ -38,7 +38,7 @@ public class SolicitudService {
                 break;
                 
             case DOCUMENTO_FIRMADO: 
-                estatus = EnumEstatusSolicitud.ATENDIDA;
+                estatus = EnumEstatusSolicitud.FIRMADA;
                 break;
                 
             default:

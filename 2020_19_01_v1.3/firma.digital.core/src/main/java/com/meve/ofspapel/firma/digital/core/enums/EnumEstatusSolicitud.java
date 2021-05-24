@@ -4,7 +4,7 @@ public enum EnumEstatusSolicitud {
     REGISTRADA( 0),
     NOTIFICADA( 1),
     VISITADA(   2),
-    ATENDIDA(   3),
+    FIRMADA(    3),
     CANCELADA(  4);
     
     private final int estatus;
