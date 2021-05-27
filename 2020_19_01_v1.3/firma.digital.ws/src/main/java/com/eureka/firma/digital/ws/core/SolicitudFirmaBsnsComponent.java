@@ -1,7 +1,6 @@
 package com.eureka.firma.digital.ws.core;
 
 import com.eureka.firma.digital.ws.bean.Firma;
-import com.eureka.firma.digital.ws.bean.InfoArchivo;
 import com.eureka.firma.digital.ws.bean.RespuestaFirma;
 import com.eureka.firma.digital.ws.bean.RespuestaSolicitud;
 import com.eureka.firma.digital.ws.bean.Resultado;

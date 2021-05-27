@@ -194,25 +194,19 @@
                                 </div>
                             </td>
                         </tr>
-                
-                        <tr>
-                        	<td style="width: 250px;">
-                                <span style="font-size: 1.2em; font-weight: bold;">
-                                    <% if( info.getSolicitud() == null || info.getSolicitud().getEstatus().equals( "FIRMADA")) { %>
+                        
+                        <% if( info.getSolicitud() == null || info.getSolicitud().getEstatus().equals( "FIRMADA")) { %>
+                            <tr>
+                                <td style="width: 250px;">
+                                    <span style="font-size: 1.2em; font-weight: bold;">
                                         Firmante:
-                                    <% } else { %>
-                                        Destinatario:
-                                    <% } %>
-                                </span>
-                            </td>
-        					<td>
-                                <input type="text" value="<%=
-                                    (info.getSolicitud() == null? "" : info.getSolicitud().getSolicitante()) +
-                                    ((info.getSolicitud() != null && info.getFirmante() != null)?  " / " : "") +
-                                    (info.getFirmante() != null? info.getFirmante() : "")
-                                %>" style="font-size: 1.2em; width: 100%" disabled/>
-                            </td>
-                        </tr>
+                                    </span>
+                                </td>
+                    			<td>
+                                    <input type="text" value="<%= info.getFirmante() != null? info.getFirmante() : "" %>" style="font-size: 1.2em; width: 100%" disabled/>
+                                </td>
+                            </tr>
+                        <% } %>
                    
                         <% if ( info.getId() != null) { %>
                             <tr>
@@ -263,7 +257,16 @@
                                     <input type="text" value="<%= info.getSolicitud().getFechaHora()%>" style="font-size: 1.2em; width: 100%" disabled/>
                                 </td>
                             </tr>
-                	
+                            
+                            <tr>
+                                <td style="width: 250px;">
+                                    <span style="font-size: 1.2em; font-weight: bold;">Destinatario:</span>
+                                </td>
+                            	<td>
+                                    <input type="text" value="<%= info.getSolicitud() == null? "" : info.getSolicitud().getSolicitante()%>" style="font-size: 1.2em; width: 100%" disabled/>
+                                </td>
+                            </tr>
+                            
                             <tr>
                                 <td style="width: 250px;">
                                     <span style="font-size: 1.2em; font-weight: bold;">Estatus:</span>

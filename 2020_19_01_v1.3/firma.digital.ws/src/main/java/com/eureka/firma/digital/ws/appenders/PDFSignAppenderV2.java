@@ -127,6 +127,8 @@ public class PDFSignAppenderV2 extends BasePDFSignAppender implements IPDFSignAp
             new Phrase( firma.getFirmaElectronica(), NORMAL_FONT)
         );
         
+        agregarNoOficial( table, "* * * *  D O C U M E N T O   N O   O F I C I A L  * * * *");
+        
         agregarTitulo( table, "Trazabilidad");
         agregarContenidoFirma( table, urlDescarga);
        
@@ -236,6 +238,21 @@ public class PDFSignAppenderV2 extends BasePDFSignAppender implements IPDFSignAp
         
         table.addCell( celda);
     }
+    
+    private void agregarNoOficial( PdfPTable table, String texto) {
+        final PdfPCell celda = new PdfPCell( new Phrase( texto, TITLE_FONT));
+        
+        celda.setColspan( COLUMNAS_TABLA);
+        celda.setPadding( 5);
+        
+        celda.setBorderWidth( 0);
+        celda.setMinimumHeight( 30);
+        
+        celda.setVerticalAlignment(   PdfPCell.ALIGN_MIDDLE);
+        celda.setHorizontalAlignment( PdfPCell.ALIGN_CENTER);
+        
+        table.addCell( celda);
+    } 
     
     private void agregarCeldaFrase( PdfPTable table, Phrase frase) {
         final PdfPCell celda = new PdfPCell( frase);

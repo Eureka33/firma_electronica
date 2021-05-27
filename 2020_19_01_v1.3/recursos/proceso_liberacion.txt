@@ -1,0 +1,46 @@
+Proceso de Preparación de Paquete de Liberación
+ Aplicación de Firma Electrónica v1.3x (/digitalSignWSSS)
+ 
+
+1.- Definir las propiedades de base de datos en el archivo de propiedades
+    [listo]
+	
+2.- Definir las propiedades de servidor de correo en la base de datos
+	[listo]
+	
+3.- Compilar los tres modulos del proyecto
+	El archivo WAR que será instalado en el ambiente del cliente
+	[listo]
+	
+4.- Revisar scripts de base de datos
+    - Preparar scripts de base de datos para la base de datos del cliente (instalación desde cero)
+	[listo]
+	- Preparar scripts de actualización si el cliente ya tiene alguna versión de tablas
+	
+	- Preparar actualización de valores de configuación
+		- Actualizar rutas relacionadas con la carpeta de recursos
+		- Actualizar valores con datos del cliente:
+			- nombre de organización
+			- URL de servidor
+			- formato de folio de solicitud
+			- número de visitas permitidas para una liga de solicitud
+	[listo]
+
+
+Proceso de Liberación
+
+ 1. Detener servidor Tomcat
+
+ 2. Aplicar los scripts generados en la base de datos
+		- creación / actualización de tablas
+		- actualización / adición de valores de configuración
+	[listo]
+	
+ 3. Copiar la carpeta de recursos a la ubicación seleccionada en el servidor del cliente
+    [listo]
+ 
+ 4. Eliminar la carpeta y war 'digitalSignWSSS' de la carpeta /webapps
+ 
+ 5. Copiar el nuevo WAR generado a la carpeta /webapps
+ 
+ 6. Levantar el servidor Tomcat
